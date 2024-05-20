@@ -5,8 +5,7 @@ import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { counterReducer } from './store/counter/counter.reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { MatSliderModule } from '@angular/material/slider';
-
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -14,8 +13,9 @@ import { MatSliderModule } from '@angular/material/slider';
   ],
   imports: [
     BrowserModule,
-    MatSliderModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    NoopAnimationsModule,
     StoreModule.forRoot({ count: counterReducer }),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states

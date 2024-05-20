@@ -1,1 +1,21 @@
-<h1>Header ne</h1>
+<div class="header">
+  <div class="flex justify-between items-center grow">
+    <div class="md:hidden">
+      <ng-icon name="ionMenuSharp"></ng-icon>
+    </div>
+    <div class="max-md:hidden">
+      <img
+        class="logo"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Code.svg/800px-Code.svg.png"
+      />
+    </div>
+    <div class="max-sm:hidden">
+      <ng-content #search></ng-content>
+    </div>
+    <div class="flex justify-between items-center">
+      <!-- <button class="btn-signin" mat-button>Đăng nhập</button>
+      <button class="btn-signup" mat-button>Đăng ký</button> -->
+      <app-avatar-menu></app-avatar-menu>
+    </div>
+  </div>
+</div>

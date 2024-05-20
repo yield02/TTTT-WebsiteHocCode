@@ -1,0 +1,17 @@
+<div class="search-container flex justify-center items-center" #searchContainer>
+  <ng-icon class="search-icon" name="ionSearchOutline"></ng-icon>
+  <input
+    class="search-input"
+    placeholder="Nhập thông tin tìm kiếm"
+    type="search"
+    size="22px"
+    [formControl]="searchControl"
+    (focus)="onFocus()"
+    #searchInput
+  />
+  <div class="searchResult" #searchResult>
+    <ng-template [ngIf]="searchControl.value">
+      Kết quả tìm kiếm cho: {{ searchControl.value }}
+    </ng-template>
+  </div>
+</div>
