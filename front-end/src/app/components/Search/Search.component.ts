@@ -16,7 +16,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   constructor(private renderer: Renderer2) {
     this.renderer.listen('window', 'click', (e: Event) => {
-      if (e.target !== this.searchResultContainer.nativeElement && e.target != this.searchContainer.nativeElement && e.target != this.searchInput.nativeElement) {
+      if (!this.searchContainer.nativeElement.contains(e.target as Node)) {
         this.searchResultContainer.nativeElement.hidden = true;
       }
     })
