@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { NgIconsModule } from '@ng-icons/core';
-import { ionPersonCircleOutline, ionNewspaperOutline, ionSettingsOutline, ionLogOutOutline, ionNotificationsOutline } from '@ng-icons/ionicons';
+import { ionPersonCircleOutline, ionNewspaperOutline, ionSettingsOutline, ionLogOutOutline, ionNotificationsOutline, ionLogoFacebook, ionLogoGoogle, ionLogoGithub, ionPersonOutline, ionLockClosedOutline, ionHomeOutline, ionChatboxOutline } from '@ng-icons/ionicons';
 import { heroAcademicCap } from '@ng-icons/heroicons/outline';
 import { ReactiveFormsModule } from "@angular/forms";
 
@@ -20,36 +20,34 @@ import { FooterComponent } from "../../components/footer/footer.component";
 import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 import { ionMenuSharp, ionSearchOutline } from "@ng-icons/ionicons";
 import { SearchComponent } from "../../components/Search/Search.component";
-import { AvatarMenuComponent } from "../../components/header/avatar-menu/avatar-menu.component";
-import { AnnouncementComponent } from "../../components/header/announcement/announcement.component";
+import { LoginComponent } from "../../components/login/login.component";
 
 
 @NgModule({
     declarations: [
         LayOutComponent,
-        HeaderComponent,
-        SearchComponent,
         FooterComponent,
-        SidebarComponent,
-        HomeComponent,
         BlogComponent,
         LearningPathComponent,
         CourseComponent,
 
     ],
     imports: [
-        AvatarMenuComponent,
-        AnnouncementComponent,
+        HeaderComponent,
+        SidebarComponent,
+        SearchComponent,
+        HomeComponent,
+
 
         CommonModule,
         HomeRoutingModule,
         MatButtonModule,
         MatInputModule,
         ReactiveFormsModule,
-        NgIconsModule.withIcons({ ionSearchOutline, ionMenuSharp, ionPersonCircleOutline, heroAcademicCap, ionNewspaperOutline, ionSettingsOutline, ionLogOutOutline, ionNotificationsOutline })
+
     ],
     exports: [],
-    providers: [],
+    providers: [LoginComponent],
     bootstrap: [],
 })
 

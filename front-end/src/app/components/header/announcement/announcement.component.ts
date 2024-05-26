@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { NgIconComponent } from '@ng-icons/core';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ionNotificationsOutline } from '@ng-icons/ionicons';
 
 @Component({
   selector: 'app-announcement',
@@ -14,6 +15,8 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
     MatButtonModule,
     MatMenuModule,
   ],
+  providers: [provideIcons({ ionNotificationsOutline })]
+  ,
   templateUrl: './announcement.component.html',
   styleUrl: './announcement.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,9 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { ionSearchOutline } from '@ng-icons/ionicons';
 import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-search',
+  standalone: true,
+  imports: [CommonModule, NgIconComponent, ReactiveFormsModule],
+  providers: [provideIcons({ ionSearchOutline })],
   templateUrl: './search.component.html',
   styleUrl: './Search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

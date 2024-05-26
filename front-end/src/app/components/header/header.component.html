@@ -13,8 +13,9 @@
       <ng-content #search></ng-content>
     </div>
     <div class="flex justify-between items-center">
-      <!-- <button class="btn-signin" mat-button>Đăng nhập</button>
-      <button class="btn-signup" mat-button>Đăng ký</button> -->
+      <!-- <button class="btn-signin" mat-button>Đăng nhập</button> -->
+      <app-login #login [toSignup]="toSignup.bind(this)"></app-login>
+      <app-signup #signup [toLogin]="toLogin.bind(this)"></app-signup>
       <app-announcement class="announce"></app-announcement>
       <app-avatar-menu></app-avatar-menu>
     </div>

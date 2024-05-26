@@ -1,4 +1,25 @@
-<div>
-    <span>abc</span>
+<div class="flex">
+  <div class="sidebar max-md:hidden">
+    <div class="wrapper">
+      <div
+        class="sidebar-navigate flex flex-col justify-center items-center"
+        routerLink="/home"
+        routerLinkActive="active"
+      >
+        <ng-icon class="sidebar-icon" name="ionHomeOutline"></ng-icon>
+        <a class="sidebar-text">Trang chủ</a>
+      </div>
+      <div
+        class="sidebar-navigate flex flex-col justify-center items-center"
+        routerLink="/forum"
+        routerLinkActive="active"
+      >
+        <ng-icon class="sidebar-icon" name="ionChatboxOutline"></ng-icon>
+        <a class="sidebar-text">Diễn đàn</a>
+      </div>
+    </div>
+  </div>
+  <div class="flex-1">
     <ng-content></ng-content>
+  </div>
 </div>

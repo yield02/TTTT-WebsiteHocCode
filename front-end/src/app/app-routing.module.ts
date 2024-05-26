@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/learning/learning.module').then(m => m.LearningModule)
   },
   {
+    path: 'forum',
+    loadChildren: () => import('./pages/forum/forum.module').then(m => m.ForumModule)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'

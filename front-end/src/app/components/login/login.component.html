@@ -1,0 +1,87 @@
+<button
+  mat-flat-button
+  color="primary"
+  class="btn-signin"
+  (click)="toggleDialog()"
+>
+  Đăng nhập
+</button>
+<p-dialog [modal]="true" [(visible)]="visible">
+  <div class="modal-container">
+    <div class="header mb-10">
+      <h1 class="header-text text-center">Đăng nhập</h1>
+    </div>
+    <div class="body mb-4">
+      <form
+        class="login-form flex justify-center items-center flex-col"
+        [formGroup]="signInForm"
+        (ngSubmit)="signInForm.valid && onSubmit()"
+      >
+        <div class="flex flex-col gap-2 mt-4">
+          <p-iconField>
+            <p-inputIcon ngClass="pi pi-user">
+              <ng-icon class="input-icon" name="ionPersonOutline"></ng-icon>
+            </p-inputIcon>
+            <input
+              class="input"
+              type="text"
+              pInputText
+              id="username"
+              aria-describedby="username-help"
+              formControlName="username"
+              placeholder="Tài khoản"
+            />
+          </p-iconField>
+          <!-- <small id="username-help">
+          Enter your username to reset your password.
+        </small> -->
+        </div>
+
+        <div class="flex flex-col gap-2 mt-4">
+          <p-iconField>
+            <p-inputIcon ngClass="pi pi-user">
+              <ng-icon class="input-icon" name="ionLockClosedOutline"></ng-icon>
+            </p-inputIcon>
+            <input
+              class="input"
+              type="password"
+              pInputText
+              id="password"
+              aria-describedby="password-help"
+              formControlName="password"
+              placeholder="Mật khẩu"
+            />
+          </p-iconField>
+          <!-- <small id="password-help">
+          Enter your username to reset your password.
+        </small> -->
+        </div>
+
+        <div class="flex justify-evenly items-center mt-4">
+          <button class="" mat-flat-button color="primary">Đăng nhập</button>
+        </div>
+      </form>
+    </div>
+    <div class="mb-5">
+      <div class="footer flex justify-center items-center">
+        <button mat-icon-button color="primary">
+          <ng-icon name="ionLogoFacebook"></ng-icon>
+        </button>
+        <button mat-icon-button color="primary">
+          <ng-icon name="ionLogoGoogle"></ng-icon>
+        </button>
+        <button mat-icon-button color="primary">
+          <ng-icon name="ionLogoGithub"></ng-icon>
+        </button>
+      </div>
+    </div>
+    <div class="signup">
+      <div class="footer flex justify-center items-center">
+        <p class="text-center">
+          Bạn chưa có tài khoản?
+          <button mat-button color="warn" (click)="toSignup()">Đăng ký</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</p-dialog>

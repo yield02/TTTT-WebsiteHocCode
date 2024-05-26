@@ -1,0 +1,88 @@
+<button class="btn-signup" (click)="toggleDialog()" mat-button>Đăng ký</button>
+
+<p-dialog [modal]="true" [(visible)]="visible">
+  <div class="modal-container">
+    <div class="header mb-10">
+      <h1 class="header-text text-center">Đăng ký</h1>
+    </div>
+    <div class="body mb-4">
+      <form
+        class="login-form flex justify-center items-center flex-col"
+        [formGroup]="signInForm"
+        (ngSubmit)="signInForm.valid && onSubmit()"
+      >
+        <div class="flex flex-col gap-2 mt-4">
+          <p-iconField>
+            <p-inputIcon ngClass="pi pi-user">
+              <ng-icon class="input-icon" name="ionPersonOutline"></ng-icon>
+            </p-inputIcon>
+            <input
+              class="input"
+              pInputText
+              id="username"
+              aria-describedby="username-help"
+              formControlName="username"
+              placeholder="Tài khoản"
+            />
+          </p-iconField>
+          <!-- <small id="username-help">
+            Enter your username to reset your password.
+          </small> -->
+        </div>
+
+        <div class="flex flex-col gap-2 mt-4">
+          <p-iconField>
+            <p-inputIcon ngClass="pi pi-user">
+              <ng-icon class="input-icon" name="ionLockClosedOutline"></ng-icon>
+            </p-inputIcon>
+            <input
+              class="input"
+              type="password"
+              pInputText
+              id="password"
+              aria-describedby="password-help"
+              formControlName="password"
+              placeholder="Mật khẩu"
+            />
+          </p-iconField>
+          <!-- <small id="password-help">
+            Enter your username to reset your password.
+          </small> -->
+        </div>
+        <div class="flex flex-col gap-2 mt-4">
+          <p-iconField>
+            <p-inputIcon ngClass="pi pi-user">
+              <ng-icon class="input-icon" name="ionLockClosedOutline"></ng-icon>
+            </p-inputIcon>
+            <input
+              class="input"
+              type="password"
+              pInputText
+              id="repassword"
+              aria-describedby="repassword-help"
+              formControlName="repassword"
+              placeholder="Mật khẩu xác thực"
+            />
+          </p-iconField>
+          <!-- <small id="repassword-help">
+            Enter your username to reset your password.
+          </small> -->
+        </div>
+
+        <div class="flex justify-evenly items-center mt-4">
+          <button class="" mat-flat-button color="warn">Đăng ký</button>
+        </div>
+      </form>
+    </div>
+    <div class="signup">
+      <div class="footer flex justify-center items-center">
+        <p class="text-center">
+          Bạn đã có tài khoản?
+          <button mat-button color="primary" (click)="toLogin()">
+            Đăng nhập
+          </button>
+        </p>
+      </div>
+    </div>
+  </div>
+</p-dialog>
