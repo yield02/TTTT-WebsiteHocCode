@@ -1,0 +1,76 @@
+.col-item {
+  cursor: pointer;
+  z-index: 0;
+  &:hover {
+    transform: scale(1.01);
+    transition: all 0.35s ease-in-out;
+    .enroll {
+      display: flex;
+    }
+  }
+
+  .card-img {
+    border-radius: 8px;
+    z-index: 0;
+  }
+
+  .footer-card {
+    padding: 8px 4px 8px 4px;
+    .card-name {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .detail-number {
+      span {
+        font-size: 12px;
+        font-style: italic;
+      }
+      span + span {
+        margin-left: 12px;
+      }
+      .detail-icon {
+        margin-right: 2px;
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+::ng-deep .p-card-header {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  .enroll {
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px;
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.4);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    animation: show 0.35s ease-in-out;
+    .button {
+      button {
+        padding: 4px 16px;
+      }
+    }
+  }
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

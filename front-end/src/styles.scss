@@ -12,16 +12,11 @@
   }
 }
 
-@layer primeng; //not necessary I think
+// @layer primeng; //not necessary I think
 
 @layer tailwind-utilities {
   @tailwind components;
   @tailwind utilities;
-}
-
-* {
-  padding: 0;
-  box-sizing: border-box;
 }
 
 /* #039AF9 */

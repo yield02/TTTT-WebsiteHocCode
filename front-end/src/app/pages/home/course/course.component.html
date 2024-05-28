@@ -1,1 +1,60 @@
-<button mat-button color="primary">Course</button>
+<div class="course-container flex md:flex-row max-md:flex-col">
+  <div class="md:basis-3/5">
+    <h1 class="heading-text my-4">100 Ngày Với Angular</h1>
+    <div class="description">
+      Series độc quyền cung cấp bởi thành viên của Angular Vietnam về các chủ đề
+      liên quan tới Angular trong vòng 100 ngày.
+    </div>
+    <div class="content">
+      <h1 class="content-heading my-4">Nội dung khóa học</h1>
+      <div class="sumary flex items-center justify-between">
+        <div class="flex">A</div>
+        <div class="flex">
+          <button class="expandAllBtn" (click)="expandAll()">Xem tất cả</button>
+        </div>
+      </div>
+      <div class="content-body">
+        <p-tree [value]="chapters" class="w-full md:w-30rem">
+          <ng-template let-chapter pTemplate="video">
+            <div class="flex justify-between items-center">
+              <div class="flex justify-start items-center">
+                <span class="content-icons"
+                  ><ng-icon name="bootstrapPersonVideo"></ng-icon
+                ></span>
+                <h4 class="content-label">
+                  {{ chapter.label }}
+                </h4>
+              </div>
+              <div class="time-stamp px-4">12:00</div>
+            </div>
+          </ng-template>
+          <ng-template let-chapter pTemplate="text">
+            <h4 class="content-label">
+              <span class="content-icons"
+                ><ng-icon name="ionDocumentTextOutline"></ng-icon
+              ></span>
+              {{ chapter.label }}
+            </h4>
+          </ng-template>
+          <ng-template let-chapter pTemplate="default">
+            <h1 class="chapter-label">{{ chapter.label }}</h1>
+          </ng-template>
+        </p-tree>
+      </div>
+    </div>
+  </div>
+  <div class="md:basis-2/5 max-md:mt-5 md:px-24">
+    <img
+      class="image-introduce"
+      src="https://bkhost.vn/wp-content/uploads/2022/05/angular-JS-logo.jpg"
+    />
+    <div class="flex justify-center mt-10">
+      <p-button
+        label="Bắt đầu học"
+        [text]="true"
+        [raised]="true"
+        severity="info"
+      />
+    </div>
+  </div>
+</div>

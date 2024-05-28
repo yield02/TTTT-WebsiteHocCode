@@ -29,7 +29,6 @@ import { LoginComponent } from "../../components/login/login.component";
         FooterComponent,
         BlogComponent,
         LearningPathComponent,
-        CourseComponent,
 
     ],
     imports: [
@@ -37,6 +36,8 @@ import { LoginComponent } from "../../components/login/login.component";
         SidebarComponent,
         SearchComponent,
         HomeComponent,
+        CourseComponent,
+
 
 
         CommonModule,

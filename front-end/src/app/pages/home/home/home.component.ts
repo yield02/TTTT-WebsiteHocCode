@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import { CoursesComponent } from './courses/courses.component';
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     standalone: true,
-    imports: [CardModule],
+    imports: [CommonModule, CoursesComponent],
     styleUrl: './home.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

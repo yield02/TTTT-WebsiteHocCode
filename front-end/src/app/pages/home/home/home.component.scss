@@ -2,14 +2,10 @@
   display: block;
 }
 .container {
-  height: 200vh;
+  min-height: 200vh;
 }
 .home-container {
   width: 100%;
   max-width: none;
   padding: 64px;
-
-  .card-img {
-    border-radius: 8px;
-  }
 }

@@ -1,0 +1,22 @@
+<div class="courses">
+  <h1 class="courses-title">JavaScript</h1>
+  <div class="grid md:grid-cols-4 sm:grid-cols-2 gap-12">
+    <app-course></app-course>
+    <app-course></app-course>
+    <app-course></app-course>
+    <app-course></app-course>
+    <app-course></app-course>
+    <app-course></app-course>
+    <app-course></app-course>
+    <app-course></app-course>
+  </div>
+  <div class="flex justify-end items-center pagination">
+    <p-paginator
+      (onPageChange)="onPageChange($event)"
+      [first]="page.first"
+      [rows]="page.rows"
+      [totalRecords]="page.total"
+      [showFirstLastIcon]="false"
+    />
+  </div>
+</div>

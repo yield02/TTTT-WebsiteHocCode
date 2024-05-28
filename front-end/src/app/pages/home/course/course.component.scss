@@ -1,0 +1,57 @@
+.course-container {
+  min-height: 100vh;
+  padding: 32px;
+
+  .heading-text {
+    font-size: 32px;
+    font-weight: 600;
+  }
+
+  .description {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  .content {
+    .content-heading {
+      font-size: 20px;
+      font-size: 700;
+    }
+
+    .expandAllBtn {
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+
+  .content-label {
+    font-size: 14px;
+  }
+  .chapter-label {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .content-icons {
+    font-size: 18px;
+    margin-right: 8px;
+  }
+  .time-stamp {
+    font-size: 14px;
+    opacity: 0.8;
+    font-style: italic;
+  }
+
+  .image-introduce {
+    border-radius: 12px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+      rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  }
+}
+::ng-deep {
+  .p-tree {
+    padding: 0;
+  }
+  .p-treenode-label {
+    width: 100%;
+  }
+}

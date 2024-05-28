@@ -1,7 +1,5 @@
-:host {
-  display: block;
-}
 .sidebar {
+  z-index: 1001;
   position: relative;
   width: 96px;
   .wrapper {
