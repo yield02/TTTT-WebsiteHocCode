@@ -1,0 +1,35 @@
+<div class="learning-header flex justify-between items-center">
+  <div class="flex justify-center items-center">
+    <div class="navigation-home" routerLink="/home">
+      <img
+        class="logo"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Code.svg/800px-Code.svg.png"
+      />
+    </div>
+  </div>
+  <div class="flex justify-center items-center">
+    <img
+      class="course-img"
+      src="https://bkhost.vn/wp-content/uploads/2022/05/angular-JS-logo.jpg"
+    />
+    <h4 class="course-name">100 ngày với angular</h4>
+  </div>
+  <div class="sumary-info px-4">
+    <p-button
+      class="menu-btn max-lg:hidden"
+      (onClick)="toggleLessonBar()"
+      [text]="true"
+      severity="secondary"
+    >
+      <ng-icon class="menu-icon" name="ionMenuOutline"></ng-icon>
+    </p-button>
+    <p-button
+      class="menu-btn lg:hidden"
+      (onClick)="toggleLessonSideBar()"
+      [text]="true"
+      severity="secondary"
+    >
+      <ng-icon class="menu-icon" name="ionMenuOutline"></ng-icon>
+    </p-button>
+  </div>
+</div>

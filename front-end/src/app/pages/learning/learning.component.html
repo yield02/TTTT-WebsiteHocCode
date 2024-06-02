@@ -1,0 +1,28 @@
+<div class="learning-container">
+  <div class="header">
+    <app-learning-header
+      [toggleLessonBar]="toggleLessonBar.bind(this)"
+      [toggleLessonSideBar]="toggleLessonSideBar.bind(this)"
+    ></app-learning-header>
+  </div>
+  <div class="grid lg:grid-cols-4 py-2">
+    <div class="scroll-container lg:col-span-3 overflow-y-scroll" #content>
+      <app-lesson></app-lesson>
+    </div>
+    <div
+      class="scroll-container col-span-1 overflow-y-scroll max-lg:hidden"
+      #lessonBar
+    >
+      <ng-container [ngTemplateOutlet]="chapterList"></ng-container>
+    </div>
+    <ng-container>
+      <p-sidebar [(visible)]="sidebarVisible">
+        <ng-container [ngTemplateOutlet]="chapterList"></ng-container>
+      </p-sidebar>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #chapterList>
+  <app-chapterlist [selectedChapter]="selectedChapter"></app-chapterlist>
+</ng-template>

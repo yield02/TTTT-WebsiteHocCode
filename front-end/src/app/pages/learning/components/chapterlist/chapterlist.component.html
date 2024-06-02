@@ -1,0 +1,19 @@
+<div class="chapter-container">
+  <h1 class="title mx-4 my-4">Nội dung khóa học</h1>
+  <div class="content-container">
+    <ng-container *ngFor="let chapter of chapters; index as i">
+      <p-tree
+        selectionMode="single"
+        [(selection)]="selectedChapter"
+        [value]="chapter"
+      >
+        <ng-template let-chapter pTemplate="default">
+          <h4 class="content-label">{{ chapter.label }}</h4>
+        </ng-template>
+        <ng-template class="active" let-chapter pTemplate="text">
+          <h4 class="content-label">{{ chapter.label }}</h4>
+        </ng-template>
+      </p-tree>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="lesson-container">
+  <div class="video-wrapper">
+    <div class="video-play-wapper">
+      <iframe
+        class="video"
+        width="100%"
+        height="100%"
+        src="https://www.youtube.com/embed/zmKiajd642E?si=HqdI9mQDfypcAv6M"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+  <div class="content-container">
+    <div class="my-8 flex justify-between items-center">
+      <h3 class="content-heading">Cài đặt Angular</h3>
+      <span class="time-stamp">Ngày đăng 20-3-2024</span>
+    </div>
+    <div class="content-box mb-8" *ngIf="!isComment">
+      GIỚI THIỆU Trong vài năm trở lại đây, Angular đã có nhiều cải tiến mới, cả
+      về feature và performance. Càng ngày càng có nhiều công ty/tổ chức, dự án
+      sử dụng Angular để phát triển các sản phẩm giàu tính tương tác. Mình nhận
+      thấy đây là thời điểm thích hợp để khởi động một series để các bạn có động
+      lực học code Angular, do đó series 100 Days of Code Angular đã ra đời. Mục
+      tiêu của series là mang đến cơ hội để thử thách bản thân các bạn trong một
+      quá trình liên tục, với mong muốn sau khi kết thúc 100 ngày thì các bạn có
+      kiến thức nền tảng để phát triển dự án bằng Angular. CHUẨN BỊ Để chuẩn bị
+      cho chặng đường phía trước, chúng ta cần một số thứ như sau: IDE/Editor:
+      các bạn có thể dùng những công cụ mà các bạn thấy quen thuộc, hoặc sử dụng
+      một số công cụ như Visual Studio Code (VS Code), WebStorm để support code
+      tốt hơn. Nếu bạn sử dụng VS Code thì nên cài đặt thêm 1 số extension để
+      support trong quá trình code như: Angular Language Service, EditorConfig
+      for VS Code, ESLint/TSLint, Nx Console (optional) TIẾN HÀNH NODEJS Đầu
+      tiên các bạn vào trang https://nodejs.org/en/download/ để tải về Nodejs và
+      cài đặt vào máy. Các bạn có thể tải về bản Long Term Support (LTS) hoặc
+      Current đều được. Hiện tại bản LTS mới nhất là version 12, với Angular
+      version 9 thì đã hoàn toàn phù hợp rồi. Đối với các bạn nào quen thuộc với
+      terminal thì mình khuyến cáo sử dụng NVM để cài đặt và quản lý nhiều phiên
+      bản Nodejs trên cùng 1 máy. Như thế các bạn sẽ linh động khi làm việc với
+      nhiều dự án khác nhau có đòi hỏi khác nhau về version của Nodejs. Sau khi
+      cài đặt thành công các bạn có thể verify lại bằng cách mở
+      Terminal/PowerShell/CMD (mình sẽ gọi chung là Terminal) và gõ các lệnh
+      sau, nếu nó hiển thị ra được version thì đã cài đặt thành công.
+    </div>
+    <ng-container #comment *ngIf="isComment">
+      <div class="comment-container">comment nè</div>
+    </ng-container>
+  </div>
+  <div class="comment flex justify-end px-4">
+    <p-button severity="info" [rounded]="true" (onClick)="toggleIsComment()">
+      <ng-template [ngIf]="isComment" [ngIfElse]="isLearning">
+        <ng-icon name="ionChatboxOutline"></ng-icon>
+        <span class="ml-2"> Bài học </span>
+      </ng-template>
+      <ng-template #isLearning>
+        <ng-icon name="ionChatboxOutline"></ng-icon>
+        <span class="ml-2"> Thảo luận </span>
+      </ng-template>
+    </p-button>
+  </div>
+</div>

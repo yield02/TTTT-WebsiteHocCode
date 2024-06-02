@@ -1,0 +1,42 @@
+.learning-header {
+  height: 100%;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+
+  .navigation-home {
+    padding: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    &:hover {
+      opacity: 0.7;
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 12px;
+    }
+  }
+
+  .course-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    margin-right: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+  .course-name {
+    font-size: 16px;
+    font-weight: 700;
+  }
+}
+
+::ng-deep {
+  .menu-btn {
+    .p-button {
+      padding: 4px 8px;
+    }
+    .menu-icon {
+      font-size: 28px;
+    }
+  }
+}

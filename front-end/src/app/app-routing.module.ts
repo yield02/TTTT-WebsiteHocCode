@@ -15,6 +15,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/forum/forum.module').then(m => m.ForumModule)
   },
   {
+    path: 'settings',
+    loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'

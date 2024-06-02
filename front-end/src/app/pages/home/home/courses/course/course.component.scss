@@ -14,8 +14,8 @@
     z-index: 0;
   }
 
-  .footer-card {
-    padding: 8px 4px 8px 4px;
+  .content-card {
+    padding: 0px 4px 0px 4px;
     .card-name {
       font-size: 16px;
       font-weight: 500;
@@ -35,6 +35,9 @@
       }
     }
   }
+}
+::ng-deep .p-card-content {
+  padding: 0;
 }
 
 ::ng-deep .p-card-header {

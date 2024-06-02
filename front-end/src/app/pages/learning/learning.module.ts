@@ -1,6 +1,8 @@
 import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
+import { Directive, NgModule } from "@angular/core";
 import { LearningRoutingModule } from "./learning-routing.module";
+
+
 
 
 @NgModule({
