@@ -1,7 +1,7 @@
-<app-header>
+<app-header [toggleSideBar]="sidebarToggle.bind(this)">
   <app-search #search></app-search>
 </app-header>
-<app-sidebar>
+<app-sidebar [sidebarVisible]="sidebarVisible">
   <router-outlet />
 </app-sidebar>
 <app-footer></app-footer>

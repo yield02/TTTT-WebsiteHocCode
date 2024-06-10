@@ -19,6 +19,26 @@
       </div>
     </div>
   </div>
+  <p-sidebar class="mobile-sidebar" [(visible)]="sidebarVisible">
+    <div class="wrapper">
+      <div
+        class="sidebar-navigate flex justify-center items-center"
+        routerLink="/home"
+        routerLinkActive="active"
+      >
+        <ng-icon class="sidebar-icon" name="ionHomeOutline"></ng-icon>
+        <a class="sidebar-text">Trang chủ</a>
+      </div>
+      <div
+        class="sidebar-navigate flex justify-center items-center"
+        routerLink="/forum"
+        routerLinkActive="active"
+      >
+        <ng-icon class="sidebar-icon" name="ionChatboxOutline"></ng-icon>
+        <a class="sidebar-text">Diễn đàn</a>
+      </div>
+    </div>
+  </p-sidebar>
   <div class="flex-1">
     <ng-content></ng-content>
   </div>
