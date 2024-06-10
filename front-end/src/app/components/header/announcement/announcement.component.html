@@ -1,7 +1,29 @@
 <div class="notify-container" #notifyContainer>
-  <button class="notify-btn" (click)="toggleNotifyMenu()" #notifybtn>
+  <button
+    class="notify-btn max-md:hidden"
+    (click)="toggleNotifyMenu()"
+    #notifybtn
+  >
     <ng-icon class="notify-icon" name="ionNotificationsOutline"></ng-icon>
   </button>
+  <button
+    class="notify-btn md:hidden"
+    (click)="showMobileDialog()"
+    #notifybtnmobile
+  >
+    <ng-icon class="notify-icon" name="ionNotificationsOutline"></ng-icon>
+  </button>
+  <ng-container [ngTemplateOutlet]="notifyTemp"></ng-container>
+</div>
+<p-dialog
+  class="notify-dialog-mobile"
+  [modal]="true"
+  [(visible)]="mobileDialog"
+>
+  <ng-container [ngTemplateOutlet]="notifyTemp"></ng-container>
+</p-dialog>
+
+<ng-template #notifyTemp>
   <div class="menu-notify" xPosition="before" #notifyMenu>
     <div class="notify-header flex justify-between items-center">
       <h1 class="notify-headingText">Thông báo</h1>
@@ -153,4 +175,4 @@
       </div>
     </div>
   </div>
-</div>
+</ng-template>

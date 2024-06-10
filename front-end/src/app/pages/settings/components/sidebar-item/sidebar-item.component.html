@@ -1,0 +1,24 @@
+<ng-container *ngIf="handleOnClick != undefined; else linkTemplate">
+  <div
+    class="sidebar-item flex justify-start items-center"
+    (click)="handleOnClick()"
+  >
+    <ng-container *ngTemplateOutlet="Icon"></ng-container>
+    <h4 [class]="isMobile ? 'title' : 'title max-lg:hidden'">{{ title }}</h4>
+  </div>
+</ng-container>
+
+<ng-template #linkTemplate>
+  <div
+    class="sidebar-item flex justify-start items-center"
+    [routerLink]="naviagtionLink"
+    routerLinkActive="active"
+  >
+    <ng-container *ngTemplateOutlet="Icon"></ng-container>
+    <h4 [class]="isMobile ? 'title' : 'title max-lg:hidden'">{{ title }}</h4>
+  </div>
+</ng-template>
+
+<ng-template #Icon>
+  <ng-content select=".sidebar-icon"></ng-content>
+</ng-template>

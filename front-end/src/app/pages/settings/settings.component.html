@@ -1,1 +1,4 @@
-<h1>Working ne2</h1>
+<app-header [toggleSideBar]="sidebarToggle.bind(this)"></app-header>
+<app-sidebar [sidebarVisible]="sidebarVisible">
+  <router-outlet />
+</app-sidebar>

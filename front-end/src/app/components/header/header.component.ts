@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { LoginComponent } from '../login/login.component';
 import { SignupComponent } from '../signup/signup.component';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -25,6 +25,8 @@ import { heroAcademicCap } from '@ng-icons/heroicons/outline';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements AfterViewInit {
+
+  @Input() toggleSideBar!: Function;
 
   @ViewChild('login') login!: LoginComponent;
   @ViewChild('signup') logout!: SignupComponent;

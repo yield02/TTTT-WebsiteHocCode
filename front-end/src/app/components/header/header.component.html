@@ -1,7 +1,10 @@
 <div class="header">
   <div class="flex justify-between items-center grow">
-    <div class="md:hidden">
-      <ng-icon name="ionMenuSharp"></ng-icon>
+    <div
+      class="md:hidden sidebar-btn flex justify-center items-center px-2"
+      (click)="toggleSideBar()"
+    >
+      <ng-icon name="ionMenuSharp" class="sidebar-icon"></ng-icon>
     </div>
     <div class="max-md:hidden">
       <img
@@ -14,8 +17,8 @@
     </div>
     <div class="flex justify-between items-center">
       <!-- <button class="btn-signin" mat-button>Đăng nhập</button> -->
-      <app-login #login [toSignup]="toSignup.bind(this)"></app-login>
-      <app-signup #signup [toLogin]="toLogin.bind(this)"></app-signup>
+      <!-- <app-login #login [toSignup]="toSignup.bind(this)"></app-login> -->
+      <!-- <app-signup #signup [toLogin]="toLogin.bind(this)"></app-signup> -->
       <app-announcement class="announce"></app-announcement>
       <app-avatar-menu></app-avatar-menu>
     </div>

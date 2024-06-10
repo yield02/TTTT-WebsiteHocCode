@@ -37,3 +37,14 @@
     margin-right: 12px;
   }
 }
+
+.sidebar-btn {
+  :hover {
+    background: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .sidebar-icon {
+    font-size: 32px;
+  }
+}

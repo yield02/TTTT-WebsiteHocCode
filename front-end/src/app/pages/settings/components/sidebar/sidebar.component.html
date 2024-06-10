@@ -1,0 +1,57 @@
+<div class="sidebar-container flex">
+  <div class="sidebar lg:basis-1/6 max-md:hidden py-4">
+    <div
+      class="menu-list px-2 max-lg:flex justify-center flex-col items-center"
+    >
+      <app-sidebar-item
+        class=""
+        title="Thông tin cá nhân"
+        naviagtionLink="information"
+      >
+        <ng-icon class="sidebar-icon" name="ionPersonCircleOutline"></ng-icon>
+      </app-sidebar-item>
+      <app-sidebar-item
+        class=""
+        title="Mật khẩu & bảo mật"
+        naviagtionLink="/security"
+      >
+        <ng-icon class="sidebar-icon" name="bootstrapShield"></ng-icon>
+      </app-sidebar-item>
+      <app-sidebar-item class="" title="Đăng xuất" [handleOnClick]="signOut">
+        <ng-icon class="sidebar-icon" name="ionLogOutOutline"></ng-icon>
+      </app-sidebar-item>
+    </div>
+  </div>
+  <p-sidebar class="mobile-sidebar" [(visible)]="sidebarVisible">
+    <h3 class="mobile-sidebar-title">Cài đặt</h3>
+    <div class="menu-list">
+      <app-sidebar-item
+        class=""
+        title="Thông tin cá nhân"
+        naviagtionLink="/home"
+        [isMobile]="true"
+      >
+        <ng-icon class="sidebar-icon" name="ionPersonCircleOutline"></ng-icon>
+      </app-sidebar-item>
+      <app-sidebar-item
+        class=""
+        title="Mật khẩu & bảo mật"
+        naviagtionLink="/home"
+        [isMobile]="true"
+      >
+        <ng-icon class="sidebar-icon" name="bootstrapShield"></ng-icon>
+      </app-sidebar-item>
+      <app-sidebar-item
+        class=""
+        title="Đăng xuất"
+        [handleOnClick]="signOut"
+        [isMobile]="true"
+      >
+        <ng-icon class="sidebar-icon" name="ionLogOutOutline"></ng-icon>
+      </app-sidebar-item>
+    </div>
+  </p-sidebar>
+  <div class="content grow lg:basis-5/6">
+    <ng-content #content></ng-content>
+  </div>
+</div>

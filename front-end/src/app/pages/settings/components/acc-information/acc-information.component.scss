@@ -1,0 +1,49 @@
+.information-container {
+  padding: 64px;
+  .information-heading-text {
+    font-size: 28px;
+    margin-bottom: 24px;
+    font-weight: 700;
+  }
+  .information-box {
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
+    .label {
+      font-size: 14px;
+      font-style: italic;
+      margin-left: 4px;
+    }
+  }
+}
+
+::ng-deep {
+  .change-avatar {
+    .p-fileupload {
+      position: relative;
+    }
+
+    .upload-button {
+      z-index: 10;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 6px;
+      right: 0;
+      color: #fff;
+      font-size: 32px;
+      &:hover {
+        background: rgba(0, 0, 0, 0.176);
+      }
+    }
+    .p-fileupload-content {
+      padding: 0;
+      border: 0;
+    }
+    .p-fileupload-buttonbar {
+      padding: 0;
+      border: 0;
+    }
+  }
+}

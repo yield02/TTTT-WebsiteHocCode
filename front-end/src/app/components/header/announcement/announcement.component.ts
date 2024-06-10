@@ -5,7 +5,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ionNotificationsOutline } from '@ng-icons/ionicons';
-
+import { DialogModule } from 'primeng/dialog';
 @Component({
   selector: 'app-announcement',
   standalone: true,
@@ -14,6 +14,7 @@ import { ionNotificationsOutline } from '@ng-icons/ionicons';
     NgIconComponent,
     MatButtonModule,
     MatMenuModule,
+    DialogModule
   ],
   providers: [provideIcons({ ionNotificationsOutline })]
   ,
@@ -24,6 +25,9 @@ import { ionNotificationsOutline } from '@ng-icons/ionicons';
 export class AnnouncementComponent implements AfterViewInit {
   @ViewChild('notifyMenu') notifyMenu!: ElementRef<HTMLDivElement>;
   @ViewChild('notifyContainer') notifyContainer!: ElementRef<HTMLDivElement>;
+
+
+  mobileDialog: boolean = false;
 
   ngAfterViewInit(): void {
     this.notifyMenu.nativeElement.hidden = true;
@@ -40,6 +44,9 @@ export class AnnouncementComponent implements AfterViewInit {
     })
   }
 
+  showMobileDialog() {
+    this.mobileDialog = true;
+  }
   toggleNotifyMenu() {
     this.notifyMenu.nativeElement.hidden = !this.notifyMenu.nativeElement.hidden;
   }

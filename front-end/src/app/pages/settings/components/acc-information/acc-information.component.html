@@ -1,0 +1,138 @@
+<div class="information-container">
+  <h1 class="information-heading-text">Thông tin cá nhân</h1>
+  <div class="information-box">
+    <div class="change-avatar px-4 flex items-center">
+      <p-fileUpload
+        name="demo[]"
+        url="https://www.primefaces.org/cdn/api/upload.php"
+        accept="image/*"
+        maxFileSize="1000000"
+        (onUpload)="onBasicUploadAuto($event)"
+        [auto]="true"
+      >
+        <ng-template
+          pTemplate="header"
+          let-files
+          let-chooseCallback="chooseCallback"
+        >
+          <button
+            class="upload-button flex justify-center items-center"
+            (click)="choose($event, chooseCallback)"
+          >
+            <ng-icon name="ionCameraOutline"></ng-icon>
+          </button>
+        </ng-template>
+        <ng-template pTemplate="content"
+          ><p-avatar
+            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+            size="xlarge"
+            shape="circle"
+        /></ng-template>
+      </p-fileUpload>
+    </div>
+
+    <form [formGroup]="InformationForm" (ngSubmit)="onSubmit()">
+      <div class="information-item flex flex-wrap justify-start items-center">
+        <div class="flex-item md:basis-1/2 basis-full px-4 mb-3">
+          <label class="label">Họ và tên</label>
+          <p-inputGroup>
+            <input
+              type="text"
+              pInputText
+              placeholder="Họ và tên"
+              formControlName="fullname"
+            />
+            <p-inputGroupAddon>
+              <ng-icon name="ionPersonOutline"></ng-icon>
+            </p-inputGroupAddon>
+          </p-inputGroup>
+        </div>
+        <div class="flex-item md:basis-1/2 basis-full px-4 mb-3">
+          <label class="label">Email</label>
+          <p-inputGroup>
+            <input
+              type="email"
+              pInputText
+              placeholder="Email"
+              formControlName="email"
+            />
+            <p-inputGroupAddon>
+              <ng-icon name="ionMailOutline"></ng-icon>
+            </p-inputGroupAddon>
+          </p-inputGroup>
+        </div>
+        <div class="flex-item md:basis-1/2 basis-full px-4 mb-3">
+          <label class="label">Số điện thoại</label>
+          <p-inputGroup>
+            <input
+              type="text"
+              pInputText
+              placeholder="Số điện thoại"
+              formControlName="phone"
+            />
+            <p-inputGroupAddon>
+              <ng-icon name="heroDevicePhoneMobile"></ng-icon>
+            </p-inputGroupAddon>
+          </p-inputGroup>
+        </div>
+        <div class="flex-item md:basis-1/2 basis-full px-4 mb-3">
+          <label class="label">Ngày/Tháng/Năm sinh</label>
+          <p-inputGroup>
+            <input
+              type="text"
+              pInputText
+              placeholder="Ngày/Tháng/Năm sinh"
+              formControlName="birthday"
+            />
+            <p-inputGroupAddon>
+              <ng-icon name="heroCake"></ng-icon>
+            </p-inputGroupAddon>
+          </p-inputGroup>
+        </div>
+        <div class="flex-item basis-full px-4 mb-3">
+          <label class="label">Địa chỉ</label>
+          <p-inputGroup>
+            <input
+              type="text"
+              pInputText
+              placeholder="Địa chỉ"
+              formControlName="address"
+            />
+            <p-inputGroupAddon>
+              <ng-icon name="heroHome"></ng-icon>
+            </p-inputGroupAddon>
+          </p-inputGroup>
+        </div>
+      </div>
+      <div class="flex-item basis-1/2 px-4 mb-3 flex">
+        <div class="flex align-items-center mr-4">
+          <p-radioButton
+            name="gender"
+            value="male"
+            inputId="male"
+            formControlName="gender"
+          />
+          <label for="gender1" class="ml-2">Nam</label>
+        </div>
+
+        <div class="flex align-items-center">
+          <p-radioButton
+            name="gender"
+            value="female"
+            inputId="female"
+            formControlName="gender"
+          />
+          <label for="gender2" class="ml-2">Nữ</label>
+        </div>
+      </div>
+      <div class="flex justify-end items-center">
+        <p-button
+          label="Lưu thông tin"
+          (onClick)="onSubmit()"
+          [rounded]="true"
+          severity="info"
+        />
+      </div>
+    </form>
+  </div>
+</div>

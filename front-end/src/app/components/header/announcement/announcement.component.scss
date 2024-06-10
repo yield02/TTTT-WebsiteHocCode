@@ -65,3 +65,61 @@
     }
   }
 }
+
+::ng-deep {
+  .notify-dialog-mobile {
+    .p-dialog-content {
+      padding: 0;
+    }
+    .menu-notify {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      top: 48px;
+      right: 14px;
+      .notify-header {
+        padding: 16px 20px;
+        .notify-headingText {
+          font-size: 18px;
+          font-weight: 600;
+        }
+      }
+      .notify-scroll {
+        overflow-y: scroll;
+        max-height: 600px;
+        .scroll-item {
+          padding: 8px 16px;
+          cursor: pointer;
+          transition: all 0.15s ease;
+
+          &.new {
+            background: rgba(0, 0, 0, 0.1);
+          }
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.1);
+          }
+
+          .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 12px;
+          }
+          .content-box {
+            font-size: 14px;
+            .content {
+            }
+            .highlight {
+              font-weight: 600;
+            }
+            .time {
+              font-size: 12px;
+              opacity: 0.8;
+              font-style: italic;
+            }
+          }
+        }
+      }
+    }
+  }
+}
