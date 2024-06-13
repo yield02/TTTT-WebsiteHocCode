@@ -25,7 +25,7 @@ const routes: Routes = [
                 component: BlogComponent
             },
             {
-                path: 'courses',
+                path: 'course',
                 component: CourseComponent
             }
         ]

@@ -19,7 +19,7 @@ interface UploadEvent {
 }
 
 @Component({
-  selector: 'app-acc-information',
+  selector: 'setting-acc-information',
   standalone: true,
   imports: [
     CommonModule,

@@ -10,6 +10,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ionLockClosedOutline, ionPersonOutline } from '@ng-icons/ionicons';
 
+
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -22,6 +23,7 @@ import { ionLockClosedOutline, ionPersonOutline } from '@ng-icons/ionicons';
     InputTextModule,
     IconFieldModule,
     InputIconModule,
+
   ],
   providers: [provideIcons({
     ionPersonOutline, ionLockClosedOutline,

@@ -1,0 +1,118 @@
+<div class="secure-container">
+  <p-toast />
+  <h1 class="secure-heading-text">Bảo mật</h1>
+  <div class="secure-box">
+    <div class="secure-item">
+      <h4 class="title">Email</h4>
+      <div class="flex justify-between items-center">
+        <span class="content">nhuongb2014682&#64;gmail.com</span>
+        <button class="verify-btn" (click)="showVerifiedDialog()">
+          xác thực
+        </button>
+      </div>
+      <p-dialog
+        header="Xác thực Email"
+        [modal]="true"
+        [(visible)]="isVerifiedEmail"
+        [style]="{ width: '25rem' }"
+      >
+        <span class="p-text-secondary block mb-5 text-center"
+          >Mã xác thực đã được gửi qua email của bạn</span
+        >
+        <div class="flex justify-center align-items-center gap-3 mb-5">
+          <input placeholder="Nhập mã xác thực" type="text" pInputText />
+        </div>
+        <div class="retry mb-5">
+          <span class="p-text-secondary"
+            >Bạn không nhận được mã xác thực?
+          </span>
+          <button class="retry-btn">gửi lại mã</button>
+        </div>
+
+        <div class="flex justify-center gap-2">
+          <p-button
+            size="small"
+            label="Hủy"
+            severity="secondary"
+            (click)="isVerifiedEmail = false"
+          />
+          <p-button
+            size="small"
+            label="Xác Thực"
+            (click)="submitVerifiedEmail()"
+          />
+        </div>
+      </p-dialog>
+    </div>
+    <div class="secure-item">
+      <h4 class="title">Mật khẩu</h4>
+      <div class="flex justify-between items-center">
+        <span class="content">***************</span>
+        <button class="verify-btn" (click)="showChangePassword()">
+          đổi mật khẩu
+        </button>
+      </div>
+      <p-dialog
+        class="changePassword"
+        header="Đổi mật khẩu"
+        [modal]="true"
+        [(visible)]="isChangePassword"
+        [style]="{ width: '50rem' }"
+      >
+        <form [formGroup]="formChangePassword">
+          <div
+            class="flex flex-col justify-center align-items-center gap-5 mb-5"
+          >
+            <p-password
+              promptLabel="Độ an toàn"
+              placeholder="Mật khẩu cũ"
+              formControlName="oldPassword"
+              [toggleMask]="true"
+              weakLabel="Quá yếu"
+              mediumLabel="Mạnh"
+              strongLabel="Rất mạnh"
+            >
+            </p-password>
+            <p-password
+              promptLabel="Độ an toàn"
+              placeholder="Mật khẩu mới"
+              formControlName="newPassword"
+              [toggleMask]="true"
+              weakLabel="Quá yếu"
+              mediumLabel="Mạnh"
+              strongLabel="Rất mạnh"
+            >
+            </p-password>
+            <p-password
+              promptLabel="Độ an toàn"
+              placeholder="Mật khẩu xác nhận"
+              formControlName="reNewPassword"
+              [toggleMask]="true"
+              weakLabel="Quá yếu"
+              mediumLabel="Mạnh"
+              strongLabel="Rất mạnh"
+            >
+            </p-password>
+          </div>
+        </form>
+
+        <div class="flex justify-center gap-2">
+          <p-button
+            size="small"
+            label="Hủy"
+            severity="secondary"
+            (click)="isChangePassword = false"
+          />
+          <p-button size="small" label="Lưu" (click)="submitVerifiedEmail()" />
+        </div>
+      </p-dialog>
+    </div>
+  </div>
+</div>
+
+<ng-template #invalid>
+  <ng-icon class="invalid-icon" name="ionCloseOutline"></ng-icon>
+</ng-template>
+<ng-template #valid>
+  <ng-icon class="valid-icon" name="ionCheckmark"></ng-icon>
+</ng-template>

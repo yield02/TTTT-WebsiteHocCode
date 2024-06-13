@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { RouterLink } from '@angular/router';
 import { NgIconComponent } from '@ng-icons/core';
 
 
@@ -12,7 +13,8 @@ import { NgIconComponent } from '@ng-icons/core';
     CommonModule,
     MatMenuModule,
     MatButtonModule,
-    NgIconComponent
+    NgIconComponent,
+    RouterLink
   ],
   templateUrl: './avatar-menu.component.html',
   styleUrl: './avatar-menu.component.scss',

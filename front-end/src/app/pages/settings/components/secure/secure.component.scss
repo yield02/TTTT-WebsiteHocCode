@@ -1,0 +1,60 @@
+.secure-container {
+  padding: 64px;
+  .secure-heading-text {
+    font-size: 2.8rem;
+    margin-bottom: 24px;
+    font-weight: 700;
+  }
+  .secure-box {
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
+    .label {
+      font-size: 14px;
+      font-style: italic;
+      margin-left: 4px;
+    }
+    .secure-item {
+      max-width: 800px;
+
+      & + .secure-item {
+        margin-top: 24px;
+      }
+
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .content {
+      }
+      .verify-btn {
+        text-decoration: underline;
+        color: blue;
+        &:hover {
+          opacity: 0.4;
+        }
+      }
+    }
+  }
+}
+
+.invalid-icon,
+.valid-icon {
+  margin-left: 12px;
+}
+
+::ng-deep {
+  .verifyEmail {
+    .verifyEmail-input {
+      font-size: 1.6rem;
+    }
+  }
+  .changePassword {
+    .p-inputwrapper {
+      width: 100%;
+    }
+    .p-password-input {
+      width: 100%;
+    }
+  }
+}
