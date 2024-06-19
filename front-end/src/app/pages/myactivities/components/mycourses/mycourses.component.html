@@ -1,0 +1,48 @@
+<div class="mycourses-container bg-grey">
+  <div
+    class="dash-board grid md:grid-cols-4 max-md:grid-cols-2 gap-4 bg-white p-4"
+  >
+    <mycourses-board-item [type]="'primary'"></mycourses-board-item>
+    <mycourses-board-item
+      [type]="'success'"
+      [title]="'Số người đăng ký'"
+    ></mycourses-board-item>
+    <mycourses-board-item [type]="'danger'"></mycourses-board-item>
+    <mycourses-board-item
+      [type]="'warning'"
+      [title]="'Đánh giá trung bình'"
+    ></mycourses-board-item>
+  </div>
+  <div class="courses-list mt-4">
+    <div class="header flex justify-between mb-2">
+      <h1 class="courses-heading">Danh sách khóa học</h1>
+      <div class="">
+        <input
+          class="searchInput"
+          type="text"
+          placeholder="Nhập tên khóa học..."
+          pInputText
+          [(ngModel)]="searchValue"
+        />
+      </div>
+    </div>
+    <div class="courses-list-container bg-white">
+      <p-dataView
+        class="courses-data-view"
+        #dv
+        [value]="courses"
+        [rows]="5"
+        [paginator]="true"
+      >
+        <ng-template pTemplate="list" let-courses>
+          <ng-container *ngFor="let course of courses">
+            <mycourses-course-item
+              class="course-item"
+              [data]="course"
+            ></mycourses-course-item>
+          </ng-container>
+        </ng-template>
+      </p-dataView>
+    </div>
+  </div>
+</div>

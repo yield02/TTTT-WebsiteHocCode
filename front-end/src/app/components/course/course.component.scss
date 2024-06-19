@@ -36,32 +36,34 @@
     }
   }
 }
-::ng-deep .p-card-content {
-  padding: 0;
-}
 
-::ng-deep .p-card-header {
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  .enroll {
+::ng-deep {
+  .p-card-content {
+    padding: 0;
+  }
+  .p-card-header {
+    position: relative;
+    overflow: hidden;
     z-index: 1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 8px;
-    display: none;
-    position: absolute;
-    background: rgba(0, 0, 0, 0.4);
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    animation: show 0.35s ease-in-out;
-    .button {
-      button {
-        padding: 4px 16px;
+    .enroll {
+      z-index: 1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      display: none;
+      position: absolute;
+      background: rgba(0, 0, 0, 0.4);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      animation: show 0.35s ease-in-out;
+      .button {
+        button {
+          padding: 4px 16px;
+        }
       }
     }
   }

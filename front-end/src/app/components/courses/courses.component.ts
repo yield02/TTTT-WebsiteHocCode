@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PaginatorModule } from 'primeng/paginator';
-import { CourseComponent } from './course/course.component';
+import { CourseComponent } from '../course/course.component';
 
 interface PageEvent {
   first: number;

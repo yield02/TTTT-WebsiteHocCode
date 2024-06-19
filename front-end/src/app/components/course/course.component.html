@@ -1,0 +1,73 @@
+<div class="col-item">
+  <ng-container *ngIf="type == 'learning'" #learning>
+    <p-card class="card">
+      <ng-template pTemplate="header">
+        <img
+          class="card-img"
+          alt="Card"
+          src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+        />
+        <div class="enroll flex justify-center items-center">
+          <a routerLink="course">
+            <p-button class="button" label="Tiếp tục học" severity="info" />
+          </a>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <div class="content-card">
+          <h4 class="card-name">100 ngày với Angular</h4>
+          <div class="detail-number">
+            <p-progressBar
+              class="learning-progress"
+              [value]="40"
+              [style]="{ height: '6px' }"
+            >
+              <ng-template pTemplate="content" let-value>
+                <span></span>
+              </ng-template>
+            </p-progressBar>
+          </div>
+        </div>
+      </ng-template>
+    </p-card>
+  </ng-container>
+
+  <ng-container *ngIf="type == 'introduce'" #introduce>
+    <p-card class="card">
+      <ng-template pTemplate="header">
+        <img
+          class="card-img"
+          alt="Card"
+          src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+        />
+        <div class="enroll flex justify-center items-center">
+          <a routerLink="course">
+            <p-button class="button" label="Xem chi tiết" severity="info" />
+          </a>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <div class="content-card">
+          <h4 class="card-name">100 ngày với Angular</h4>
+          <div class="detail-number flex justify-start flex-wrap">
+            <span class="flex justify-center items-center"
+              ><ng-icon class="detail-icon" name="heroAcademicCap"></ng-icon>
+              200</span
+            >
+            <span class="flex justify-center items-center"
+              ><ng-icon class="detail-icon" name="bootstrapHeart"></ng-icon>
+              30</span
+            >
+            <span class="flex justify-center items-center"
+              ><ng-icon
+                class="detail-icon"
+                name="bootstrapHeartbreak"
+              ></ng-icon>
+              2320</span
+            >
+          </div>
+        </div>
+      </ng-template>
+    </p-card>
+  </ng-container>
+</div>

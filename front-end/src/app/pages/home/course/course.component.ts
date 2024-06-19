@@ -6,17 +6,22 @@ import { ionDocumentTextOutline } from '@ng-icons/ionicons';
 import { TreeNode } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { TreeModule } from 'primeng/tree';
+import { FormsModule } from '@angular/forms';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-course',
   standalone: true,
-  imports: [CommonModule, TreeModule, NgIconComponent, ButtonModule],
+  imports: [CommonModule, TreeModule, NgIconComponent, ButtonModule, FormsModule, RatingModule],
   providers: [provideIcons({ ionDocumentTextOutline, bootstrapPersonVideo })],
   templateUrl: './course.component.html',
   styleUrl: './course.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseComponent implements OnInit {
+
+  rating: number = 4.5;
+
   chapters: TreeNode[];
 
 

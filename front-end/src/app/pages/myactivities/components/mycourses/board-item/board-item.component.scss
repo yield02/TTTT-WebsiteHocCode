@@ -1,0 +1,126 @@
+.board-item {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  .board-quantity {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .board-title {
+    font-size: 18px;
+    text-shadow: #000 1px 0 2px;
+  }
+  &.primary {
+    background: linear-gradient(
+      20deg,
+      hsla(217, 100%, 50%, 1) 0%,
+      hsla(186, 100%, 69%, 1) 100%
+    );
+    background: -moz-linear-gradient(
+      20deg,
+      hsla(217, 100%, 50%, 1) 0%,
+      hsla(186, 100%, 69%, 1) 100%
+    );
+
+    background: -webkit-linear-gradient(
+      20deg,
+      hsla(217, 100%, 50%, 1) 0%,
+      hsla(186, 100%, 69%, 1) 100%
+    );
+
+    .board-quantity {
+      color: #fff;
+    }
+    .board-title {
+      color: #fff;
+    }
+  }
+  &.success {
+    background: hsla(145, 84%, 73%, 1);
+
+    background: linear-gradient(
+      120deg,
+      hsla(145, 84%, 73%, 1) 0%,
+      hsla(150, 61%, 48%, 1) 100%
+    );
+
+    background: -moz-linear-gradient(
+      120deg,
+      hsla(145, 84%, 73%, 1) 0%,
+      hsla(150, 61%, 48%, 1) 100%
+    );
+
+    background: -webkit-linear-gradient(
+      120deg,
+      hsla(145, 84%, 73%, 1) 0%,
+      hsla(150, 61%, 48%, 1) 100%
+    );
+
+    .board-quantity {
+      color: #fff;
+    }
+    .board-title {
+      color: #fff;
+    }
+  }
+  &.danger {
+    background: linear-gradient(
+      30deg,
+      hsla(0, 100%, 67%, 1) 0%,
+      hsla(0, 100%, 89%, 1) 100%
+    );
+
+    background: -moz-linear-gradient(
+      30deg,
+      hsla(0, 100%, 67%, 1) 0%,
+      hsla(0, 100%, 89%, 1) 100%
+    );
+
+    background: -webkit-linear-gradient(
+      30deg,
+      hsla(0, 100%, 67%, 1) 0%,
+      hsla(0, 100%, 89%, 1) 100%
+    );
+
+    .board-quantity {
+      color: #fff;
+    }
+    .board-title {
+      color: #fff;
+    }
+  }
+  .board-quantity {
+    color: #fff;
+  }
+  .board-title {
+    color: #fff;
+  }
+  &.warning {
+    background: hsla(40, 94%, 74%, 1);
+
+    background: linear-gradient(
+      30deg,
+      hsla(40, 94%, 74%, 1) 0%,
+      hsla(60, 89%, 72%, 1) 100%
+    );
+
+    background: -moz-linear-gradient(
+      30deg,
+      hsla(40, 94%, 74%, 1) 0%,
+      hsla(60, 89%, 72%, 1) 100%
+    );
+
+    background: -webkit-linear-gradient(
+      30deg,
+      hsla(40, 94%, 74%, 1) 0%,
+      hsla(60, 89%, 72%, 1) 100%
+    );
+
+    .board-quantity {
+      color: #fff;
+    }
+    .board-title {
+      color: #fff;
+    }
+  }
+}

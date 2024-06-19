@@ -19,6 +19,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule)
   },
   {
+    path: 'myactivities',
+    loadChildren: () => import('./pages/myactivities/myactivities.module').then(m => m.MyActivitiesModule)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'

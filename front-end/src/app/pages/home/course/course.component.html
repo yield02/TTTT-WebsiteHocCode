@@ -50,6 +50,15 @@
       class="image-introduce"
       src="https://bkhost.vn/wp-content/uploads/2022/05/angular-JS-logo.jpg"
     />
+    <div class="flex justify-center flex-col items-center m-4">
+      <span class="text-gray rating-text">Đánh giá</span>
+      <p-rating
+        class="rating"
+        [(ngModel)]="rating"
+        [readonly]="true"
+        [cancel]="false"
+      />
+    </div>
     <div class="flex justify-center mt-10">
       <p-button
         label="Bắt đầu học"

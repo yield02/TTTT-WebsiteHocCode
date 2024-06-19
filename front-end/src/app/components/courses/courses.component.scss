@@ -11,3 +11,11 @@
     margin-top: 18px;
   }
 }
+
+::ng-deep {
+  .paginationItem {
+    .p-paginator {
+      background: transparent;
+    }
+  }
+}

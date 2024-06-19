@@ -1,0 +1,62 @@
+<div class="sidebar-container flex">
+  <div class="sidebar lg:basis-1/6 max-md:hidden py-4">
+    <div
+      class="menu-list sticky px-2 max-lg:flex justify-center flex-col items-center"
+    >
+      <activities-sidebar-item
+        class=""
+        title="Khóa học đang học"
+        naviagtionLink="courses"
+      >
+        <ng-icon class="sidebar-icon" name="heroCodeBracketSquare"></ng-icon>
+      </activities-sidebar-item>
+      <activities-sidebar-item
+        class=""
+        title="Khóa học của tôi"
+        naviagtionLink="mycourses"
+      >
+        <ng-icon class="sidebar-icon" name="heroAcademicCap"></ng-icon>
+      </activities-sidebar-item>
+
+      <activities-sidebar-item
+        class=""
+        title="Bài viết của tôi"
+        naviagtionLink="mypost"
+      >
+        <ng-icon class="sidebar-icon" name="ionNewspaperOutline"></ng-icon>
+      </activities-sidebar-item>
+    </div>
+  </div>
+  <p-sidebar class="mobile-sidebar" [(visible)]="sidebarVisible">
+    <h3 class="mobile-sidebar-title">Cài đặt</h3>
+    <div class="menu-list">
+      <activities-sidebar-item
+        class=""
+        title="Khóa học đang học"
+        naviagtionLink="courses"
+        [isMobile]="true"
+      >
+        <ng-icon class="sidebar-icon" name="heroCodeBracketSquare"></ng-icon>
+      </activities-sidebar-item>
+      <activities-sidebar-item
+        class=""
+        title="Khóa học của tôi"
+        naviagtionLink="mycourses"
+        [isMobile]="true"
+      >
+        <ng-icon class="sidebar-icon" name="heroAcademicCap"></ng-icon>
+      </activities-sidebar-item>
+      <activities-sidebar-item
+        class=""
+        title="Bài viết của tôi"
+        [isMobile]="true"
+        naviagtionLink="mypost"
+      >
+        <ng-icon class="sidebar-icon" name="ionNewspaperOutline"></ng-icon>
+      </activities-sidebar-item>
+    </div>
+  </p-sidebar>
+  <div class="content grow lg:basis-5/6">
+    <ng-content #content></ng-content>
+  </div>
+</div>
