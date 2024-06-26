@@ -24,8 +24,11 @@
     "@ng-icons/heroicons": "^27.4.0",
     "@ng-icons/ionicons": "^27.4.0",
     "@ngrx/store": "^17.2.0",
+    "@tinymce/tinymce-angular": "^8.0.0",
+    "primeicons": "^7.0.0",
     "primeng": "^17.17.0",
     "rxjs": "~7.8.0",
+    "tinymce": "^7.2.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },

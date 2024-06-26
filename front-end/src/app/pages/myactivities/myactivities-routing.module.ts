@@ -5,6 +5,7 @@ import { CoursesComponent } from "./components/courses/courses.component";
 import { MycoursesComponent } from "./components/mycourses/mycourses.component";
 import { MypostComponent } from "./components/mypost/mypost.component";
 import { CourseManagerComponent } from "./components/mycourses/courseManager/courseManager.component";
+import { CourseEditComponent } from "./components/mycourses/courseEdit/courseEdit.component";
 
 
 
@@ -23,6 +24,10 @@ const routes: Routes = [
                     {
                         path: 'manager/:courseid',
                         component: CourseManagerComponent
+                    },
+                    {
+                        path: 'edit/:courseid',
+                        component: CourseEditComponent
                     },
                     {
                         path: '',

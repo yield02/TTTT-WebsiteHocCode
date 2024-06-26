@@ -5,6 +5,7 @@ import { CourseItemComponent } from './course-item/course-item.component';
 import { DataViewModule } from 'primeng/dataview';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'myacc-mycourses',
@@ -15,7 +16,8 @@ import { InputTextModule } from 'primeng/inputtext';
     CourseItemComponent,
     DataViewModule,
     FormsModule,
-    InputTextModule
+    InputTextModule,
+    ButtonModule
   ],
   templateUrl: `./mycourses.component.html`,
   styleUrl: './mycourses.component.scss',

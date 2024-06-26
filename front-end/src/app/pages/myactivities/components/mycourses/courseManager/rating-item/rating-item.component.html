@@ -1,0 +1,30 @@
+<div class="rating-container flex py-4">
+  <div>
+    <p-avatar
+      label="V"
+      styleClass="mr-2"
+      size="large"
+      [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
+      shape="circle"
+    />
+  </div>
+  <div>
+    <div class="flex items-center justify-start gap-4">
+      <h4 class="name">Thanh Nhường</h4>
+      <p-rating
+        class="rating-star"
+        [(ngModel)]="rating"
+        [readonly]="true"
+        [cancel]="false"
+      />
+    </div>
+    <div class="content">
+      Bài học hay lắm mong anh ra thêm nhiều bài học bổ ích nữa ạ At vero eos et
+      accusamus et iusto odio dignissimos... At vero eos et accusamus et iusto
+      odio dignissimos...
+    </div>
+    <div class="more">
+      <span class="time-stamp">24/06/2024</span>
+    </div>
+  </div>
+</div>

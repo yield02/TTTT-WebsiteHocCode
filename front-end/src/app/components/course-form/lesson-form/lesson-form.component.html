@@ -1,0 +1,60 @@
+<div class="p-2">
+  <div class="content mb-4">
+    <form class="flex flex-col gap-4" [formGroup]="form">
+      <div class="flex flex-col gap-2">
+        <label for="title">Tên bài học</label>
+        <input
+          pInputText
+          formControlName="title"
+          id="title"
+          aria-describedby="username-help"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="videoUrl">Video URL</label>
+        <input
+          pInputText
+          formControlName="video"
+          id="videoUrl"
+          aria-describedby="username-help"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label>Chương</label>
+        <p-dropdown
+          class="w-full"
+          containerStyleClass="w-full"
+          formControlName="chapter"
+          optionLabel="name"
+          optionValue="chapterId"
+          [options]="chapterList"
+          placeholder="Chọn chương"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label>Nội dung bài học</label>
+        <editor
+          [init]="content"
+          outputFormat="html"
+          [formControlName]="'content'"
+          apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+        ></editor>
+      </div>
+    </form>
+  </div>
+  <div class="footer flex gap-4 justify-end items-center">
+    <p-button
+      label="Lưu"
+      (onClick)="submit()"
+      [size]="'small'"
+      [raised]="true"
+    />
+    <p-button
+      label="Hủy"
+      [outlined]="true"
+      [size]="'small'"
+      severity="secondary"
+      (onClick)="closeDialog({})"
+    ></p-button>
+  </div>
+</div>

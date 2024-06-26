@@ -1,0 +1,13 @@
+<div class="comment-list">
+  <app-comment></app-comment>
+  <app-comment></app-comment>
+  <app-comment></app-comment>
+  <app-comment></app-comment>
+  <app-comment></app-comment>
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="paginator.pageIndex"
+    [rows]="paginator.pageSize"
+    [totalRecords]="paginator.totalRecord"
+  />
+</div>

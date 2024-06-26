@@ -1,0 +1,17 @@
+<div class="chapter-form p-4">
+  <form class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <label>Tên chương:</label>
+      <input pInputText />
+    </div>
+    <div class="flex gap-4 justify-end">
+      <p-button label="Lưu" severity="primary"></p-button>
+      <p-button
+        [outlined]="true"
+        label="Hủy"
+        [severity]="'secondary'"
+        (onClick)="closeForm()"
+      ></p-button>
+    </div>
+  </form>
+</div>

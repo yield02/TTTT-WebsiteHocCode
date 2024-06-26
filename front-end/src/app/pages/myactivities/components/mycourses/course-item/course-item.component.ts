@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroStarSolid } from '@ng-icons/heroicons/solid';
 import { Button, ButtonModule } from 'primeng/button';
@@ -10,7 +11,8 @@ import { Button, ButtonModule } from 'primeng/button';
   imports: [
     CommonModule,
     NgIconComponent,
-    ButtonModule
+    ButtonModule,
+    RouterLink
   ],
   providers: [provideIcons({
     heroStarSolid

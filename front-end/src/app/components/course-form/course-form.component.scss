@@ -1,0 +1,21 @@
+.course-form {
+  .detail {
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+}
+
+::ng-deep {
+  .chapter-list {
+    .p-orderlist-controls {
+      display: none;
+    }
+  }
+  .lesson-list {
+    .p-orderlist-controls {
+      display: none;
+    }
+  }
+}

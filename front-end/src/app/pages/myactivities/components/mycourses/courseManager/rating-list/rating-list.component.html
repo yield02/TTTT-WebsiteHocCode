@@ -1,0 +1,18 @@
+<div class="rating-list">
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <course-manager-rating-item></course-manager-rating-item>
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="paginator.pageIndex"
+    [rows]="paginator.pageSize"
+    [totalRecords]="paginator.totalRecord"
+  />
+</div>

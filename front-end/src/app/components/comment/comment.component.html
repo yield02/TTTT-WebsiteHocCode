@@ -1,0 +1,62 @@
+<div class="comment-container flex flex-col">
+  <div class="flex">
+    <div class="flex items-start">
+      <p-avatar
+        label="V"
+        styleClass="mr-2"
+        size="large"
+        [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
+        shape="circle"
+      />
+    </div>
+    <div class="body">
+      <div class="head flex items-center gap-4">
+        <h1 class="name">Thanh Nhường</h1>
+        -
+        <a class="course-name text-gray-dark underline">Cài đặt Angular</a>
+      </div>
+      <div class="content">
+        Bài học hay lắm mong anh ra thêm nhiều bài học bổ ích nữa ạ At vero eos
+        et accusamus et iusto odio dignissimos... At vero eos et accusamus et
+        iusto odio dignissimos...
+      </div>
+      <div class="actions">
+        <button class="action-btn active">Thích</button>
+        <button class="action-btn" (click)="toggleIsReply()">Trả lời</button>
+        <span class="time">3 giờ trước</span>
+      </div>
+    </div>
+    <div class="more flex items-center sm:p-8 max-sm:hidden">
+      <!-- <button class="more-btn text-gray-dark">
+        <ng-icon name="ionEllipsisHorizontalOutline"></ng-icon>
+      </button> -->
+      <p-speedDial
+        className="more-action  max-sm:hidden"
+        [model]="items"
+        type="circle"
+        transitionDelay="80"
+        showIcon="pi pi-ellipsis-h"
+        hideIcon="pi pi-times"
+        buttonClassName="p-button-outlined"
+      />
+    </div>
+  </div>
+  <ng-template [ngIf]="isReply">
+    <div class="rely-container">
+      <div class="wapper flex">
+        <textarea
+          placeholder="Nhập nội dung trả lời"
+          class="text-input grow"
+          pInputTextarea
+          [(ngModel)]="replyValue"
+        >
+        </textarea>
+        <div class="flex justify-center items-end">
+          <button class="send-btn">
+            <ng-icon name="ionSendOutline"></ng-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
