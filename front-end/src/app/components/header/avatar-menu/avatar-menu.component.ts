@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent } from '@ng-icons/core';
+import { AuthService } from '../../../services/auth.service';
 
 
 @Component({
@@ -20,4 +21,12 @@ import { NgIconComponent } from '@ng-icons/core';
   styleUrl: './avatar-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AvatarMenuComponent { }
+export class AvatarMenuComponent {
+  constructor(private authService: AuthService) {
+
+  }
+
+  logOut(): void {
+    this.authService.logOut().subscribe();
+  }
+}

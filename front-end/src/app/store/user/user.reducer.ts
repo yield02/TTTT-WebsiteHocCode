@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { increment, decrement, reset } from './counter.actions';
+import { Update, Delete } from './user.actions';
 import { User } from '../../models/User';
 
 export const initialState: User = {
@@ -15,9 +15,13 @@ export const initialState: User = {
     status: {},
 }
 
-export const counterReducer = createReducer(
+export const userReducer = createReducer(
     initialState,
-    // on(increment, (state) => ({ count: state.count + 1 })),
-    // on(decrement, (state) => ({ count: state.count - 1 })),
-    // on(reset, (state) => ({ count: 0 }))
+    on(Update, (state, { updateValue }) => {
+        console.log(updateValue);
+        return { ...state, ...updateValue };
+    }),
+    on(Delete, (state) => {
+        return initialState;
+    }),
 );

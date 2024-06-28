@@ -8,6 +8,7 @@
     </div>
     <div class="max-md:hidden">
       <img
+        routerLink="/home"
         class="logo"
         src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Code.svg/800px-Code.svg.png"
       />
@@ -17,10 +18,15 @@
     </div>
     <div class="flex justify-between items-center">
       <!-- <button class="btn-signin" mat-button>Đăng nhập</button> -->
-      <!-- <app-login #login [toSignup]="toSignup.bind(this)"></app-login> -->
-      <!-- <app-signup #signup [toLogin]="toLogin.bind(this)"></app-signup> -->
-      <app-announcement class="announce"></app-announcement>
-      <app-avatar-menu></app-avatar-menu>
+      <ng-template [ngIf]="$isAuth | async" [ngIfElse]="loginBtn">
+        <app-announcement class="announce"></app-announcement>
+        <app-avatar-menu></app-avatar-menu>
+      </ng-template>
+
+      <ng-template #loginBtn>
+        <app-login #login [toSignup]="toSignup.bind(this)"></app-login>
+        <app-signup #signup [toLogin]="toLogin.bind(this)"></app-signup>
+      </ng-template>
     </div>
   </div>
 </div>

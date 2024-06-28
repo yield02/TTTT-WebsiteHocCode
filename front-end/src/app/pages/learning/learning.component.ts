@@ -5,6 +5,7 @@ import { LessonComponent } from './components/lesson/lesson.component';
 import { ChapterlistComponent } from './components/chapterlist/chapterlist.component';
 import { SidebarModule } from 'primeng/sidebar';
 import { TreeNode } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-learning',

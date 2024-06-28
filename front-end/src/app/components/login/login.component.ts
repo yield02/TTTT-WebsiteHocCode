@@ -8,6 +8,16 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ionLockClosedOutline, ionLogoFacebook, ionLogoGithub, ionLogoGoogle, ionPersonOutline } from '@ng-icons/ionicons';
+import { AuthService } from '../../services/auth.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { CookieService } from 'ngx-cookie-service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import { User } from '../../models/User';
+import { Update } from '../../store/user/user.actions';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -20,10 +30,12 @@ import { ionLockClosedOutline, ionLogoFacebook, ionLogoGithub, ionLogoGoogle, io
     InputTextModule,
     IconFieldModule,
     InputIconModule,
+    ToastModule,
+
   ],
   providers: [provideIcons({
     ionPersonOutline, ionLockClosedOutline, ionLogoFacebook, ionLogoGoogle, ionLogoGithub
-  })],
+  }), MessageService, CookieService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,10 +43,11 @@ import { ionLockClosedOutline, ionLogoFacebook, ionLogoGithub, ionLogoGoogle, io
 export class LoginComponent implements OnInit {
   @Input({ required: true }) toSignup!: Function;
 
+
   visible: boolean = false;
   signInForm: FormGroup<{ username: FormControl, password: FormControl }>;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private messageService: MessageService, private cookieService: CookieService, private store: Store<User>) {
     this.signInForm = this.fb.group({
       username: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
       password: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
@@ -45,7 +58,14 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.signInForm);
+    this.authService.login(this.signInForm.value as { username: string, password: string }).subscribe(
+      (res) => {
+        this.cookieService.set('token', res.token, 1);
+        this.store.dispatch(Update({ updateValue: res.user }));
+        this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đăng nhập thành công' });
+        this.visible = false;
+      }
+    );
 
   }
 

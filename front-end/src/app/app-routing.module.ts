@@ -1,26 +1,37 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { loginGuardGuard } from './guard/LoginGuard.guard';
+import { MessageService } from 'primeng/api';
+
+
+
+
 
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
-  },
-  {
-    path: 'learning',
-    loadChildren: () => import('./pages/learning/learning.module').then(m => m.LearningModule)
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule),
   },
   {
     path: 'forum',
     loadChildren: () => import('./pages/forum/forum.module').then(m => m.ForumModule)
   },
   {
+    path: 'learning',
+    loadChildren: () => import('./pages/learning/learning.module').then(m => m.LearningModule),
+    canMatch: [loginGuardGuard],
+
+  },
+  {
     path: 'settings',
-    loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule)
+    loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule),
+    canMatch: [loginGuardGuard],
+
   },
   {
     path: 'myactivities',
-    loadChildren: () => import('./pages/myactivities/myactivities.module').then(m => m.MyActivitiesModule)
+    loadChildren: () => import('./pages/myactivities/myactivities.module').then(m => m.MyActivitiesModule),
+    canMatch: [loginGuardGuard],
   },
   {
     path: '',
@@ -31,6 +42,11 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [MessageService]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+  constructor() {
+
+  }
+}

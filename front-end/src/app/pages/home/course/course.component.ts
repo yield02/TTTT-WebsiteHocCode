@@ -8,11 +8,12 @@ import { ButtonModule } from 'primeng/button';
 import { TreeModule } from 'primeng/tree';
 import { FormsModule } from '@angular/forms';
 import { RatingModule } from 'primeng/rating';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-course',
   standalone: true,
-  imports: [CommonModule, TreeModule, NgIconComponent, ButtonModule, FormsModule, RatingModule],
+  imports: [CommonModule, TreeModule, NgIconComponent, ButtonModule, FormsModule, RatingModule, RouterLink],
   providers: [provideIcons({ ionDocumentTextOutline, bootstrapPersonVideo })],
   templateUrl: './course.component.html',
   styleUrl: './course.component.scss',

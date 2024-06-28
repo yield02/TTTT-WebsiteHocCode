@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, isDevMode } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, switchMap, tap, timer } from 'rxjs';
 
 import { increment, decrement, reset } from './store/counter/counter.actions';
 import { map } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Học Lập Trình Trực Tuyến';
   // count$: Observable<{ 'count': number }>;
   // countValue$: Observable<number>;
@@ -34,5 +35,14 @@ export class AppComponent {
   //   this.store.dispatch(reset());
   // }
 
+
+  ngOnInit() {
+    if (isDevMode()) {
+      console.log('Dev mode');
+    }
+    else {
+      console.log('App mode');
+    }
+  }
 
 }

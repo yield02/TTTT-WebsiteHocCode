@@ -10,7 +10,7 @@ import { LearningRoutingModule } from "./learning-routing.module";
     ],
     imports: [
         CommonModule,
-        LearningRoutingModule
+        LearningRoutingModule,
     ],
     exports: [],
     providers: [],
