@@ -24,7 +24,6 @@
               <ng-icon class="input-icon" name="ionPersonOutline"></ng-icon>
             </p-inputIcon>
             <input
-              class="input"
               type="text"
               pInputText
               id="username"
@@ -44,11 +43,9 @@
               <ng-icon class="input-icon" name="ionLockClosedOutline"></ng-icon>
             </p-inputIcon>
             <input
-              class="input"
               type="password"
               pInputText
               id="password"
-              aria-describedby="password-help"
               formControlName="password"
               placeholder="Mật khẩu"
             />
@@ -57,6 +54,12 @@
           Enter your username to reset your password.
         </small> -->
         </div>
+
+        <ng-template [ngIf]="error" #name>
+          <div class="text-center my-4">
+            <app-error-message-form [message]="error"></app-error-message-form>
+          </div>
+        </ng-template>
 
         <div class="flex justify-evenly items-center mt-4">
           <button class="" mat-flat-button color="primary">Đăng nhập</button>

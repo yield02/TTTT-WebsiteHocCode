@@ -4,7 +4,7 @@
     (click)="handleOnClick()"
   >
     <ng-container *ngTemplateOutlet="Icon"></ng-container>
-    <h4 [class]="isMobile ? 'title' : 'title max-lg:hidden'">{{ title }}</h4>
+    <h4 [class]="isMobile ? 'title' : 'title max-lg:hidden '">{{ title }}</h4>
   </div>
 </ng-container>
 
@@ -15,10 +15,10 @@
     routerLinkActive="active"
   >
     <ng-container *ngTemplateOutlet="Icon"></ng-container>
-    <h4 [class]="isMobile ? 'title' : 'title max-lg:hidden'">{{ title }}</h4>
+    <h4 [class]="isMobile ? 'title' : 'title max-lg:hidden '">{{ title }}</h4>
   </div>
 </ng-template>
 
 <ng-template #Icon>
-  <ng-content select=".sidebar-icon"></ng-content>
+  <ng-content class="" select=".sidebar-icon"></ng-content>
 </ng-template>

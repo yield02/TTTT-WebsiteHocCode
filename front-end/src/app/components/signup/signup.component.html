@@ -11,63 +11,58 @@
         [formGroup]="signInForm"
         (ngSubmit)="signInForm.valid && onSubmit()"
       >
-        <div class="flex flex-col gap-2 mt-4">
-          <p-iconField>
-            <p-inputIcon>
-              <ng-icon class="input-icon" name="ionPersonOutline"></ng-icon>
-            </p-inputIcon>
-            <input
-              class="input"
-              pInputText
-              id="username"
-              aria-describedby="username-help"
-              formControlName="username"
-              placeholder="Tài khoản"
-            />
-          </p-iconField>
-          <!-- <small id="username-help">
-            Enter your username to reset your password.
-          </small> -->
+        <div class="flex flex-col gap-2 mt-4 w-full">
+          <input
+            pInputText
+            id="username"
+            aria-describedby="username-help"
+            formControlName="username"
+            placeholder="Tài khoản"
+          />
         </div>
 
         <div class="flex flex-col gap-2 mt-4">
-          <p-iconField>
-            <p-inputIcon>
-              <ng-icon class="input-icon" name="ionLockClosedOutline"></ng-icon>
-            </p-inputIcon>
-            <input
-              class="input"
-              type="password"
-              pInputText
-              id="password"
-              aria-describedby="password-help"
-              formControlName="password"
-              placeholder="Mật khẩu"
-            />
-          </p-iconField>
+          <p-password
+            promptLabel="Độ an toàn"
+            id="password"
+            aria-describedby="password-help"
+            formControlName="password"
+            placeholder="Mật khẩu"
+            [toggleMask]="true"
+            weakLabel="Quá yếu"
+            mediumLabel="Mạnh"
+            strongLabel="Rất mạnh"
+          >
+          </p-password>
           <!-- <small id="password-help">
             Enter your username to reset your password.
           </small> -->
         </div>
         <div class="flex flex-col gap-2 mt-4">
-          <p-iconField>
-            <p-inputIcon>
-              <ng-icon class="input-icon" name="ionLockClosedOutline"></ng-icon>
-            </p-inputIcon>
-            <input
-              class="input"
-              type="password"
-              pInputText
-              id="repassword"
-              aria-describedby="repassword-help"
-              formControlName="repassword"
-              placeholder="Mật khẩu xác thực"
-            />
-          </p-iconField>
+          <p-password
+            promptLabel="Độ an toàn"
+            id="repassword"
+            aria-describedby="repassword-help"
+            formControlName="repassword"
+            placeholder="Mật khẩu xác thực"
+            [toggleMask]="true"
+            weakLabel="Quá yếu"
+            mediumLabel="Mạnh"
+            strongLabel="Rất mạnh"
+          >
+          </p-password>
           <!-- <small id="repassword-help">
             Enter your username to reset your password.
           </small> -->
         </div>
+
+        <ng-template [ngIf]="errorMessage">
+          <div class="py-4">
+            <app-error-message-form
+              [message]="errorMessage"
+            ></app-error-message-form>
+          </div>
+        </ng-template>
 
         <div class="flex justify-evenly items-center mt-4">
           <button class="" mat-flat-button color="warn">Đăng ký</button>

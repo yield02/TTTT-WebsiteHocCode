@@ -12,6 +12,10 @@ import { ionLockClosedOutline, ionPersonOutline } from '@ng-icons/ionicons';
 import { AuthService } from '../../services/auth.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { PasswordModule } from 'primeng/password';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ErrorMessageFormComponent } from '../error-message-form/error-message-form.component';
 
 
 @Component({
@@ -26,7 +30,9 @@ import { MessageService } from 'primeng/api';
     InputTextModule,
     IconFieldModule,
     InputIconModule,
-    ToastModule
+    ToastModule,
+    PasswordModule,
+    ErrorMessageFormComponent
   ],
   providers: [provideIcons({
     ionPersonOutline, ionLockClosedOutline,
@@ -38,6 +44,8 @@ import { MessageService } from 'primeng/api';
 export class SignupComponent {
   @Input({ required: true }) toLogin!: Function;
 
+
+  errorMessage: String = '';
   visible: boolean = false;
   signInForm: FormGroup<{ username: FormControl, password: FormControl, repassword: FormControl }>;
   test: boolean = false;
@@ -51,7 +59,6 @@ export class SignupComponent {
   }
 
   ngOnInit(): void {
-    // console.log(this.signInForm);
   }
 
   async onSubmit() {
@@ -64,11 +71,13 @@ export class SignupComponent {
             this.toLogin();
           },
           err => {
+            this.errorMessage = err.error.message;
             this.messageService.add({ severity: 'error', summary: 'Có lỗi xảy ra', detail: err.error.message });
           }
         );
       },
       err => {
+        this.errorMessage = err.error.message;
         this.messageService.add({ severity: 'error', summary: 'Có lỗi xảy ra', detail: err.error.message });
       });
   }

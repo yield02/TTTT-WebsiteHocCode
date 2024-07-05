@@ -10,14 +10,14 @@
       >
         <ng-icon class="sidebar-icon" name="ionPersonCircleOutline"></ng-icon>
       </app-sidebar-item>
-      <app-sidebar-item
-        class=""
-        title="Mật khẩu & bảo mật"
-        naviagtionLink="security"
-      >
+      <app-sidebar-item class="" title="Bảo mật" naviagtionLink="security">
         <ng-icon class="sidebar-icon" name="bootstrapShield"></ng-icon>
       </app-sidebar-item>
-      <app-sidebar-item class="" title="Đăng xuất" [handleOnClick]="signOut">
+      <app-sidebar-item
+        class=""
+        title="Đăng xuất"
+        [handleOnClick]="signOut.bind(this)"
+      >
         <ng-icon class="sidebar-icon" name="ionLogOutOutline"></ng-icon>
       </app-sidebar-item>
     </div>
@@ -26,17 +26,24 @@
     <h3 class="mobile-sidebar-title">Cài đặt</h3>
     <div class="menu-list">
       <app-sidebar-item
+        title="Trang chủ"
+        naviagtionLink="/home"
+        [isMobile]="true"
+      >
+        <ng-icon class="sidebar-icon" name="ionHomeOutline"></ng-icon>
+      </app-sidebar-item>
+      <app-sidebar-item
         class=""
         title="Thông tin cá nhân"
-        naviagtionLink="/home"
+        naviagtionLink="information"
         [isMobile]="true"
       >
         <ng-icon class="sidebar-icon" name="ionPersonCircleOutline"></ng-icon>
       </app-sidebar-item>
       <app-sidebar-item
         class=""
-        title="Mật khẩu & bảo mật"
-        naviagtionLink="/home"
+        title="Bảo mật"
+        naviagtionLink="security"
         [isMobile]="true"
       >
         <ng-icon class="sidebar-icon" name="bootstrapShield"></ng-icon>
@@ -44,7 +51,7 @@
       <app-sidebar-item
         class=""
         title="Đăng xuất"
-        [handleOnClick]="signOut"
+        [handleOnClick]="signOut.bind(this)"
         [isMobile]="true"
       >
         <ng-icon class="sidebar-icon" name="ionLogOutOutline"></ng-icon>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, of, switchMap, tap } from 'rxjs';
+import { Observable, Subscriber, Subscription, map, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Store } from '@ngrx/store';
 import { User } from '../models/User';
@@ -9,9 +9,19 @@ import { MessageService } from 'primeng/api';
 import { Delete, Update } from '../store/user/user.actions';
 import { Router } from '@angular/router';
 
+interface LoginResponse {
+  user: User,
+  token: string,
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
+
+
+
+
 export class AuthService {
 
   constructor(private http: HttpClient, private store: Store<{ user: User }>, private cookie: CookieService, private messageService: MessageService, private router: Router) {
@@ -58,8 +68,13 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}auth/signup`, userData);
   }
 
-  login(userData: { username: string; password: string }): Observable<any> {
-    return this.http.post(`${environment.apiUrl}auth/login`, userData);
+  login(userData: { username: string; password: string }): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}auth/login`, userData).pipe(tap(data => {
+      if (data.token) {
+        this.cookie.set('token', data.token, 1);
+        this.store.dispatch(Update({ updateValue: data.user }));
+      }
+    }));
   }
 
   getUserInfor(): Observable<boolean> {
