@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { SidebarModule } from 'primeng/sidebar';
 import { SidebarItemComponent } from '../sidebar-item/sidebar-item.component';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { ionNewspaperOutline } from '@ng-icons/ionicons';
+import { ionHomeOutline, ionNewspaperOutline } from '@ng-icons/ionicons';
 import { heroAcademicCap, heroCodeBracketSquare } from '@ng-icons/heroicons/outline';
 
 @Component({
@@ -15,7 +15,7 @@ import { heroAcademicCap, heroCodeBracketSquare } from '@ng-icons/heroicons/outl
     SidebarItemComponent,
     NgIconComponent
   ],
-  providers: [provideIcons({ heroCodeBracketSquare, heroAcademicCap, ionNewspaperOutline })],
+  providers: [provideIcons({ heroCodeBracketSquare, heroAcademicCap, ionNewspaperOutline, ionHomeOutline })],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

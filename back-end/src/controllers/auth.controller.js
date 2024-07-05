@@ -32,7 +32,9 @@ exports.login = async (req, res, next) => {
 exports.getUserinfor = async (req, res, next) => {
   try {
     const token = req.cookies.token;
-    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+
     const user = await authService.getUserInfor(userInfor.username);
     res.status(200).json(user);
   } catch (error) {

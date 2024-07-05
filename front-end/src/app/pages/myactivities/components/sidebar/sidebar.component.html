@@ -27,9 +27,18 @@
       </activities-sidebar-item>
     </div>
   </div>
+
   <p-sidebar class="mobile-sidebar" [(visible)]="sidebarVisible">
     <h3 class="mobile-sidebar-title">Cài đặt</h3>
     <div class="menu-list">
+      <activities-sidebar-item
+        class=""
+        title="Trang chủ"
+        naviagtionLink="/home"
+        [isMobile]="true"
+      >
+        <ng-icon class="sidebar-icon" name="ionHomeOutline"></ng-icon>
+      </activities-sidebar-item>
       <activities-sidebar-item
         class=""
         title="Khóa học đang học"

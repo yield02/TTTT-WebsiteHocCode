@@ -28,6 +28,7 @@ app.use(
     extended: true,
   })
 );
+
 app.use(express.json());
 
 route(app);

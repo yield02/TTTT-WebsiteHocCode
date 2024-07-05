@@ -19,6 +19,7 @@
       <div class="flex gap-4">
         <p-button
           label="Đăng khóa học"
+          routerLink="create/course"
           [size]="'small'"
           [outlined]="true"
           severity="info"
@@ -36,7 +37,7 @@
       <p-dataView
         class="courses-data-view"
         #dv
-        [value]="courses"
+        [value]="(courses | async) ?? []"
         [rows]="5"
         [paginator]="true"
       >

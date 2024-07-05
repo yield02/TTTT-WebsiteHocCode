@@ -4,5 +4,5 @@ import { Injectable, inject } from '@angular/core';
 
 export const loginGuardGuard: CanMatchFn = (route, state) => {
   const authService = inject(AuthService);
-  return authService.isLoginGuard();
+  return authService.isAuth();
 };

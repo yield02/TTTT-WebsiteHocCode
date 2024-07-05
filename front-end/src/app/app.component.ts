@@ -2,7 +2,6 @@ import { Component, OnInit, isDevMode } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, switchMap, tap, timer } from 'rxjs';
 
-import { increment, decrement, reset } from './store/counter/counter.actions';
 import { map } from 'rxjs';
 import { environment } from '../environments/environment';
 

@@ -13,7 +13,6 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CookieService } from 'ngx-cookie-service';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 
 import { User } from '../../models/User';
 import { Update } from '../../store/user/user.actions';

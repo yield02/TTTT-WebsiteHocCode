@@ -7,13 +7,14 @@ import { User } from '../models/User';
 import { CookieService } from 'ngx-cookie-service';
 import { MessageService } from 'primeng/api';
 import { Delete, Update } from '../store/user/user.actions';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private store: Store<{ user: User }>, private cookie: CookieService, private messageService: MessageService) {
+  constructor(private http: HttpClient, private store: Store<{ user: User }>, private cookie: CookieService, private messageService: MessageService, private router: Router) {
 
   }
 
@@ -74,9 +75,12 @@ export class AuthService {
   }
 
   logOut() {
-    this.store.dispatch(Delete());
-    this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đăng xuất thành công' });
-    return this.http.get(`${environment.apiUrl}auth/logout`, { withCredentials: true });
+    return this.http.get(`${environment.apiUrl}auth/logout`, { withCredentials: true }).subscribe((data) => {
+      this.store.dispatch(Delete());
+      this.router.navigate(['/home']);
+      this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đăng xuất thành công' });
+    }, (error) => {
+      this.messageService.add({ severity: 'error', summary: 'Thật bại', detail: 'Đăng xuất thất bại, có lỗi xảy ra' });
+    });
   }
-
 }

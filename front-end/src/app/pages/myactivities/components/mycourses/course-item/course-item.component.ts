@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroStarSolid } from '@ng-icons/heroicons/solid';
 import { Button, ButtonModule } from 'primeng/button';
+import { Course } from '../../../../../models/Course';
 
 @Component({
   selector: 'mycourses-course-item',
@@ -22,6 +23,6 @@ import { Button, ButtonModule } from 'primeng/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseItemComponent {
-  @Input() data!: { name: string; rating: number };
+  @Input() data!: Course;
 
 }

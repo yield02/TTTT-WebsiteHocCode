@@ -1,11 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { BoardItemComponent } from './board-item/board-item.component';
 import { CourseItemComponent } from './course-item/course-item.component';
 import { DataViewModule } from 'primeng/dataview';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { Course } from '../../../../models/Course';
+import { Store } from '@ngrx/store';
+import { map, of, switchMap, tap } from 'rxjs';
+import { CourseManagerService } from '../../../../services/course-manger.service';
+import { Add } from '../../../../store/mycoursemanager/mycoursemanager.actions';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'myacc-mycourses',
@@ -17,62 +24,35 @@ import { ButtonModule } from 'primeng/button';
     DataViewModule,
     FormsModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    RouterLink
   ],
   templateUrl: `./mycourses.component.html`,
   styleUrl: './mycourses.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MycoursesComponent {
-  courses!: { name: string; rating: number }[];
+export class MycoursesComponent implements OnInit {
+  courses!: Observable<Course[]> | undefined;
   searchValue: String = '';
 
 
-  constructor() {
-    this.courses = [
-      {
-        name: 'Course 1',
-        rating: 4.5
-      },
-      {
-        name: 'Course 2',
-        rating: 3.7
-      },
-      {
-        name: 'Course 3',
-        rating: 4.9
-      },
-      {
-        name: 'Course 4',
-        rating: 4.2
-      },
-      {
-        name: 'Course 5',
-        rating: 3.8
-      },
-      {
-        name: 'Course 1',
-        rating: 4.5
-      },
-      {
-        name: 'Course 2',
-        rating: 3.7
-      },
-      {
-        name: 'Course 3',
-        rating: 4.9
-      },
-      {
-        name: 'Course 4',
-        rating: 4.2
-      },
-      {
-        name: 'Course 5',
-        rating: 3.8
+  constructor(private courseManagerStore: Store<{ myCourseManager: Course[] }>, private courseManagerService: CourseManagerService) {
+    this.courseManagerStore.select('myCourseManager').pipe(switchMap((data: Course[]) => {
+      if (data.length <= 0) {
+        return this.courseManagerService.getCourses();
       }
-    ];
+      return of({ courses: [] });
+    })).subscribe((data) => {
+      if (data.courses.length > 0) {
+        courseManagerStore.dispatch(Add({ courses: data.courses }));
+      }
+    })
   }
 
+
+  ngOnInit(): void {
+    this.courses = this.courseManagerStore.select('myCourseManager');
+  }
 
 
 

@@ -1,84 +1,135 @@
 <div class="course-form">
-  <form class="flex flex-col gap-4" [formGroup]="form">
+  <form
+    class="flex flex-col gap-4"
+    [formGroup]="form"
+    (ngSubmit)="form.valid && onSubmit()"
+    enctype="multipart/form-data"
+  >
     <div class="flex flex-col gap-2">
-      <label for="username">Tên khóa học</label>
+      <label for="course-name">Tên khóa học</label>
       <input
         pInputText
-        id="username"
-        aria-describedby="username-help"
+        id="course-name"
+        aria-describedby="course-name-help"
         placeholder="Tên khóa học"
-        formControlName="title"
+        formControlName="course_name"
       />
+      <!-- <small class="help-text" id="course-name-help">
+        {{ form.get("title")?.errors }}
+      </small> -->
     </div>
     <div class="flex flex-col gap-2">
       <label for="description">Mô tả khóa học</label>
-      <textarea id="description" class="description" pInputTextarea></textarea>
+      <textarea
+        id="description"
+        class="description"
+        pInputTextarea
+        formControlName="description"
+        aria-describedby="course-description-help"
+      ></textarea>
+      <!-- <small class="help-text" id="course-description-help">
+        Enter your username to reset your password.
+      </small> -->
     </div>
     <div>
-      <p-fileUpload
-        mode="basic"
-        name="demo[]"
-        chooseIcon="pi pi-upload"
-        accept="image/*"
-        maxFileSize="1000000"
-        [auto]="true"
-        chooseLabel="Chọn ảnh khóa học"
-      />
+      <div class="flex gap-4">
+        <p-fileUpload
+          class="upload-image"
+          mode="advanced"
+          name="demo[]"
+          chooseIcon="pi pi-upload"
+          accept="image/*"
+          showUploadButton="false"
+          cancelLabel="Hủy"
+          maxFileSize="1000000"
+          (uploadHandler)="upLoadImage($event)"
+          [auto]="true"
+          (onSelect)="upLoadImage($event)"
+          chooseLabel="Chọn ảnh khóa học"
+          aria-describedby="course-image-help"
+        />
+        <ng-template
+          [ngIf]="form.get('image')?.value?.objectURL || course?.image"
+        >
+          <img
+            class="image"
+            [src]="
+              form.get('image')?.value?.objectURL ||
+              (course?.image &&
+                'data:' +
+                  course?.image?.contentType +
+                  ';base64,' +
+                  course?.image?.buffer)
+            "
+            alt="ảnh khóa học"
+          />
+        </ng-template>
+      </div>
+      <ng-template [ngIf]="form.get('image')?.errors">
+        <small class="help-text" id="course-image-help">
+          *Vui lòng chọn ảnh
+        </small>
+      </ng-template>
+    </div>
+    <div class="flex justify-end">
+      <p-button [size]="'small'" label="Lưu" type="submit"></p-button>
     </div>
   </form>
-  <div class="detail my-4">
-    <h3 class="title text-center mb-8">Chi tiết khóa học</h3>
-    <div class="add-actions flex justify-end items-center gap-4 mb-2">
-      <p-button
-        label="Thêm chương"
-        [size]="'small'"
-        [outlined]="true"
-        severity="success"
-        (onClick)="showChapterForm()"
-      />
-      <p-button
-        label="Thêm bài học"
-        [size]="'small'"
-        [outlined]="true"
-        severity="info"
-        (onClick)="showLessonForm()"
-      />
+  <ng-template [ngIf]="course?._id">
+    <div class="detail my-4">
+      <h3 class="title text-center mb-8">Chi tiết khóa học</h3>
+      <div class="add-actions flex justify-end items-center gap-4 mb-2">
+        <p-button
+          label="Thêm chương"
+          [size]="'small'"
+          [outlined]="true"
+          severity="success"
+          (onClick)="showChapterForm()"
+        />
+        <p-button
+          label="Thêm bài học"
+          [size]="'small'"
+          [outlined]="true"
+          severity="info"
+          (onClick)="showLessonForm()"
+        />
+      </div>
+      <p-orderList
+        class="chapter-list"
+        [value]="chapterList"
+        header="Danh sách các chương"
+        (onReorder)="getOrder($event)"
+        [dragdrop]="true"
+      >
+        <ng-template let-chapter pTemplate="item">
+          <p-fieldset legend="{{ chapter.course_name }}" [toggleable]="true">
+            <p-orderList
+              [value]="chapter.content"
+              class="lesson-list"
+              [dragdrop]="true"
+            >
+              <ng-template pTemplate="header"
+                ><div class="flex justify-end gap-4">
+                  <p-button
+                    icon="pi pi-pencil"
+                    [rounded]="true"
+                    severity="info"
+                    [size]="'small'"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    [rounded]="true"
+                    severity="danger"
+                    [size]="'small'"
+                  /></div
+              ></ng-template>
+              <ng-template let-lesson pTemplate="item">
+                <course-form-lesson [data]="lesson"></course-form-lesson>
+              </ng-template>
+            </p-orderList>
+          </p-fieldset>
+        </ng-template>
+      </p-orderList>
     </div>
-    <p-orderList
-      class="chapter-list"
-      [value]="chapterList"
-      header="Danh sách các chương"
-      (onReorder)="getOrder($event)"
-      [dragdrop]="true"
-    >
-      <ng-template let-chapter pTemplate="item">
-        <p-fieldset legend="{{ chapter.title }}" [toggleable]="true">
-          <p-orderList
-            [value]="chapter.content"
-            class="lesson-list"
-            [dragdrop]="true"
-          >
-            <ng-template pTemplate="header"
-              ><div class="flex justify-end gap-4">
-                <p-button
-                  icon="pi pi-pencil"
-                  [rounded]="true"
-                  severity="info"
-                  [size]="'small'"
-                />
-                <p-button
-                  icon="pi pi-trash"
-                  [rounded]="true"
-                  severity="danger"
-                  [size]="'small'"
-                /></div
-            ></ng-template>
-            <ng-template let-lesson pTemplate="item">
-              <course-form-lesson [data]="lesson"></course-form-lesson>
-            </ng-template>
-          </p-orderList>
-        </p-fieldset>
-      </ng-template>
-    </p-orderList>
-  </div>
+  </ng-template>
 </div>

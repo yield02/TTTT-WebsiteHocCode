@@ -1,7 +1,8 @@
 import { Lesson } from "./Lesson";
 
 export interface Chapter {
-    id: number;
+    _id: String;
     title: string;
     content: [Lesson] | [] | undefined;
+    order?: number;
 }

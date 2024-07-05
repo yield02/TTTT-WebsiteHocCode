@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent } from '@ng-icons/core';
 import { AuthService } from '../../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -21,12 +22,17 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './avatar-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AvatarMenuComponent {
+export class AvatarMenuComponent implements OnDestroy {
+  $observer: Subscription = new Subscription();
   constructor(private authService: AuthService) {
 
   }
 
   logOut(): void {
-    this.authService.logOut().subscribe();
+    this.$observer = this.authService.logOut();
+  }
+
+  ngOnDestroy(): void {
+    this.$observer.unsubscribe();
   }
 }

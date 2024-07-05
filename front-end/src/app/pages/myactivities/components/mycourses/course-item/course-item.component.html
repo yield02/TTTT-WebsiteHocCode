@@ -2,19 +2,21 @@
   <div class="flex flex-row items-start gap-4">
     <img
       class="course-image"
-      src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+      [src]="
+        'data:' + data.image?.contentType + ';base64,' + data.image?.buffer
+      "
       alt="course-image"
     />
     <div class="flex flex-col justify-center items-start">
-      <h1 class="course-name">{{ data.name }}</h1>
+      <h1 class="course-name">{{ data.course_name }}</h1>
       <div class="rating flex items-center">
-        {{ data.rating }}
+        0
         <ng-icon class="rating-icon text-yellow" name="heroStarSolid"></ng-icon>
       </div>
     </div>
   </div>
   <div class="flex md:justify-center items-end">
-    <a [routerLink]="'edit/1'"
+    <a [routerLink]="'edit/' + data._id"
       ><p-button [size]="'small'" severity="secondary" [outlined]="true"
         >Chỉnh sửa khóa học</p-button
       ></a
