@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 @Component({
   selector: 'app-chapter-form',
@@ -9,20 +10,33 @@ import { InputTextModule } from 'primeng/inputtext';
   imports: [
     CommonModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    FormsModule
   ],
   templateUrl: './chapter-form.component.html',
   styleUrl: './chapter-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChapterFormComponent {
+export class ChapterFormComponent implements OnInit {
 
-  constructor(public ref: DynamicDialogRef) {
+  chapterTitle!: String;
 
+  constructor(public ref: DynamicDialogRef, private _dialogConfig: DynamicDialogConfig) {
+
+  }
+
+  ngOnInit(): void {
+    if (this._dialogConfig?.data?.chapterTitle) {
+      this.chapterTitle = this._dialogConfig.data.chapterTitle;
+    }
   }
 
   closeForm() {
     this.ref.close();
+  }
+
+  saveChapter(): void {
+    this.ref.close(this.chapterTitle);
   }
 
 }

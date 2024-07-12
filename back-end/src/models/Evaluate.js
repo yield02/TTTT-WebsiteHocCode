@@ -2,10 +2,14 @@ const mongoose = require("mongoose");
 
 const evaluateSchema = new mongoose.Schema(
   {
-    author_id: { type: mongoose.Schema.ObjectId, ref: "User", require: true },
-    course_id: { type: mongoose.Schema.ObjectId, ref: "Course", require: true },
-    star: { type: Number, require: true },
-    description: { type: String, require: false },
+    author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
+    course_id: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Course",
+      required: true,
+    },
+    star: { type: Number, required: true },
+    description: { type: String, required: false },
   },
   { timestamps: true }
 );

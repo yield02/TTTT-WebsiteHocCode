@@ -38,6 +38,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
+  console.error(error.stack);
   return res.status(error.statusCode || 500).json({
     message: error.message || "Lỗi máy chủ",
   });

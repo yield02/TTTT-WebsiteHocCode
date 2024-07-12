@@ -2,13 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Course } from '../models/Course';
 import { environment } from '../../environments/environment';
+import { catchError, Observable, of, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Add } from '../store/mycoursemanager/mycoursemanager.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseManagerService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private store: Store<{ myCourseManager: Course[] }>) {
 
   }
 
@@ -18,6 +21,16 @@ export class CourseManagerService {
       {
         withCredentials: true,
       });
+  }
+
+  getCourse(course_id: String): Observable<Course | null> {
+    return this.http.get<Course>(`${environment.apiUrl}course/${course_id}`, {
+      withCredentials: true,
+    }).pipe(tap(data => {
+      this.store.dispatch(Add({ courses: [data] }));
+    }), catchError(() => {
+      return of(null);
+    }));
   }
 
   getCourses() {

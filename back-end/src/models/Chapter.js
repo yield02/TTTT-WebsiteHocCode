@@ -4,9 +4,14 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const chapterSchema = new mongoose.Schema(
   {
     chapter_id: Number,
-    author_id: { type: mongoose.Schema.ObjectId, ref: "User", require: true },
-    title: { type: String, require: true },
-    order: { type: Number, require: true },
+    author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
+    title: { type: String, required: true },
+    lessons: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Lesson",
+      },
+    ],
   },
   { timestamps: true }
 );

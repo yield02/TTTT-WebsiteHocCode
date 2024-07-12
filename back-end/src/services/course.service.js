@@ -24,7 +24,13 @@ exports.create = async (data, file) => {
       .save()
       .then((res) => {
         return {
-          course: { ...res._doc },
+          course: {
+            ...res._doc,
+            image: {
+              contentType: file?.mimetype,
+              buffer: resizeBuffer.toString("base64"),
+            },
+          },
         };
       })
       .catch((error) => {
@@ -41,9 +47,7 @@ exports.getById = async (courseId) => {
     if (!courseData) {
       throw new apiError(404, "Course not found");
     }
-    return {
-      course: { ...courseData._doc },
-    };
+    return { ...courseData._doc };
   } catch (error) {
     throw new apiError(500, error.message);
   }
@@ -51,7 +55,6 @@ exports.getById = async (courseId) => {
 
 exports.update = async (data, file, authorId) => {
   try {
-    console.log(data._id, authorId);
     const courseData = await course.findOne({
       _id: data._id,
       author_id: authorId,
@@ -67,20 +70,27 @@ exports.update = async (data, file, authorId) => {
       const buffer = file.buffer;
       var resizeBuffer = await resize(buffer);
       var finalImage = {
-        contentType: file.mimetype,
+        contentType: file?.mimetype,
         buffer: Buffer.from(resizeBuffer.toString("base64"), "base64"),
       };
       courseData.image = finalImage;
     }
-
     const updatedCourse = await courseData.save();
+
+    if (file) {
+      return {
+        course: {
+          ...updatedCourse._doc,
+          image: {
+            contentType: file?.mimetype,
+            buffer: resizeBuffer.toString("base64"),
+          },
+        },
+      };
+    }
     return {
       course: {
         ...updatedCourse._doc,
-        image: {
-          contentType: file.mimetype,
-          buffer: resizeBuffer.toString("base64"),
-        },
       },
     };
   } catch (error) {
@@ -90,7 +100,6 @@ exports.update = async (data, file, authorId) => {
 
 exports.getByAuthor = async (authorId) => {
   try {
-    console.log(authorId);
     const courses = await course.find({ author_id: authorId });
     return {
       courses: courses.map((course) => {

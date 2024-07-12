@@ -1,3 +1,5 @@
+import { Chapter } from "./Chapter"
+
 export interface Course {
     _id?: String,
     course_name: String,
@@ -5,5 +7,6 @@ export interface Course {
     image?: {
         contentType: String,
         buffer: String
-    }
+    },
+    chapters?: String[],
 }

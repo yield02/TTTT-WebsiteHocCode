@@ -2,10 +2,19 @@
   <form class="flex flex-col gap-4">
     <div class="flex flex-col gap-2">
       <label>Tên chương:</label>
-      <input pInputText />
+      <input
+        pInputText
+        type="text"
+        [(ngModel)]="chapterTitle"
+        [ngModelOptions]="{ standalone: true }"
+      />
     </div>
     <div class="flex gap-4 justify-end">
-      <p-button label="Lưu" severity="primary"></p-button>
+      <p-button
+        label="Lưu"
+        severity="primary"
+        (onClick)="saveChapter()"
+      ></p-button>
       <p-button
         [outlined]="true"
         label="Hủy"

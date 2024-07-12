@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,6 +17,14 @@ import { CourseManagerService } from '../../services/course-manger.service';
 import { Add } from '../../store/mycoursemanager/mycoursemanager.actions';
 import { Store } from '@ngrx/store';
 import { Update } from '../../store/mycoursemanager/mycoursemanager.actions';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { of, switchMap } from 'rxjs';
+import { ChapterService } from '../../services/chapter.service';
+import { Router } from '@angular/router';
+import { ChapterListComponent } from './chapter-list/chapter-list.component';
+import { AppState } from '../../store/reducer';
+import { CreateChapter } from '../../store/chapters/chapters.actions';
 
 
 
@@ -32,17 +40,18 @@ import { Update } from '../../store/mycoursemanager/mycoursemanager.actions';
     HttpClientModule,
     OrderListModule,
     FieldsetModule,
+    ToastModule,
 
-    LessonComponent,
+    ChapterListComponent,
     LessonFormComponent,
     ChapterFormComponent
   ],
-  providers: [DialogService],
+  providers: [DialogService, MessageService],
   templateUrl: './course-form.component.html',
   styleUrl: './course-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CourseFormComponent implements OnInit, OnDestroy {
+export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() course?: Course | null
     = {
@@ -50,40 +59,33 @@ export class CourseFormComponent implements OnInit, OnDestroy {
       course_name: '',
       description: ''
     };
-  chapterList: Chapter[];
 
   form!: FormGroup;
   lessonFormRef: DynamicDialogRef | undefined;
   chapterFormRef: DynamicDialogRef | undefined;
 
-  constructor(private fb: FormBuilder, private dialogService: DialogService, private courseManagerService: CourseManagerService, private courseManagerStore: Store) {
-    console.log(this.course);
+  constructor(
+    private fb: FormBuilder,
+    private dialogService: DialogService,
+    private courseManagerService: CourseManagerService,
+    private store: Store<AppState>,
+    private messageService: MessageService,
+    private router: Router,
+  ) {
 
 
-    this.chapterList = this.chapterList = [
-      {
-        _id: '1',
-        title: '1. Bắt đầu làm quen với IDE và cài đặt môi trường làm việc',
-        content: [
-          {
-            _id: '12324',
-            title: '1. Bắt đầu làm quen với IDE và cài đặt môi trường làm việc',
-            video: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ',
-            content: {}
-          }
-        ]
-      },
-      {
-        _id: '2',
-        title: 'Chapter 2',
-        content: []
-      },
-      {
-        _id: '3',
-        title: 'Chapter 3',
-        content: []
-      }
-    ];
+  }
+
+  ngOnChanges(change: any): void {
+
+    if (this.course?._id) {
+      this.form?.patchValue({
+        _id: this.course?._id,
+        course_name: this.course?.course_name,
+        description: this.course?.description,
+        image: this.course?.image || null,
+      })
+    }
   }
 
   ngOnInit(): void {
@@ -93,7 +95,7 @@ export class CourseFormComponent implements OnInit, OnDestroy {
       description: [this.course?.description, Validators.compose([Validators.required, Validators.minLength(20)])],
       image: [this.course?.image || null, Validators.compose([Validators.required])],
     });
-    console.log(this.form.value);
+
   }
 
   showLessonForm() {
@@ -104,17 +106,27 @@ export class CourseFormComponent implements OnInit, OnDestroy {
   }
 
   showChapterForm() {
-    this.chapterFormRef = this.dialogService.open(ChapterFormComponent, { header: 'Thêm chương' })
+    this.chapterFormRef = this.dialogService.open(ChapterFormComponent, { header: 'Thêm chương' });
+    this.chapterFormRef.onClose.pipe(switchMap((chapterTitle: String) => {
+      if (chapterTitle) {
+        const data = {
+          course_id: this.course!._id!,
+          title: chapterTitle,
+        }
+        this.store.dispatch(CreateChapter({ createChapter: data }));
+      }
+      return of(null);
+    })).subscribe();
   }
 
-  getOrder(event: any) {
-    console.log(event);
-    console.log(this.chapterList);
-  }
+
 
   ngOnDestroy(): void {
     if (this.lessonFormRef) {
       this.lessonFormRef.close();
+    }
+    if (this.chapterFormRef) {
+      this.chapterFormRef.close();
     }
   }
   upLoadImage(event: any) {
@@ -128,21 +140,26 @@ export class CourseFormComponent implements OnInit, OnDestroy {
     fb.append('image', this.form.value.image);
     fb.append('course_name', this.form.value.course_name);
     fb.append('description', this.form.value.description);
+
+    // create course
     if (!this.course?._id) {
       this.courseManagerService.createCourse(fb).subscribe(({ course }) => {
-        this.course = {
-          _id: course._id,
-          course_name: course.course_name,
-          description: course.description,
-          image: course.image
-        }
-        this.courseManagerStore.dispatch(Add({ courses: [course] }))
+        this.store.dispatch(Add({ courses: [course] }))
+        this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Tạo khóa học thành công' })
+        setTimeout(() => { this.router.navigate([`/myactivities/mycourses/edit/${course._id}`]); }, 500);
+      }, (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Thất bại', detail: 'Tạo khóa học thất bại' })
       });
     }
+    // update course  if have _id  in course object  else create new course  in store  and courseManagerService  for update course in database  and store in local storage  and state management  in ngrx/store  and firestore/firebase  or mongodb  or any other database  or local storage  or memory  or any other data storage solution  or any other data storage solution  or any other data storage solution  or any other data storage solution
     else {
       fb.append('_id', this.course._id.toString());
       this.courseManagerService.updateCourse(fb).subscribe(({ course }) => {
-        this.courseManagerStore.dispatch(Update({ course: course }))
+        this.course = { ...course };
+        this.store.dispatch(Update({ course: course }))
+        this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật khóa học thành công' })
+      }, (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Thất bại', detail: 'Cập nhật khóa học thất bại' })
       });
     }
   }

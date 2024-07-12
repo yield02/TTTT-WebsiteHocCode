@@ -4,7 +4,7 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const courseSchema = new mongoose.Schema(
   {
     course_id: Number,
-    author_id: { type: mongoose.Schema.ObjectId, ref: "User", require: true },
+    author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
     course_name: String,
     image: { type: Object },
     status: {
@@ -17,6 +17,12 @@ const courseSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    chapters: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Chapter",
+      },
+    ],
   },
   { timestamps: true }
 );

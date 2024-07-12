@@ -8,7 +8,7 @@ export const selectMyCourseManager = (state: AppState) => state.myCourseManager;
 
 export const selectCourseFromId = (_id: String) => createSelector(
   selectMyCourseManager,
-  (myCourseManager: Course[]) => {
+  (myCourseManager: Course[]): Course | undefined => {
     return myCourseManager.find(c => c._id === _id);
   }
 );

@@ -4,11 +4,10 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const lessonSchema = new mongoose.Schema(
   {
     lesson_id: Number,
-    author_id: { type: mongoose.Schema.ObjectId, ref: "User", require: true },
-    title: { type: String, require: true },
-    content: { type: Object, require: false },
-    video: { type: String, require: false },
-    order: { type: Number, require: true },
+    author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
+    title: { type: String, required: true },
+    content: { type: Object, required: false },
+    video: { type: String, required: false },
   },
   { timestamps: true }
 );

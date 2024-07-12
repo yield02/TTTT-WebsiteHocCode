@@ -1,4 +1,5 @@
 <div class="course-form">
+  <p-toast></p-toast>
   <form
     class="flex flex-col gap-4"
     [formGroup]="form"
@@ -76,60 +77,10 @@
     </div>
   </form>
   <ng-template [ngIf]="course?._id">
-    <div class="detail my-4">
-      <h3 class="title text-center mb-8">Chi tiết khóa học</h3>
-      <div class="add-actions flex justify-end items-center gap-4 mb-2">
-        <p-button
-          label="Thêm chương"
-          [size]="'small'"
-          [outlined]="true"
-          severity="success"
-          (onClick)="showChapterForm()"
-        />
-        <p-button
-          label="Thêm bài học"
-          [size]="'small'"
-          [outlined]="true"
-          severity="info"
-          (onClick)="showLessonForm()"
-        />
-      </div>
-      <p-orderList
-        class="chapter-list"
-        [value]="chapterList"
-        header="Danh sách các chương"
-        (onReorder)="getOrder($event)"
-        [dragdrop]="true"
-      >
-        <ng-template let-chapter pTemplate="item">
-          <p-fieldset legend="{{ chapter.course_name }}" [toggleable]="true">
-            <p-orderList
-              [value]="chapter.content"
-              class="lesson-list"
-              [dragdrop]="true"
-            >
-              <ng-template pTemplate="header"
-                ><div class="flex justify-end gap-4">
-                  <p-button
-                    icon="pi pi-pencil"
-                    [rounded]="true"
-                    severity="info"
-                    [size]="'small'"
-                  />
-                  <p-button
-                    icon="pi pi-trash"
-                    [rounded]="true"
-                    severity="danger"
-                    [size]="'small'"
-                  /></div
-              ></ng-template>
-              <ng-template let-lesson pTemplate="item">
-                <course-form-lesson [data]="lesson"></course-form-lesson>
-              </ng-template>
-            </p-orderList>
-          </p-fieldset>
-        </ng-template>
-      </p-orderList>
-    </div>
+    <app-chapter-list
+      [course_id]="course!._id!"
+      (showChapterFormEvent)="showChapterForm()"
+      (showLessonFormEvent)="showLessonForm()"
+    ></app-chapter-list>
   </ng-template>
 </div>

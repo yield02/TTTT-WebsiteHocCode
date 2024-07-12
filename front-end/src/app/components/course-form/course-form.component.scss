@@ -1,10 +1,4 @@
 .course-form {
-  .detail {
-    .title {
-      font-size: 24px;
-      font-weight: 600;
-    }
-  }
   .help-text {
     color: red;
   }
@@ -17,16 +11,6 @@
 }
 
 ::ng-deep {
-  .chapter-list {
-    .p-orderlist-controls {
-      display: none;
-    }
-  }
-  .lesson-list {
-    .p-orderlist-controls {
-      display: none;
-    }
-  }
   .upload-image {
     .p-fileupload-buttonbar {
       border-radius: 6px;

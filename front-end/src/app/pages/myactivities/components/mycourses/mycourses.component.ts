@@ -37,6 +37,8 @@ export class MycoursesComponent implements OnInit {
 
 
   constructor(private courseManagerStore: Store<{ myCourseManager: Course[] }>, private courseManagerService: CourseManagerService) {
+
+    // fetch data when component is initialized
     this.courseManagerStore.select('myCourseManager').pipe(switchMap((data: Course[]) => {
       if (data.length <= 0) {
         return this.courseManagerService.getCourses();

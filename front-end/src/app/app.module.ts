@@ -9,6 +9,8 @@ import { HttpClientModule } from '@angular/common/http';
 import reducers from './store/reducer';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { EffectsModule } from '@ngrx/effects';
+import effects from './effects';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { MessageService } from 'primeng/api';
     NoopAnimationsModule,
     HttpClientModule,
     StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       // logOnly: environment.production, // Restrict extension to log-only mode

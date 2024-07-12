@@ -9,7 +9,6 @@ exports.create = async (req, res, next) => {
       throw new ApiError(400, "Bạn chưa upload hình ảnh");
     }
     var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log(req.body);
     const course = await courseManagerService.create(
       {
         course_name: req.body.course_name,
@@ -18,7 +17,7 @@ exports.create = async (req, res, next) => {
       },
       req.file
     );
-    res.status(200).json(course || "");
+    res.status(201).json(course || "");
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));
   }
@@ -43,7 +42,7 @@ exports.updateCourse = async (req, res, next) => {
         course_name: req.body.course_name,
         description: req.body.description,
       },
-      req.file,
+      req?.file,
       userInfor._id
     );
     res.status(200).json(course || "");
@@ -56,7 +55,6 @@ exports.getCourseAuthor = async (req, res, next) => {
   try {
     const token = req.cookies.token;
     var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log(userInfor);
     const courses = await courseManagerService.getByAuthor(userInfor._id);
     res.status(200).json(courses || []);
   } catch (error) {

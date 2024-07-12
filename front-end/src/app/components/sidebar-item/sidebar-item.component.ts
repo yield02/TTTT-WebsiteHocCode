@@ -20,8 +20,7 @@ export class SidebarItemComponent implements AfterViewInit {
   @Input() title!: string;
 
   ngAfterViewInit() {
-    console.log(this.isMobile);
-    console.log(this.handleOnClick);
+
   }
 
 }

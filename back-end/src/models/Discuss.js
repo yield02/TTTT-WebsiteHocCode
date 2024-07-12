@@ -3,9 +3,13 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const discussSchema = new mongoose.Schema(
   {
-    author_id: { type: mongoose.Schema.ObjectId, ref: "User", require: true },
-    lesson_id: { type: mongoose.Schema.ObjectId, ref: "Lesson", require: true },
-    content: { type: String, require: true },
+    author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
+    lesson_id: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Lesson",
+      required: true,
+    },
+    content: { type: String, required: true },
   },
   { timestamps: true }
 );
