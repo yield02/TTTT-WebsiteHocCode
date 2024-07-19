@@ -1,12 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { Editor } from 'tinymce';
+import { select, Store } from '@ngrx/store';
+import { AppState } from '../../../store/reducer';
+import { selectChaptersFromCourseId, selectChaptersFromIds } from '../../../store/chapters/chapters.selectors';
+import { Observable } from 'rxjs';
+import { Chapter } from '../../../models/Chapter';
+import { Lesson } from '../../../models/Lesson';
 
 @Component({
   selector: 'course-form-lesson-form',
@@ -26,9 +32,11 @@ import { Editor } from 'tinymce';
   styleUrl: './lesson-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LessonFormComponent {
-  chapterList!: any[];
-  form: FormGroup;
+export class LessonFormComponent implements OnInit {
+  initValue: String = '';
+  chapterList!: Observable<Chapter[]>;
+  form!: FormGroup;
+  lesson?: Lesson;
 
   content: EditorComponent['init'] = {
     menubar: false,
@@ -64,29 +72,51 @@ export class LessonFormComponent {
     font_size_input_default_unit: 'px',
   }
 
-  constructor(public ref: DynamicDialogRef, private fb: FormBuilder) {
-    this.form = this.fb.group({
-      title: [''],
-      video: [''],
-      chapter: [''],
-      content: [''],
-    })
-    this.chapterList = [
-      { name: 'Chương 1. Cài đặt môi trường làm việc và làm quen với angular', chapterId: 'NY' },
-      { name: 'Chương 2. Directive', chapterId: 'RM' },
-      { name: 'Chương 3. Interaction', chapterId: 'LDN' },
-      { name: 'Chương 4. Two way binding', chapterId: 'IST' },
-      { name: 'Chương 5. Dependency injection(DI)', chapterId: 'PRS' }
-    ];
+  constructor(public ref: DynamicDialogRef, private fb: FormBuilder, private _dialogConfig: DynamicDialogConfig, private _store: Store<AppState>) {
+
+
+  }
+
+  ngOnInit(): void {
+    if (this._dialogConfig?.data?.course_id) {
+      this.chapterList = this._store.pipe(select(selectChaptersFromCourseId(this._dialogConfig.data?.course_id)));
+    }
+
+    if (this._dialogConfig?.data?.lesson) {
+      this.lesson = this._dialogConfig?.data?.lesson
+
+    }
+
+    if (this.lesson) {
+      const content = this.lesson!.content.toString();
+      this.form = this.fb.group({
+        title: [this.lesson.title],
+        video: [this.lesson.video],
+        chapter_id: [this.lesson = this._dialogConfig?.data?.chapter_id],
+        content: [content],
+      })
+    }
+    else {
+      this.form = this.fb.group({
+        title: [''],
+        video: [''],
+        chapter_id: [''],
+        content: [''],
+      })
+    }
+
   }
 
   closeDialog(data: any) {
-    this.ref.close(data);
+    this.ref.close();
   }
 
   submit() {
-    console.log(this.form.value);
-    console.log(this.content);
-    this.ref.close();
+    this.ref.close({
+      title: this.form.value.title,
+      video: this.form.value.video,
+      chapter_id: this.form.value.chapter_id,
+      content: this.form.value.content
+    });
   }
 }

@@ -4,13 +4,24 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const courseSchema = new mongoose.Schema(
   {
     course_id: Number,
+    subject_id: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Subject",
+      required: true,
+    },
     author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
     course_name: String,
     image: { type: Object },
     status: {
-      type: String,
-      enum: ["waiting", "active", "banned"],
-      default: "waiting",
+      state: {
+        type: String,
+        enum: ["waiting", "active", "banned"],
+        default: "active",
+      },
+      reason: {
+        type: String,
+        default: "",
+      },
     },
     description: String,
     note: {

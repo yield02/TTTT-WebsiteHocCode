@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { bootstrapHeart, bootstrapHeartbreak } from '@ng-icons/bootstrap-icons';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { Course } from '../../models/Course';
 
 @Component({
   selector: 'app-course',
@@ -26,7 +27,11 @@ import { ProgressBarModule } from 'primeng/progressbar';
   styleUrl: './course.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CourseComponent {
+export class CourseComponent implements OnInit {
   @Input() type: string = 'introduce';
+  @Input() course!: Course;
 
+  ngOnInit(): void {
+    console.log(this.course);
+  }
 }

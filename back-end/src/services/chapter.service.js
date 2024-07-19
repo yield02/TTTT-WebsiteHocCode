@@ -1,6 +1,7 @@
 const Course = require("../models/Course");
 const apiError = require("../utils/apiError");
 const Chapter = require("../models/Chapter");
+const Lesson = require("../models/Lesson");
 
 exports.create = async (data, author_id) => {
   try {
@@ -12,8 +13,6 @@ exports.create = async (data, author_id) => {
     const course = await Course.findById(data.course_id);
     const chapter = new Chapter(injectData);
     const chapterSave = await chapter.save();
-
-    // console.log(course);
 
     course.chapters.push(chapterSave._id);
     await course.save();
@@ -70,6 +69,11 @@ exports.deleteChapter = async (course_id, chapter_id, author_id) => {
     if (!chapter) {
       throw new apiError(404, "Chương trình không tồn tại");
     }
+
+    const lesson_ids = chapter._doc.lessons;
+
+    const lessons = await Lesson.deleteMany({ _id: { $in: lesson_ids } });
+
     return {
       message: "Chương trình đã xóa thành công",
     };

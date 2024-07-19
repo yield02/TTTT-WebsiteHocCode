@@ -18,7 +18,7 @@ export const initialState: User = {
 export const userReducer = createReducer(
     initialState,
     on(Update, (state, { updateValue }) => {
-        console.log(updateValue);
+        // console.log(updateValue);
         return { ...state, ...updateValue };
     }),
     on(Delete, (state) => {

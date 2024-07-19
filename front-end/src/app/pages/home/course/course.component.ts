@@ -8,7 +8,13 @@ import { ButtonModule } from 'primeng/button';
 import { TreeModule } from 'primeng/tree';
 import { FormsModule } from '@angular/forms';
 import { RatingModule } from 'primeng/rating';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Observable, tap } from 'rxjs';
+import { Course } from '../../../models/Course';
+import { select, Store } from '@ngrx/store';
+import { AppState } from '../../../store/reducer';
+import { selectCourseFromCourseId } from '../../../store/courses/courses.selector';
+import { FetchingCourseFromCourseId } from '../../../store/courses/courses.actions';
 
 @Component({
   selector: 'app-course',
@@ -22,16 +28,24 @@ import { RouterLink } from '@angular/router';
 export class CourseComponent implements OnInit {
 
   rating: number = 4.5;
-
   chapters: TreeNode[];
+  course$!: Observable<Course | undefined>;
+  fetched: boolean = false;
 
 
-
-  constructor() {
+  constructor(private _route: ActivatedRoute, private _store: Store<AppState>) {
     this.chapters = []
   }
 
   ngOnInit(): void {
+    const course_id = this._route.snapshot.paramMap.get('courseId');
+
+    this.course$ = this._store.pipe(select(selectCourseFromCourseId(course_id!))).pipe(tap(course => {
+      if (!course && !this.fetched) {
+        this._store.dispatch(FetchingCourseFromCourseId({ course_id: course_id! }));
+      }
+    }));
+
     this.chapters = [
       {
         key: '0',

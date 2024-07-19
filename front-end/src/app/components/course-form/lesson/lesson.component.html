@@ -1,9 +1,9 @@
 <div class="lesson flex justify-between items-center">
   <div class="">
-    <h4 class="title">{{ data.title }}</h4>
+    <h4 class="title">{{ lesson.title }}</h4>
     <div class="more-details flex gap-2 items-center">
       <ng-icon class="detail-icon" name="bootstrapPersonVideo"></ng-icon>
-      <span class="time-stamp">11:30</span>
+      <span class="time-stamp">{{ lesson.updatedAt || "" | HoursFormat }}</span>
     </div>
   </div>
   <div class="actions">
@@ -12,7 +12,7 @@
       [rounded]="true"
       [text]="true"
       severity="info"
-      (onClick)="handleEdit()"
+      (onClick)="showEditDialog()"
     />
     <p-button
       icon="pi pi-trash"

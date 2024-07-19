@@ -1,9 +1,9 @@
+@if(course$ | async; as course) {
 <div class="course-container flex md:flex-row max-md:flex-col">
   <div class="md:basis-3/5">
-    <h1 class="heading-text my-4">100 Ngày Với Angular</h1>
+    <h1 class="heading-text my-4">{{ course.course_name }}</h1>
     <div class="description">
-      Series độc quyền cung cấp bởi thành viên của Angular Vietnam về các chủ đề
-      liên quan tới Angular trong vòng 100 ngày.
+      {{ course.description }}
     </div>
     <div class="content">
       <h1 class="content-heading my-4">Nội dung khóa học</h1>
@@ -45,10 +45,12 @@
       </div>
     </div>
   </div>
-  <div class="md:basis-2/5 max-md:mt-5 md:px-24">
+  <div class="md:basis-2/5 max-md:mt-5 md:px-24 flex flex-col items-center">
     <img
       class="image-introduce"
-      src="https://bkhost.vn/wp-content/uploads/2022/05/angular-JS-logo.jpg"
+      [src]="
+        'data:' + course.image!.contentType! + ';base64,' + course.image!.buffer
+      "
     />
     <div class="flex justify-center flex-col items-center m-4">
       <span class="text-gray rating-text">Đánh giá</span>
@@ -61,7 +63,7 @@
     </div>
     <div class="flex justify-center mt-10">
       <p-button
-        routerLink="/learning"
+        [routerLink]="'/learning/' + course._id"
         label="Bắt đầu học"
         [text]="true"
         [raised]="true"
@@ -70,3 +72,4 @@
     </div>
   </div>
 </div>
+}

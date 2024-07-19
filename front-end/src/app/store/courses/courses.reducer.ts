@@ -1,15 +1,14 @@
 import { createReducer, on } from '@ngrx/store';
-import { Create, Update, Delete } from './course.actions';
+import { Create, Update, Delete, FetchingCoursesSucess } from './courses.actions';
 import { Course } from '../../models/Course';
 
-export const initialState: Course = {
-    _id: '',
-    course_name: '',
-    description: '',
-}
+export const initialState: Course[] = []
 
-export const courseReducer = createReducer(
+export const coursesReducer = createReducer(
     initialState,
+    on(FetchingCoursesSucess, (state, { courses }) => {
+        return [...state, ...courses];
+    }),
     on(Create, (state, { course }) => {
         console.log(course);
         return state

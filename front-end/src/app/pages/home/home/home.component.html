@@ -1,4 +1,5 @@
 <div class="container home-container">
-  <app-courses></app-courses>
-  <app-courses></app-courses>
+  <ng-container *ngFor="let subject of subjects | async">
+    <app-courses [subject]="subject"></app-courses>
+  </ng-container>
 </div>

@@ -2,11 +2,17 @@ import { Chapter } from "./Chapter"
 
 export interface Course {
     _id?: String,
+    author_id?: String,
     course_name: String,
-    description: String,
     image?: {
         contentType: String,
         buffer: String
     },
+    status?: "waiting" | "active" | "banned";
+    description: String,
+    note?: String,
     chapters?: String[],
+    createdAt?: String,
+    updatedAt?: String,
+    subject_id?: String
 }

@@ -32,6 +32,18 @@
         Enter your username to reset your password.
       </small> -->
     </div>
+    <div class="flex flex-col gap-2">
+      <p-dropdown
+        class="w-full"
+        containerStyleClass="w-full"
+        formControlName="subject_id"
+        optionLabel="title"
+        optionValue="_id"
+        editable="true"
+        [options]="(subjects | async) || []"
+        placeholder="Chọn chủ đề"
+      />
+    </div>
     <div>
       <div class="flex gap-4">
         <p-fileUpload

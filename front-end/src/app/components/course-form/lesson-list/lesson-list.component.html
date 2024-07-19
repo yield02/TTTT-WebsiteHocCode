@@ -1,0 +1,13 @@
+<p-orderList
+  [value]="(lessons$ | async) || []"
+  class="lesson-list"
+  [dragdrop]="true"
+>
+  <ng-template let-lesson pTemplate="item">
+    <course-form-lesson
+      [chapter_id]="chapter_id"
+      [lesson]="lesson"
+      [course_id]="this.course_id"
+    ></course-form-lesson>
+  </ng-template>
+</p-orderList>

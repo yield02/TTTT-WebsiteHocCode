@@ -24,10 +24,10 @@
         <p-dropdown
           class="w-full"
           containerStyleClass="w-full"
-          formControlName="chapter"
-          optionLabel="name"
-          optionValue="chapterId"
-          [options]="chapterList"
+          formControlName="chapter_id"
+          optionLabel="title"
+          optionValue="_id"
+          [options]="(chapterList | async) || []"
           placeholder="Chọn chương"
         />
       </div>
@@ -36,7 +36,8 @@
         <editor
           [init]="content"
           outputFormat="html"
-          [formControlName]="'content'"
+          formControlName="content"
+          licenseKey="gpl"
           apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
         ></editor>
       </div>

@@ -36,7 +36,6 @@ export class AuthService {
       switchMap(data => {
         if (!data._id) {
           if (this.cookie.get('token')) {
-            console.log(this.cookie.get('token'));
             return this.getUserInfor();
           }
           else {
@@ -64,7 +63,7 @@ export class AuthService {
   }
 
   signup(userData: { username: string; password: string }): Observable<any> {
-    console.log(environment.apiUrl);
+    // console.log(environment.apiUrl);
     return this.http.post(`${environment.apiUrl}auth/signup`, userData);
   }
 

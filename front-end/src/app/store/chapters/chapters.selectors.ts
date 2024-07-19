@@ -8,7 +8,7 @@ export const selectChapters = (state: AppState): Chapter[] => state.chapters;
 export const selectCourseManager = (state: AppState): Course[] => state.myCourseManager;
 
 
-export const selectChaptersFromId = (course_id: String) => createSelector(
+export const selectChaptersFromCourseId = (course_id: String) => createSelector(
     selectChapters,
     selectCourseManager,
     (chapters: Chapter[], CourseManager: Course[]): Chapter[] => {
@@ -19,4 +19,14 @@ export const selectChaptersFromId = (course_id: String) => createSelector(
         return []
 
     }
+);
+
+export const selectChaptersFromIds = (chapters_id: String[]) => createSelector(
+    selectChapters,
+    (chapters: Chapter[]): Chapter[] => chapters.filter((c: Chapter) => chapters_id.includes(c._id))
+);
+
+export const selectChapterFromId = (chapters_id: String) => createSelector(
+    selectChapters,
+    (chapters: Chapter[]): Chapter | undefined => chapters.find((c: Chapter) => c._id === chapters_id)
 );

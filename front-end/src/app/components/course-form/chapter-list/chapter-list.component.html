@@ -9,54 +9,30 @@
       severity="success"
       (onClick)="showChapterForm()"
     />
-    <p-button
-      label="Thêm bài học"
-      [size]="'small'"
-      [outlined]="true"
-      severity="info"
-      (onClick)="showLessonForm()"
-    />
+    <ng-template [ngIf]="((chapterList | async) || []).length > 0">
+      <p-button
+        label="Thêm bài học"
+        [size]="'small'"
+        [outlined]="true"
+        severity="info"
+        (onClick)="showLessonForm()"
+      />
+    </ng-template>
   </div>
   <p-orderList
     class="chapter-list"
+    styleClass="activity-order-list"
     [value]="(chapterList | async) || []"
     header="Danh sách các chương"
     (onReorder)="getOrder($event)"
+    [tabindex]="0"
     [dragdrop]="true"
   >
     <ng-template let-chapter pTemplate="item">
-      <p-fieldset
-        legend="{{ chapter.title }}"
-        [toggleable]="true"
-        [collapsed]="true"
-      >
-        <p-orderList
-          [value]="chapter.lessons"
-          class="lesson-list"
-          [dragdrop]="true"
-        >
-          <ng-template pTemplate="header"
-            ><div class="flex justify-end gap-4">
-              <p-button
-                icon="pi pi-pencil"
-                [rounded]="true"
-                severity="info"
-                [size]="'small'"
-                (onClick)="showEditChapter(chapter)"
-              />
-              <p-button
-                (onClick)="confirmDelete(chapter._id)"
-                icon="pi pi-trash"
-                [rounded]="true"
-                severity="danger"
-                [size]="'small'"
-              /></div
-          ></ng-template>
-          <ng-template let-lesson pTemplate="item">
-            <course-form-lesson [data]="lesson"></course-form-lesson>
-          </ng-template>
-        </p-orderList>
-      </p-fieldset>
+      <app-chapter
+        [chapter]="chapter"
+        [course_id]="this.course_id"
+      ></app-chapter>
     </ng-template>
   </p-orderList>
 </div>

@@ -12,6 +12,7 @@
   .card-img {
     border-radius: 8px;
     z-index: 0;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px;
   }
 
   .content-card {
@@ -45,6 +46,10 @@
     position: relative;
     overflow: hidden;
     z-index: 1;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+
     .enroll {
       z-index: 1;
       top: 0;

@@ -25,9 +25,9 @@ const routes: Routes = [
                 component: BlogComponent
             },
             {
-                path: 'course',
+                path: 'course/:courseId',
                 component: CourseComponent
-            }
+            },
         ]
     }
 ]

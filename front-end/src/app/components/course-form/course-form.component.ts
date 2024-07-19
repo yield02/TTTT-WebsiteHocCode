@@ -19,12 +19,17 @@ import { Store } from '@ngrx/store';
 import { Update } from '../../store/mycoursemanager/mycoursemanager.actions';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { of, switchMap } from 'rxjs';
+import { Observable, of, switchMap, take, tap } from 'rxjs';
 import { ChapterService } from '../../services/chapter.service';
 import { Router } from '@angular/router';
 import { ChapterListComponent } from './chapter-list/chapter-list.component';
 import { AppState } from '../../store/reducer';
 import { CreateChapter } from '../../store/chapters/chapters.actions';
+import { CreateLessonInterface, Lesson } from '../../models/Lesson';
+import { CreateLesson } from '../../store/lessons/lessons.actions';
+import { Subject } from '../../models/Subject';
+import { fetchingSubjects } from '../../store/subjects/subjects.actions';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 
@@ -41,6 +46,7 @@ import { CreateChapter } from '../../store/chapters/chapters.actions';
     OrderListModule,
     FieldsetModule,
     ToastModule,
+    DropdownModule,
 
     ChapterListComponent,
     LessonFormComponent,
@@ -57,12 +63,16 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
     = {
       _id: '',
       course_name: '',
-      description: ''
+      description: '',
+      subject_id: '',
+
     };
 
   form!: FormGroup;
   lessonFormRef: DynamicDialogRef | undefined;
   chapterFormRef: DynamicDialogRef | undefined;
+  fetched: Boolean = false;
+  subjects!: Observable<Subject[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -84,24 +94,47 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
         course_name: this.course?.course_name,
         description: this.course?.description,
         image: this.course?.image || null,
+        subject_id: this.course?.subject_id,
       })
     }
   }
 
   ngOnInit(): void {
+    this.subjects = this.store.select(state => state.subjects).pipe(tap(subjects => {
+      if (!this.fetched && subjects.length <= 0) {
+        this.store.dispatch(fetchingSubjects());
+        this.fetched = true;
+      }
+    }));
+
     this.form = this.fb.group({
       _id: [this.course?._id],
       course_name: [this.course?.course_name, Validators.compose([Validators.required, Validators.minLength(6)])],
       description: [this.course?.description, Validators.compose([Validators.required, Validators.minLength(20)])],
       image: [this.course?.image || null, Validators.compose([Validators.required])],
+      subject_id: [this.course?.subject_id],
     });
-
   }
 
   showLessonForm() {
     this.lessonFormRef = this.dialogService.open(LessonFormComponent, {
-      header: 'Thêm bài học'
-    });
+      header: 'Thêm bài học',
+      data: {
+        course_id: this.course?._id
+      }
+    },);
+    this.lessonFormRef.onClose.pipe(switchMap((lesson) => {
+      if (lesson) {
+        const data: CreateLessonInterface = {
+          chapter_id: lesson.chapter_id,
+          title: lesson.title,
+          content: lesson.content,
+          video: lesson.video
+        }
+        this.store.dispatch(CreateLesson({ createLesson: data }))
+      }
+      return of(null);
+    })).subscribe();
 
   }
 
@@ -140,7 +173,8 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
     fb.append('image', this.form.value.image);
     fb.append('course_name', this.form.value.course_name);
     fb.append('description', this.form.value.description);
-
+    fb.append('subject_id', this.form.value.subject_id);
+    console.log(this.form.value.subject_id);
     // create course
     if (!this.course?._id) {
       this.courseManagerService.createCourse(fb).subscribe(({ course }) => {

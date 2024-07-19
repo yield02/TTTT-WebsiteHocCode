@@ -6,7 +6,7 @@ import { LearningComponent } from "./learning.component";
 
 const routes: Routes = [
     {
-        path: '',
+        path: ':courseId',
         component: LearningComponent
     }
 ]

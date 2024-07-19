@@ -13,6 +13,7 @@ exports.create = async (req, res, next) => {
       {
         course_name: req.body.course_name,
         description: req.body.description,
+        subject_id: req.body.subject_id,
         author: userInfor._id,
       },
       req.file
@@ -40,6 +41,7 @@ exports.updateCourse = async (req, res, next) => {
       {
         _id: req.body._id,
         course_name: req.body.course_name,
+        subject_id: req.body.subject_id,
         description: req.body.description,
       },
       req?.file,
@@ -56,6 +58,17 @@ exports.getCourseAuthor = async (req, res, next) => {
     const token = req.cookies.token;
     var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
     const courses = await courseManagerService.getByAuthor(userInfor._id);
+    res.status(200).json(courses || []);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.getCoursesFromSubjectId = async (req, res, next) => {
+  try {
+    const courses = await courseManagerService.getBySubjectId(
+      req.query.subject_id
+    );
     res.status(200).json(courses || []);
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));

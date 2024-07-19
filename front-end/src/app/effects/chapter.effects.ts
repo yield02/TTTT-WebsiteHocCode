@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { CreateChapter, CreateChapterSuccess, DeleteChapter, DeleteChapterSuccess, UpdateChapter, UpdateChapterError, UpdateChapterSuccess } from '../store/chapters/chapters.actions';
 import { AddChapter, DeleteChapter as CourseDeleteChapter } from '../store/mycoursemanager/mycoursemanager.actions';
 import { ChapterService } from '../services/chapter.service';
+import { AppState } from '../store/reducer';
+import { select, Store } from '@ngrx/store';
+import { selectChapterFromId } from '../store/chapters/chapters.selectors';
+import { Chapter } from '../models/Chapter';
+import { DeleteLessons } from '../store/lessons/lessons.actions';
 
 @Injectable({ providedIn: 'root' })
 export class ChapterEffects {
 
-    constructor(private actions$: Actions, private chapterService: ChapterService) { }
+    constructor(private actions$: Actions, private chapterService: ChapterService, private _store: Store<AppState>) { }
 
     createChapter$ = createEffect(() =>
         this.actions$.pipe(
@@ -30,6 +35,15 @@ export class ChapterEffects {
             switchMap(_action =>
                 this.chapterService.deleteChapter(_action.course_id, _action.chapter_id)
                     .pipe(
+                        tap(data => {
+                            this._store.pipe(select(selectChapterFromId(_action.chapter_id)),
+                                tap((chapter: Chapter | undefined) => {
+                                    if (chapter?.lessons?.length) {
+                                        this._store.dispatch(DeleteLessons({ lessons_id: chapter.lessons! }))
+                                    }
+                                })
+                            ).subscribe()
+                        }),
                         map(() => DeleteChapterSuccess({ chapter_id: _action.chapter_id })),
                         map(data => ({ ...data, course_id: _action.course_id }))
                     )

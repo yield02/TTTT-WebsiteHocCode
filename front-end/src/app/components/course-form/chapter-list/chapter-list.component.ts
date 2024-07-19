@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
-import { OrderListModule } from 'primeng/orderlist';
+import { OrderListModule, OrderList } from 'primeng/orderlist';
 import { FieldsetModule } from 'primeng/fieldset';
 import { select, Store } from '@ngrx/store';
 import { exhaustMap, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -18,6 +18,8 @@ import { ConfirmationService } from 'primeng/api';
 import { DeleteChapter, UpdateChapter } from '../../../store/chapters/chapters.actions';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ChapterFormComponent } from '../chapter-form/chapter-form.component';
+import { LessonListComponent } from '../lesson-list/lesson-list.component';
+import { ChapterComponent } from '../chapter/chapter.component';
 @Component({
     selector: 'app-chapter-list',
     standalone: true,
@@ -29,6 +31,8 @@ import { ChapterFormComponent } from '../chapter-form/chapter-form.component';
         ConfirmDialogModule,
 
         LessonComponent,
+        LessonListComponent,
+        ChapterComponent,
     ],
     providers: [ConfirmationService],
     templateUrl: './chapter-list.component.html',
@@ -42,25 +46,22 @@ export class ChapterListComponent implements OnInit, OnChanges {
     @Output() showLessonFormEvent = new EventEmitter();
 
     lessonFormRef: DynamicDialogRef | undefined;
-    chapterFormRef: DynamicDialogRef | undefined;
     chapterList!: Observable<Chapter[]>;
     isFetching: boolean = false;
     constructor(
         private _store: Store<AppState>,
         private _chapterService: ChapterService,
-        private _confirmationService: ConfirmationService,
-        private _dialogService: DialogService,
+
 
     ) {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(changes);
     }
 
     ngOnInit(): void {
         this.chapterList = this._store.pipe(
-            select(chaptersSelectors.selectChaptersFromId(this.course_id)),
+            select(chaptersSelectors.selectChaptersFromCourseId(this.course_id)),
             switchMap(chapters => {
                 if (chapters.length == 0 && !this.isFetching) {
                     this.isFetching = true;
@@ -80,49 +81,10 @@ export class ChapterListComponent implements OnInit, OnChanges {
         this.showLessonFormEvent.emit();
     }
 
-    onSelectChapter(event: any) {
-        console.log(event)
-    }
 
-    getOrder(event: any) {
+    getOrder(event: Event) {
         console.log(event);
     }
 
-    deleteChapter(chapter_id: String) {
-        this._store.dispatch(DeleteChapter({ course_id: this.course_id, chapter_id: chapter_id }));
-    }
 
-    confirmDelete(chapter_id: String) {
-        this._confirmationService.confirm({
-            message: 'Bạn có chắc chắn muốn xóa chương này?',
-            header: 'Xóa chương',
-            icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Xóa',
-            rejectLabel: 'Hủy',
-            acceptButtonStyleClass: "p-button-danger p-button-text",
-            rejectButtonStyleClass: "p-button-text p-button-text",
-            accept: () => {
-                this.deleteChapter(chapter_id);
-            },
-            reject: () => {
-                console.log('hủy')
-            },
-        });
-    }
-
-    showEditChapter(chapter: Chapter) {
-        this.chapterFormRef = this._dialogService.open(ChapterFormComponent, {
-            header: 'Chỉnh sửa chương', data: {
-                chapterTitle: chapter.title,
-            }
-        });
-        this.chapterFormRef.onClose.pipe(
-            exhaustMap((title) => {
-                if (title != chapter.title) {
-                    this._store.dispatch(UpdateChapter({ chapter_id: chapter._id, title: title }))
-                }
-                return of(null);
-            })
-        ).subscribe();
-    }
 }

@@ -17,6 +17,7 @@ exports.create = async (data, file) => {
     const newCourse = new course({
       course_name: data.course_name,
       description: data.description,
+      subject_id: data.subject_id,
       author_id: data.author,
       image: finalImage,
     });
@@ -43,7 +44,10 @@ exports.create = async (data, file) => {
 
 exports.getById = async (courseId) => {
   try {
-    const courseData = await course.findById(courseId);
+    const courseData = await course.findOne({
+      _id: courseId,
+      "status.state": "active",
+    });
     if (!courseData) {
       throw new apiError(404, "Course not found");
     }
@@ -65,6 +69,7 @@ exports.update = async (data, file, authorId) => {
 
     courseData.course_name = data.course_name;
     courseData.description = data.description;
+    courseData.subject_id = data.subject_id;
 
     if (file) {
       const buffer = file.buffer;
@@ -105,6 +110,20 @@ exports.getByAuthor = async (authorId) => {
       courses: courses.map((course) => {
         return { ...course._doc };
       }),
+    };
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
+exports.getBySubjectId = async (subjectId) => {
+  try {
+    const courses = await course.find({
+      subject_id: subjectId,
+      "status.state": "active",
+    });
+    return {
+      courses: courses,
     };
   } catch (error) {
     throw new apiError(500, error.message);

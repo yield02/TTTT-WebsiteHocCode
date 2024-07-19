@@ -1,25 +1,26 @@
-<div class="courses">
-  <h1 class="courses-title">JavaScript</h1>
-  <div
-    class="grid grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-12"
-  >
-    <app-course></app-course>
-    <app-course></app-course>
-    <app-course></app-course>
-    <app-course></app-course>
-    <app-course></app-course>
-    <app-course></app-course>
-    <app-course></app-course>
-    <app-course></app-course>
+@if(courses$ | async; as courses) {
+<ng-container *ngIf="courses.length > 0">
+  <div class="courses">
+    <h1 class="courses-title">{{ subject.title }}</h1>
+    <div
+      class="grid grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-12"
+    >
+      <ng-container *ngFor="let course of courses">
+        <app-course [course]="course"></app-course>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="courses.length > page.rows">
+      <div class="flex justify-end items-center pagination">
+        <p-paginator
+          class="paginationItem"
+          (onPageChange)="onPageChange($event)"
+          [first]="page.first"
+          [rows]="page.rows"
+          [totalRecords]="page.total"
+          [showFirstLastIcon]="false"
+        />
+      </div>
+    </ng-container>
   </div>
-  <div class="flex justify-end items-center pagination">
-    <p-paginator
-      class="paginationItem"
-      (onPageChange)="onPageChange($event)"
-      [first]="page.first"
-      [rows]="page.rows"
-      [totalRecords]="page.total"
-      [showFirstLastIcon]="false"
-    />
-  </div>
-</div>
+</ng-container>
+}
