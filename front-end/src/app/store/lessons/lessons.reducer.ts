@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { CreateLessonSucess, DeleteLessons, DeleteLessonSucess, FetchingLessonSucess, UpdateLessonSucess } from './lessons.actions';
+import { CreateLessonSucess, DeleteAllLessons, DeleteLessons, DeleteLessonSucess, FetchingLessonSucess, UpdateLessonSucess } from './lessons.actions';
 import { Lesson } from '../../models/Lesson';
 
 export const initialState: Lesson[] = []
@@ -25,5 +25,8 @@ export const lessonsReducer = createReducer(
     }),
     on(DeleteLessons, (state, { lessons_id }) => {
         return state.filter(item => !lessons_id.includes(item._id));
+    }),
+    on(DeleteAllLessons, (state) => {
+        return [];
     })
 );

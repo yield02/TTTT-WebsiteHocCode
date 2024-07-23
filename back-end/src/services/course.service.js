@@ -129,3 +129,90 @@ exports.getBySubjectId = async (subjectId) => {
     throw new apiError(500, error.message);
   }
 };
+
+exports.userEnroll = async (course_id, user_id) => {
+  try {
+    const course = await course.findByIdAndUpdate(
+      course_id,
+      {
+        $push: { waiting_enroll: user_id },
+      },
+      { new: true }
+    );
+    return {
+      course: course._doc,
+    };
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+exports.acceptEnroll = async (course_id, user_id, author_id) => {
+  try {
+    const course = await course.findOneAndUpdate(
+      { _id: course_id, author_id },
+      {
+        $pull: { waiting_enroll: user_id },
+        $push: { enroll: user_id },
+      },
+      { new: true }
+    );
+    return {
+      course: course._doc,
+    };
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
+exports.rejectEnroll = async (course_id, user_id, author_id) => {
+  try {
+    const course = await course.findOneAndUpdate(
+      { _id: course_id, author_id },
+      {
+        $pull: { waiting_enroll: user_id },
+      },
+      { new: true }
+    );
+    // Thông báo cho người dùng khi từ chối.
+    return {
+      course: course._doc,
+    };
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+exports.deleteEnrollFromAuthor = async (course_id, user_id, author_id) => {
+  try {
+    const course = await course.findOneAndUpdate(
+      { _id: course_id, author_id },
+      {
+        $pull: { enroll: user_id },
+      },
+      { new: true }
+    );
+    // Thông báo cho người dùng khi hủy đăng ký.
+    return {
+      course: course._doc,
+    };
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
+exports.deleteEnrollFromUser = async (course_id, user_id) => {
+  try {
+    const course = await course.findByIdAndUpdate(
+      course_id,
+      {
+        $pull: { enroll: user_id },
+      },
+      { new: true }
+    );
+    // Thông báo cho người dùng khi hủy đăng ký.
+    return {
+      course: course._doc,
+    };
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};

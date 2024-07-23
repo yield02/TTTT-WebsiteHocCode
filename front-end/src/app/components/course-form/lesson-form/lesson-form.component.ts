@@ -9,7 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Editor } from 'tinymce';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducer';
-import { selectChaptersFromCourseId, selectChaptersFromIds } from '../../../store/chapters/chapters.selectors';
+import { selectChaptersMangerFromCourseId } from '../../../store/chapters/chapters.selectors';
 import { Observable } from 'rxjs';
 import { Chapter } from '../../../models/Chapter';
 import { Lesson } from '../../../models/Lesson';
@@ -79,7 +79,7 @@ export class LessonFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this._dialogConfig?.data?.course_id) {
-      this.chapterList = this._store.pipe(select(selectChaptersFromCourseId(this._dialogConfig.data?.course_id)));
+      this.chapterList = this._store.pipe(select(selectChaptersMangerFromCourseId(this._dialogConfig.data?.course_id)));
     }
 
     if (this._dialogConfig?.data?.lesson) {
@@ -88,7 +88,7 @@ export class LessonFormComponent implements OnInit {
     }
 
     if (this.lesson) {
-      const content = this.lesson!.content.toString();
+      const content = this.lesson!.content!.toString();
       this.form = this.fb.group({
         title: [this.lesson.title],
         video: [this.lesson.video],

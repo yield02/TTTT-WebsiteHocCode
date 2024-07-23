@@ -13,7 +13,8 @@ export const CreateChapterSuccess = createAction('[Chapters Component] CreateSuc
 
 // export const loadChapter = createAction('[Chapters Component] loadChapter', props<{ chapter: Chapter }>());
 
-export const FetchChapters = createAction('[Chapters Component] FetchChapters', props<{ fetchValue: Chapter[] }>())
+export const FetchingChapters = createAction('[Chapters Component] FetchingChapters', props<{ course_id: String }>());
+export const FetchChaptersSucess = createAction('[Chapters Component] FetchChaptersSucess', props<{ fetchValue: Chapter[] }>())
 
 export const UpdateChapter = createAction('[Chapters Component] Update', props<{ chapter_id: String, title: String }>());
 export const UpdateChapterSuccess = createAction('[Chapters Component] UpdateChapterSuccess', props<{ chapter_id: String, title: String }>());

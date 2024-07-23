@@ -21,7 +21,7 @@ import { ChapterFormComponent } from '../chapter-form/chapter-form.component';
 import { LessonListComponent } from '../lesson-list/lesson-list.component';
 import { ChapterComponent } from '../chapter/chapter.component';
 @Component({
-    selector: 'app-chapter-list',
+    selector: 'course-form-chapter-list',
     standalone: true,
     imports: [
         CommonModule,
@@ -61,7 +61,7 @@ export class ChapterListComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.chapterList = this._store.pipe(
-            select(chaptersSelectors.selectChaptersFromCourseId(this.course_id)),
+            select(chaptersSelectors.selectChaptersMangerFromCourseId(this.course_id)),
             switchMap(chapters => {
                 if (chapters.length == 0 && !this.isFetching) {
                     this.isFetching = true;
@@ -70,7 +70,7 @@ export class ChapterListComponent implements OnInit, OnChanges {
                 }
                 console.log('return ChapterList from store');
                 return of(chapters);
-            })
+            }),
         );
     }
 

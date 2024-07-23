@@ -15,3 +15,5 @@ export const DeleteLesson = createAction('[Lessons Component] deleteLesson', pro
 export const DeleteLessonSucess = createAction('[Lessons Component] deleteLessonSucess', props<{ lesson_id: String }>());
 
 export const DeleteLessons = createAction('[Lessons Component] deleteLessons', props<{ lessons_id: String[] }>());
+
+export const DeleteAllLessons = createAction('[Lessons Component] deleteAllLessons');

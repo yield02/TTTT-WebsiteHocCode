@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { CreateChapter, UpdateChapter, CreateChapterSuccess, FetchChapters, DeleteChapterSuccess, UpdateChapterSuccess, ChapterCreateLesson, ChapterUpdateLesson, ChapterDeleteLesson } from './chapters.actions';
+import { CreateChapter, UpdateChapter, CreateChapterSuccess, DeleteChapterSuccess, UpdateChapterSuccess, ChapterCreateLesson, ChapterUpdateLesson, ChapterDeleteLesson, FetchChaptersSucess } from './chapters.actions';
 import { Chapter } from '../../models/Chapter';
 
 export const initialState: Chapter[] = []
@@ -21,7 +21,7 @@ export const chaptersReducer = createReducer(
             return chapter;
         });
     }),
-    on(FetchChapters, (state, { fetchValue }) => {
+    on(FetchChaptersSucess, (state, { fetchValue }) => {
         return [...fetchValue];
     }),
     on(DeleteChapterSuccess, (state, { chapter_id }) => {

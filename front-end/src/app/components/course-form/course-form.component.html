@@ -89,10 +89,10 @@
     </div>
   </form>
   <ng-template [ngIf]="course?._id">
-    <app-chapter-list
+    <course-form-chapter-list
       [course_id]="course!._id!"
       (showChapterFormEvent)="showChapterForm()"
       (showLessonFormEvent)="showLessonForm()"
-    ></app-chapter-list>
+    ></course-form-chapter-list>
   </ng-template>
 </div>

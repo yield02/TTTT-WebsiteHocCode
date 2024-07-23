@@ -6,8 +6,8 @@ import { Lesson } from "../../models/Lesson";
 
 
 
-export const selectLessons = (state: AppState): Lesson[] => state.lessons;
-export const selectChapters = (state: AppState): Chapter[] => state.chapters;
+const selectLessons = (state: AppState): Lesson[] => state.lessons;
+const selectChapters = (state: AppState): Chapter[] => state.chapters;
 
 
 export const selectLessonsFromChapterId = (chapter_id: String) => createSelector(
@@ -35,4 +35,9 @@ export const isFetchingLessons = (chapter_id: String) => createSelector(
         }
         return chapter?.lessons?.length !== lessonsFilter.length;
     }
+);
+
+export const selectLessonFromId = (lesson_id: String) => createSelector(
+    selectLessons,
+    (lessons: Lesson[]): Lesson | undefined => lessons.find((l: Lesson) => l._id === lesson_id)
 );

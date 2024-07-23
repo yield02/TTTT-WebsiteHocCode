@@ -28,6 +28,10 @@ const courseSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    enroll: [{ type: mongoose.Schema.ObjectId, ref: "User", unique: true }],
+    waiting_enroll: [
+      { type: mongoose.Schema.ObjectId, ref: "User", unique: true },
+    ],
     chapters: [
       {
         type: mongoose.Schema.ObjectId,

@@ -1,49 +1,36 @@
-@if(course$ | async; as course) {
+@if(course$ | async; as course;) {
 <div class="course-container flex md:flex-row max-md:flex-col">
   <div class="md:basis-3/5">
     <h1 class="heading-text my-4">{{ course.course_name }}</h1>
     <div class="description">
       {{ course.description }}
     </div>
+    @if(chapters$ | async; as chapters) {
     <div class="content">
       <h1 class="content-heading my-4">Nội dung khóa học</h1>
       <div class="sumary flex items-center justify-between">
         <div class="flex mb-1">
-          Tổng quát: <span> <b>11</b> phần</span>
+          Tổng quát:
+          <span>
+            <b>{{ chapters.length }}</b> phần</span
+          >
         </div>
         <div class="flex">
-          <button class="expandAllBtn" (click)="expandAll()">Xem tất cả</button>
+          <button (click)="toggleCollapseAll()" class="expandAllBtn">
+            Xem tất cả
+          </button>
         </div>
       </div>
       <div class="content-body">
-        <p-tree [value]="chapters" class="w-full md:w-30rem">
-          <ng-template let-chapter pTemplate="video">
-            <div class="flex justify-between items-center">
-              <div class="flex justify-start items-center">
-                <span class="content-icons"
-                  ><ng-icon name="bootstrapPersonVideo"></ng-icon
-                ></span>
-                <h4 class="content-label">
-                  {{ chapter.label }}
-                </h4>
-              </div>
-              <div class="time-stamp px-4">12:00</div>
-            </div>
-          </ng-template>
-          <ng-template let-chapter pTemplate="text">
-            <h4 class="content-label">
-              <span class="content-icons"
-                ><ng-icon name="ionDocumentTextOutline"></ng-icon
-              ></span>
-              {{ chapter.label }}
-            </h4>
-          </ng-template>
-          <ng-template let-chapter pTemplate="default">
-            <h1 class="chapter-label">{{ chapter.label }}</h1>
-          </ng-template>
-        </p-tree>
+        <ng-container *ngFor="let chapter of chapters">
+          <home-course-chapter
+            [isCollapseAll]="isCollapseAll"
+            [chapter]="chapter"
+          ></home-course-chapter>
+        </ng-container>
       </div>
     </div>
+    }
   </div>
   <div class="md:basis-2/5 max-md:mt-5 md:px-24 flex flex-col items-center">
     <img
@@ -62,6 +49,7 @@
       />
     </div>
     <div class="flex justify-center mt-10">
+      @if(user$ | async; as user) { @if( course?.enroll?.includes(user._id) ) {
       <p-button
         [routerLink]="'/learning/' + course._id"
         label="Bắt đầu học"
@@ -69,6 +57,15 @@
         [raised]="true"
         severity="info"
       />
+      } @else {
+      <p-button
+        [routerLink]="'/learning/' + course._id"
+        label="Đăng ký khóa học"
+        [text]="true"
+        [raised]="true"
+        severity="info"
+      />
+      } }
     </div>
   </div>
 </div>

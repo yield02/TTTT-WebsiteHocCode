@@ -1,0 +1,32 @@
+<div class="chapter-container">
+  <div
+    class="chapter-header bg-grey flex justify-between items-center"
+    (click)="toggleCollapse()"
+  >
+    <div class="">
+      <h1 class="chapter-heading-text">{{ index }}. {{ chapter.title }}</h1>
+      <div>
+        <span class="progress text-gray-400">2/3</span>
+      </div>
+    </div>
+    <button class="collapse-btn">
+      @if(!isCollapsed) {
+      <ng-icon class="collapse-icons" name="heroChevronDown"></ng-icon>
+      } @else {
+      <ng-icon class="collapse-icons" name="heroChevronRight"></ng-icon>
+      }
+    </button>
+  </div>
+  @if(!isCollapsed) {
+  <div class="lesson-collapse pl-4">
+    <ng-container *ngFor="let lesson of lessons$ | async; index as stt">
+      <learning-lesson
+        [lesson]="lesson"
+        [index]="stt + 1"
+        [chapter_index]="this.index"
+        [chapter_id]="chapter._id"
+      ></learning-lesson>
+    </ng-container>
+  </div>
+  }
+</div>

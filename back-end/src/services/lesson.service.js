@@ -2,9 +2,12 @@ const apiError = require("../utils/apiError");
 const Chapter = require("../models/Chapter");
 const Lesson = require("../models/Lesson");
 
-exports.create = async ({ chapter_id, title, content, video }, author_id) => {
+exports.create = async (
+  { chapter_id, title, course_id, content, video },
+  author_id
+) => {
   try {
-    if (!chapter_id || !title || (!content && !video)) {
+    if (!chapter_id || !title || !course_id || (!content && !video)) {
       throw new apiError("Thông tin được yêu cầu không đủ!!!", 400);
     }
     const chapter = await Chapter.findOne({
@@ -14,11 +17,19 @@ exports.create = async ({ chapter_id, title, content, video }, author_id) => {
     if (!chapter) {
       throw new apiError("Không tìm thấy chương", 404);
     }
+
+    const videoId = video.split("watch?v=")[1];
+    let embedUrl = video;
+    if (videoId) {
+      embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    }
+
     const lesson = new Lesson({
       author_id: author_id,
       title: title,
+      course_id: course_id,
       content: content,
-      video: video,
+      video: embedUrl,
       chapter_id: chapter_id,
     });
     const lessonSave = await lesson.save();
@@ -65,20 +76,37 @@ exports.update = async (lesson_id, data, author_id) => {
   }
 };
 
-exports.getLessonList = async (chapter_id, author_id) => {
+exports.getLessonList = async (chapter_id, user_id) => {
   try {
     const chapter = await Chapter.findOne({
       _id: chapter_id,
-      author_id: author_id,
     });
     if (!chapter) {
       throw new apiError("Không tìm thấy chương", 404);
     }
     const lessonListId = chapter.lessons;
-    const lessonList = await Lesson.find({ _id: { $in: lessonListId } });
+    const lessonList = await Lesson.find({
+      _id: { $in: lessonListId },
+    }).populate("course_id");
+
     return {
       lessons: lessonList.map((lesson) => {
-        return { ...lesson._doc };
+        // When user is author or user was enrolled in the course
+        if (
+          lesson.author_id === user_id ||
+          lesson.course_id.enroll.includes(user_id)
+        ) {
+          return { ...lesson._doc, course_id: lesson._doc.course_id._id };
+        }
+        // When user is not author and user was not enrolled in the course
+        else {
+          return {
+            ...lesson._doc,
+            content: "",
+            video: "",
+            course_id: lesson._doc.course_id._id,
+          };
+        }
       }),
     };
   } catch (error) {

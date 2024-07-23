@@ -24,15 +24,6 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.getCourse = async (req, res, next) => {
-  try {
-    const course = await courseManagerService.getById(req.params.id);
-    res.status(200).json(course || "");
-  } catch (error) {
-    return next(new ApiError(error.statusCode, error.message));
-  }
-};
-
 exports.updateCourse = async (req, res, next) => {
   try {
     const token = req.cookies.token;
@@ -70,6 +61,86 @@ exports.getCoursesFromSubjectId = async (req, res, next) => {
       req.query.subject_id
     );
     res.status(200).json(courses || []);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.getCourse = async (req, res, next) => {
+  try {
+    const course = await courseManagerService.getById(req.params.id);
+    res.status(200).json(course || "");
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.userEnroll = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const course = await courseManagerService.enroll(
+      req.body.course_id,
+      userInfor._id
+    );
+    res.status(200).json(course || "");
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+exports.acceptEnroll = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const course = await courseManagerService.acceptEnroll(
+      req.body.course_id,
+      req.body.user_id,
+      userInfor._id
+    );
+    res.status(200).json(course || "");
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+exports.rejectEnroll = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const course = await courseManagerService.rejectEnroll(
+      req.body.course_id,
+      req.body.user_id,
+      userInfor._id
+    );
+    res.status(200).json(course || "");
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.deleteEnrollFromAuthor = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const course = await courseManagerService.deleteEnrollFromAuthor(
+      req.body.course_id,
+      req.body.user_id,
+      userInfor._id
+    );
+    res.status(200).json(course || "");
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.deleteEnrollFromUser = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const course = await courseManagerService.deleteEnrollFromUser(
+      req.body.course_id,
+      userInfor._id
+    );
+    res.status(200).json(course || "");
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));
   }

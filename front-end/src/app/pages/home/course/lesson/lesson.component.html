@@ -1,0 +1,28 @@
+@if(type == 'video') {
+<ng-container pTemplate="video">
+  <div class="pl-4">
+    <div class="lesson-container flex justify-between items-center">
+      <div class="flex justify-start items-center">
+        <span class="content-icons"
+          ><ng-icon name="bootstrapPersonVideo"></ng-icon
+        ></span>
+        <h4 class="content-label">{{ lesson.title }}</h4>
+      </div>
+      <div class="time-stamp px-4">12:00</div>
+    </div>
+  </div>
+</ng-container>
+} @else {
+<ng-container pTemplate="text">
+  <div class="pl-4">
+    <div class="lesson-container">
+      <h4 class="content-label">
+        <span class="content-icons"
+          ><ng-icon name="ionDocumentTextOutline"></ng-icon
+        ></span>
+        {{ lesson.title }}
+      </h4>
+    </div>
+  </div>
+</ng-container>
+}

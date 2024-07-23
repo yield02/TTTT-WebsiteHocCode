@@ -13,20 +13,6 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.getLessonList = async (req, res, next) => {
-  try {
-    const token = req.cookies.token;
-    var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const lessonList = await lessonService.getLessonList(
-      req.params.chapter_id,
-      userInfor._id
-    );
-    res.status(200).json(lessonList || []);
-  } catch (error) {
-    return next(new ApiError(error.statusCode, error.message));
-  }
-};
-
 exports.delete = async (req, res, next) => {
   try {
     const token = req.cookies.token;
@@ -51,6 +37,23 @@ exports.update = async (req, res, next) => {
       userInfor._id
     );
     res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.getLessonList = async (req, res, next) => {
+  const token = req.cookies.token;
+  var userInfor = "";
+  if (token) {
+    userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+  }
+  try {
+    const lessonList = await lessonService.getLessonList(
+      req.params.chapter_id,
+      userInfor._id
+    );
+    res.status(200).json(lessonList || []);
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));
   }

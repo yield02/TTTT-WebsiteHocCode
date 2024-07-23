@@ -10,6 +10,8 @@ export interface Course {
     },
     status?: "waiting" | "active" | "banned";
     description: String,
+    enroll?: String[],
+    waiting_enroll?: String[],
     note?: String,
     chapters?: String[],
     createdAt?: String,

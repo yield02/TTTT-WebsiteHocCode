@@ -6,13 +6,26 @@ import { Course } from "../../models/Course";
 
 export const selectChapters = (state: AppState): Chapter[] => state.chapters;
 export const selectCourseManager = (state: AppState): Course[] => state.myCourseManager;
+export const selectCourses = (state: AppState): Course[] => state.courses;
 
-
-export const selectChaptersFromCourseId = (course_id: String) => createSelector(
+export const selectChaptersMangerFromCourseId = (course_id: String) => createSelector(
     selectChapters,
     selectCourseManager,
     (chapters: Chapter[], CourseManager: Course[]): Chapter[] => {
         const course = CourseManager.find((c: Course) => c._id === course_id);
+        if (course) {
+            return chapters.filter((c: Chapter) => course!.chapters!.includes(c._id))
+        }
+        return []
+
+    }
+);
+
+export const selectChaptersFromCourseId = (course_id: String) => createSelector(
+    selectChapters,
+    selectCourses,
+    (chapters: Chapter[], courses: Course[]): Chapter[] => {
+        const course = courses.find((c: Course) => c._id === course_id);
         if (course) {
             return chapters.filter((c: Chapter) => course!.chapters!.includes(c._id))
         }

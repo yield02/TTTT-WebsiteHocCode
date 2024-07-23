@@ -5,6 +5,11 @@ const lessonSchema = new mongoose.Schema(
   {
     lesson_id: Number,
     author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
+    course_id: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Course",
+      required: true,
+    },
     title: { type: String, required: true },
     content: { type: Object, required: false },
     video: { type: String, required: false },

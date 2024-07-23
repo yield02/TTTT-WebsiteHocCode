@@ -127,6 +127,7 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
       if (lesson) {
         const data: CreateLessonInterface = {
           chapter_id: lesson.chapter_id,
+          course_id: this.course?._id!,
           title: lesson.title,
           content: lesson.content,
           video: lesson.video

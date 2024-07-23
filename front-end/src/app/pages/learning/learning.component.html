@@ -1,3 +1,4 @@
+@if(course$ | async ) {
 <div class="learning-container">
   <div class="header">
     <app-learning-header
@@ -7,7 +8,7 @@
   </div>
   <div class="grid lg:grid-cols-4 py-2">
     <div class="scroll-container lg:col-span-3 overflow-y-scroll" #content>
-      <app-lesson></app-lesson>
+      <learning-lesson-content></learning-lesson-content>
     </div>
     <div
       class="scroll-container col-span-1 overflow-y-scroll max-lg:hidden"
@@ -22,7 +23,8 @@
     </ng-container>
   </div>
 </div>
+}
 
 <ng-template #chapterList>
-  <app-chapterlist [selectedChapter]="selectedChapter"></app-chapterlist>
+  <app-chapterlist></app-chapterlist>
 </ng-template>

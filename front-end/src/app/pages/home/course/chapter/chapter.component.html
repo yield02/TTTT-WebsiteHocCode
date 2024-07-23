@@ -1,0 +1,26 @@
+<div class="chapter-container">
+  <div class="chapter-header flex justify-between items-center">
+    <div class="flex justify-start items-center">
+      <button (click)="toggleCollapse()">
+        @if(this.isCollapsed) {
+        <ng-icon class="collapse-icon text-blue-500" name="heroPlus"></ng-icon>
+        } @if(!this.isCollapsed) {
+        <ng-icon class="collapse-icon text-blue-500" name="heroMinus"></ng-icon>
+        }
+      </button>
+      <h2 class="chapter-heading-text">{{ chapter.title }}</h2>
+    </div>
+    <div>
+      <span class="total-lesson text-gray-400">
+        {{ chapter.lessons?.length }} bài học
+      </span>
+    </div>
+  </div>
+  @if(!isCollapsed) {
+  <div class="lesson-collapse">
+    <ng-container *ngFor="let lesson of lessons$ | async">
+      <home-course-lesson [lesson]="lesson"></home-course-lesson>
+    </ng-container>
+  </div>
+  }
+</div>

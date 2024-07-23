@@ -11,6 +11,7 @@ module.exports = {
     backgroundColor: {
       grey: "#eff6ff",
       white: "#ffffff",
+      blue: "rgba (70, 194, 218, 0.8)",
     },
     colors: ({ colors }) => ({
       inherit: colors.inherit,

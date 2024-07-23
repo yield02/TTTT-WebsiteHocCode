@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { MessageService } from 'primeng/api';
 import { Delete, Update } from '../store/user/user.actions';
 import { Router } from '@angular/router';
+import { AppState } from '../store/reducer';
 
 interface LoginResponse {
   user: User,
@@ -24,7 +25,7 @@ interface LoginResponse {
 
 export class AuthService {
 
-  constructor(private http: HttpClient, private store: Store<{ user: User }>, private cookie: CookieService, private messageService: MessageService, private router: Router) {
+  constructor(private http: HttpClient, private store: Store<AppState>, private cookie: CookieService, private messageService: MessageService, private router: Router) {
 
   }
 
@@ -70,7 +71,7 @@ export class AuthService {
   login(userData: { username: string; password: string }): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiUrl}auth/login`, userData).pipe(tap(data => {
       if (data.token) {
-        this.cookie.set('token', data.token, 1);
+        this.cookie.set('token', data.token, 1, '/');
         this.store.dispatch(Update({ updateValue: data.user }));
       }
     }));

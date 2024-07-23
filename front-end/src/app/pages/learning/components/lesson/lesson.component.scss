@@ -1,41 +1,32 @@
 .lesson-container {
-  position: relative;
-  .video-wrapper {
-    background-color: rgba(0, 0, 0, 1);
-    padding: 0 8.5%;
-    position: relative;
-    width: 100%;
+  padding: 8px 16px 8px 16px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  margin-bottom: 12px;
 
-    .video-play-wapper {
-      padding-top: 56.25%;
-      position: relative;
-      .video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-    }
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  background: rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.15);
   }
 
-  .content-container {
-    padding: 0 8.5%;
-    .content-heading {
-      font-size: 26px;
-      font-weight: 800;
-    }
-    .time-stamp {
-      font-size: 14px;
-      font-style: italic;
-      opacity: 0.5;
-    }
+  &.active {
+    background-color: rgba(70, 194, 218, 0.35);
   }
 
-  .comment {
-    position: -webkit-sticky;
-    position: sticky;
-    bottom: 0px;
-    right: 10px;
+  &.studied {
+    background: white;
+  }
+
+  .checked-icon {
+    font-size: 24px;
+  }
+  .sub-icon {
+    font-size: 14px;
   }
 }

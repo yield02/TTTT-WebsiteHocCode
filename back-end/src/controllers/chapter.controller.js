@@ -18,22 +18,6 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.getChapterList = async (req, res, next) => {
-  try {
-    const token = req.cookies.token;
-
-    var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-    const chapterList = await chapterManagerService.getChapterList(
-      req.params.course_id,
-      userInfor._id
-    );
-    res.status(200).json(chapterList || []);
-  } catch (error) {
-    return next(new ApiError(error.statusCode, error.message));
-  }
-};
-
 exports.delete = async (req, res, next) => {
   try {
     const token = req.cookies.token;
@@ -61,6 +45,19 @@ exports.update = async (req, res, next) => {
       userInfor._id
     );
     res.status(204).json({});
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.getChapterList = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+
+    const chapterList = await chapterManagerService.getChapterList(
+      req.params.course_id
+    );
+    res.status(200).json(chapterList || []);
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));
   }

@@ -5,7 +5,7 @@ import { map, Observable, tap } from 'rxjs';
 import { Chapter } from '../models/Chapter';
 import { Store } from '@ngrx/store';
 import { AppState } from '../store/reducer';
-import { FetchChapters, UpdateChapter } from '../store/chapters/chapters.actions';
+import { FetchChaptersSucess, UpdateChapter } from '../store/chapters/chapters.actions';
 import { AddChapter } from '../store/mycoursemanager/mycoursemanager.actions';
 
 interface createChapter {
@@ -26,13 +26,6 @@ export class ChapterService {
     return this.http.post<{ chapter: Chapter }>(`${environment.apiUrl}chapter/create`, {
       data
     }, { withCredentials: true });
-    // .pipe(tap(res => {
-    //   // error
-    //   this._store.dispatch(AddChapter({ course_id: data.course_id, chapter_id: res.chapter._id }))
-    //   this._store.dispatch(Create({ chapter: res.chapter }));
-    // }));
-
-    // Phương pháp giải quyết tạm thời là setTimeOut
   }
 
   getChapterList(course_id: String): Observable<Chapter[]> {
@@ -42,9 +35,13 @@ export class ChapterService {
           return data.chapterList;
         }),
         tap((chapterList: Chapter[]) => {
-          this._store.dispatch(FetchChapters({ fetchValue: chapterList }))
+          this._store.dispatch(FetchChaptersSucess({ fetchValue: chapterList }))
         })
       );
+  }
+
+  getChaptersFromCourseId(course_id: String): Observable<Chapter[]> {
+    return this.http.get<{ chapterList: Chapter[] }>(`${environment.apiUrl}chapter/${course_id}`, { withCredentials: true }).pipe(map(data => data.chapterList));
   }
 
   deleteChapter(course_id: String, chapter_id: String): Observable<any> {

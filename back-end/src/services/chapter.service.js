@@ -25,11 +25,10 @@ exports.create = async (data, author_id) => {
   }
 };
 
-exports.getChapterList = async (course_id, author_id) => {
+exports.getChapterList = async (course_id) => {
   try {
     const course = await Course.findOne({
       _id: course_id,
-      author_id: author_id,
     });
     if (!course) {
       throw new apiError(

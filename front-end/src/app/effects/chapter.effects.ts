@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
-import { CreateChapter, CreateChapterSuccess, DeleteChapter, DeleteChapterSuccess, UpdateChapter, UpdateChapterError, UpdateChapterSuccess } from '../store/chapters/chapters.actions';
+import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
+import { CreateChapter, CreateChapterSuccess, DeleteChapter, DeleteChapterSuccess, FetchChaptersSucess, FetchingChapters, UpdateChapter, UpdateChapterError, UpdateChapterSuccess } from '../store/chapters/chapters.actions';
 import { AddChapter, DeleteChapter as CourseDeleteChapter } from '../store/mycoursemanager/mycoursemanager.actions';
 import { ChapterService } from '../services/chapter.service';
 import { AppState } from '../store/reducer';
@@ -66,5 +66,16 @@ export class ChapterEffects {
                 // })
             )
         ),
+    ))
+
+    loadChapter$ = createEffect(() => this.actions$.pipe(
+        ofType(FetchingChapters),
+        mergeMap(_action => {
+            return this.chapterService.getChaptersFromCourseId(_action.course_id)
+                .pipe(
+                    map(chapters => FetchChaptersSucess({ fetchValue: chapters })),
+                    catchError(error => of())
+                )
+        })
     ))
 }

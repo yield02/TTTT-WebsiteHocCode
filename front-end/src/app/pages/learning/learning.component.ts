@@ -1,11 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { LearningHeaderComponent } from './components/learning-header/learning-header.component';
-import { LessonComponent } from './components/lesson/lesson.component';
-import { ChapterlistComponent } from './components/chapterlist/chapterlist.component';
+import { LessonComponent } from './components/lesson-content/lesson-content.component';
 import { SidebarModule } from 'primeng/sidebar';
 import { TreeNode } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
+import { ChapterlistComponent } from './components/chapterlist/chapterlist.component';
+import { ActivatedRoute } from '@angular/router';
+import { Course } from '../../models/Course';
+import { Observable, tap } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { AppState } from '../../store/reducer';
+import { selectCourseFromCourseId } from '../../store/courses/courses.selector';
+import { FetchingCourseFromCourseId } from '../../store/courses/courses.actions';
 
 @Component({
   selector: 'app-learning',
@@ -22,17 +28,32 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './learning.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LearningComponent implements AfterViewInit {
+export class LearningComponent implements OnInit {
 
   @ViewChild('content') content!: ElementRef<HTMLDivElement>;
   @ViewChild('lessonBar') lessonBar!: ElementRef<HTMLDivElement>;
   @ViewChild('chapterlist') chapterlist!: ElementRef<CommonModule>;
 
-  selectedChapter!: TreeNode;
   sidebarVisible: boolean = false;
+  course$!: Observable<Course | undefined>;
+  isFetched: boolean = false;
 
-  ngAfterViewInit(): void {
-    console.log(this.lessonBar);
+
+
+  constructor(private _activatedRoute: ActivatedRoute, private _store: Store<AppState>) {
+
+  }
+
+
+  ngOnInit(): void {
+    const course_id = this._activatedRoute.snapshot.paramMap.get('courseId');
+
+    this.course$ = this._store.pipe(select(selectCourseFromCourseId(course_id!)), tap((course) => {
+      if (!course && !this.isFetched) {
+        this._store.dispatch(FetchingCourseFromCourseId({ course_id: course_id! }));
+        this.isFetched = true;
+      }
+    }))
   }
 
   toggleLessonBar() {

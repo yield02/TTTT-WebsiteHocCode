@@ -1,15 +1,17 @@
 export interface Lesson {
     _id: String,
     title: String,
-    content: String,
-    video: String,
+    content?: String,
+    video?: String,
     createdAt?: String,
-    updatedAt?: String
+    updatedAt?: String,
+    course_id: String,
 }
 
 
 export interface CreateLessonInterface {
     chapter_id: String,
+    course_id: String,
     title: String,
     content: String,
     video: String
