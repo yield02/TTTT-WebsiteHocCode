@@ -74,9 +74,7 @@ export class WaitingListComponent implements OnInit, OnDestroy, OnChanges, After
     ngAfterViewInit(): void {
 
         this.subcriptions.push(this.searchForm.valueChanges?.pipe(debounceTime(500), tap(data => {
-            if (data.username) {
-                this.userFetching$.next({ username: data.username, pagination: this.paginator });
-            }
+            this.userFetching$.next({ username: data.username, pagination: this.paginator });
         })).subscribe()!);
 
         this.userFetching$.next({ username: '', pagination: this.paginator });
@@ -86,7 +84,6 @@ export class WaitingListComponent implements OnInit, OnDestroy, OnChanges, After
         if (changes['course']) {
             this.userFetching$.next({ username: '', pagination: this.paginator });
         }
-        console.log(changes);
     }
 
     searchUser(username: String): Observable<User[]> {

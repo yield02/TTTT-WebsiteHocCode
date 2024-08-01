@@ -78,6 +78,12 @@ export class CourseManagerService {
     });
   }
 
+  deleteUserEnrollFromAuth(course_id: String, users_id: String[]): Observable<Course> {
+    return this.http.patch<Course>(`${environment.apiUrl}course/enroll/delete/${course_id}`, { users_id }, {
+      withCredentials: true,
+    });
+  }
+
 
 
 

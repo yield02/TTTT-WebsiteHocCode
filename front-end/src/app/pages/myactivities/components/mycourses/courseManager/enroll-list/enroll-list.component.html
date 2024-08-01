@@ -1,31 +1,57 @@
-<div class="enroll-list-container w-full">
-  <h1 class="title">Thành viên</h1>
+<p-confirmDialog></p-confirmDialog>
+<div class="w-full">
+  <h1 class="title mt-4">Thành Viên</h1>
   <div class="enroll-list w-full">
     <div class="tools flex justify-between items-center">
-      <div>
-        <p-checkbox [binary]="true" inputId="checkAll" />
+      <div class="flex gap-4">
+        <div>
+          <p-checkbox
+            [binary]="true"
+            inputId="checkAll"
+            [ngModel]="checkAll"
+            (ngModelChange)="toggleCheckAll()"
+          />
+          <span class="check-quantity">
+            {{
+              usersCheckedId.length > 0 ? "(" + usersCheckedId.length + ")" : ""
+            }}
+          </span>
+        </div>
+
         <label class="ml-1 max-md:hidden" for="checkAll">Đánh dấu tất cả</label>
       </div>
       <div class="flex justify-center items-center gap-2">
-        <input
-          class="searchInput"
-          placeholder="Nhập tên người dùng"
-          pInputText
-        />
+        <form #searchForm="ngForm">
+          <input
+            class="searchInput"
+            name="username"
+            placeholder="Nhập tên người dùng"
+            pInputText
+            [(ngModel)]="findUserName"
+            #searchInput
+          />
+        </form>
         <p-button
+          class="max-sm:hidden"
           [size]="'small'"
+          (onClick)="DeleteEnrollFromAuthConfirm($event)"
           label="Xóa học viên"
           [outlined]="true"
           severity="danger"
         />
       </div>
     </div>
-    <div>
-      @if(enrollUsers$ | async; as users) {
+    <div class="list-container">
+      @if(userList$ | async; as users) {
       <ng-container *ngFor="let user of users">
-        <course-manager-enroll-item [user]="user"></course-manager-enroll-item>
+        <course-manager-enroll-item
+          (addCheck)="addCheckList($event)"
+          (removeCheck)="removeCheckList($event)"
+          [checkAll]="checkAll"
+          [user]="user"
+        ></course-manager-enroll-item>
       </ng-container>
-      }
+      } @else { Danh sách trống }
     </div>
     <div class="paginator">
       <p-paginator

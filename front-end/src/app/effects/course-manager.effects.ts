@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { CourseManagerService } from "../services/course-manger.service";
-import { AcceptEnroll, Add, FetchCourseManager, fetchUsersInCourse, FindUserInCourseWithUserName, RejectEnroll, UpdateCourseManager } from "../store/mycoursemanager/mycoursemanager.actions";
+import { AcceptEnroll, Add, DeleteUserEnrollFromAuth, FetchCourseManager, fetchUsersInCourse, RejectEnroll, UpdateCourseManager } from "../store/mycoursemanager/mycoursemanager.actions";
 import { catchError, debounceTime, map, of, switchMap, take, tap, throttleTime, timer } from "rxjs";
 import { fetchUsersSuccess } from "../store/users/users.actions";
 
@@ -53,6 +53,16 @@ export class CoursesManagerEffects {
         switchMap(_action => this._courseManagerService.getUsersInCourse(_action.course_id, _action.filter, _action.typeList)
             .pipe(
                 map((users) => fetchUsersSuccess({ users: users })),
+                catchError((error) => of())
+            )
+        )
+    ));
+
+    deleteEnrollFromAuth$ = createEffect(() => this.actions$.pipe(
+        ofType(DeleteUserEnrollFromAuth),
+        switchMap(_action => this._courseManagerService.deleteUserEnrollFromAuth(_action.course_id, _action.users_id)
+            .pipe(
+                map((course) => UpdateCourseManager({ course })),
                 catchError((error) => of())
             )
         )

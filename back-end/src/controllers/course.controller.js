@@ -122,8 +122,8 @@ exports.deleteEnrollFromAuthor = async (req, res, next) => {
     const token = req.cookies.token;
     var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
     const course = await courseManagerService.deleteEnrollFromAuthor(
-      req.body.course_id,
-      req.body.user_id,
+      req.params.course_id,
+      req.body.users_id,
       userInfor._id
     );
     res.status(200).json(course || "");

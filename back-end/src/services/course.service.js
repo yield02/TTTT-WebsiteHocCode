@@ -148,7 +148,6 @@ exports.userEnroll = async (course_id, user_id) => {
 };
 
 exports.acceptEnroll = async (course_id, users_id, author_id) => {
-  console.log("co vo day");
   try {
     const course = await Course.findOneAndUpdate(
       { _id: course_id, author_id },
@@ -158,8 +157,6 @@ exports.acceptEnroll = async (course_id, users_id, author_id) => {
       },
       { new: true }
     );
-
-    console.log(course);
 
     const updateLearningOfUser = await User.updateMany(
       { _id: { $in: users_id } },
@@ -176,7 +173,6 @@ exports.acceptEnroll = async (course_id, users_id, author_id) => {
 
 exports.rejectEnroll = async (course_id, users_id, author_id) => {
   try {
-    console.log(users_id, course_id);
     const course = await Course.findOneAndUpdate(
       { _id: course_id, author_id },
       {
@@ -184,21 +180,33 @@ exports.rejectEnroll = async (course_id, users_id, author_id) => {
       },
       { new: true }
     );
+    const updateLearningOfUser = await User.updateMany(
+      { _id: { $in: users_id } },
+      {
+        $push: { learning: course_id },
+      }
+    );
     // Thông báo cho người dùng khi từ chối.
     return course;
   } catch (error) {
     throw new apiError(500, error.message);
   }
 };
-exports.deleteEnrollFromAuthor = async (course_id, user_id, author_id) => {
+exports.deleteEnrollFromAuthor = async (course_id, users_id, author_id) => {
   try {
-    console.log("xóa tác giả");
     const course = await Course.findOneAndUpdate(
       { _id: course_id, author_id },
       {
-        $pull: { enroll: user_id },
+        $pull: { enroll: { $in: users_id } },
       },
       { new: true }
+    );
+
+    const updateLearningOfUser = await User.updateMany(
+      { _id: { $in: users_id } },
+      {
+        $pull: { learning: course_id },
+      }
     );
     // Thông báo cho người dùng khi hủy đăng ký.
     return course;
@@ -216,6 +224,9 @@ exports.deleteEnrollFromUser = async (course_id, user_id) => {
       },
       { new: true }
     );
+    const updateLearningOfUser = await User.findById(user_id, {
+      $pull: { learning: course_id },
+    });
     // Thông báo cho người dùng khi hủy đăng ký.
     return course;
   } catch (error) {

@@ -22,3 +22,5 @@ export const RejectEnroll = createAction('[mycoursemanager Component] RejectEnro
 export const FindUserInCourseWithUserName = createAction('[mycoursemanager Component] FetchUsersWithUserName', props<{ username: String, course_id: String, typeList: 'enroll' | 'waiting_enroll' }>());
 
 export const fetchUsersInCourse = createAction('[Users Component] Fetch Users', props<{ course_id: String, filter: Filter, typeList: 'enroll' | 'waiting_enroll' }>());
+
+export const DeleteUserEnrollFromAuth = createAction('[Users Component] Delete User Enroll', props<{ course_id: String, users_id: String[] }>());
