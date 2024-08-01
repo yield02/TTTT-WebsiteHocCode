@@ -25,7 +25,7 @@ export class CourseEditComponent {
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private courseManager: Store<AppState>, private courseService: CourseManagerService) {
     let _id: String = this.activatedRoute.snapshot.paramMap.get('courseid') || '';
     this.course = this.courseManager.pipe(
-      select(CourseManagerSelectors.selectCourseFromId(_id)),
+      select(CourseManagerSelectors.selectCourseManagerFromId(_id)),
       switchMap((course) => {
         if (course) {
           return of(course);

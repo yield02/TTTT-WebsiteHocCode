@@ -1,9 +1,10 @@
-import { createSelector } from "@ngrx/store";
+import { createSelector, select } from "@ngrx/store";
 import { Course } from "../../models/Course";
 import { AppState } from "../reducer";
+import { User } from "../../models/User";
 
 
 
-export const selectUserInfor = (state: AppState) => state.user;
-export const selectCourses = (state: AppState) => state.courses;
+export const selectUser = (state: AppState) => state.user;
+
 

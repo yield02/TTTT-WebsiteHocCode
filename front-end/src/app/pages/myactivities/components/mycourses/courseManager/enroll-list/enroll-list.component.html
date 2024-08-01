@@ -1,0 +1,39 @@
+<div class="enroll-list-container w-full">
+  <h1 class="title">Thành viên</h1>
+  <div class="enroll-list w-full">
+    <div class="tools flex justify-between items-center">
+      <div>
+        <p-checkbox [binary]="true" inputId="checkAll" />
+        <label class="ml-1 max-md:hidden" for="checkAll">Đánh dấu tất cả</label>
+      </div>
+      <div class="flex justify-center items-center gap-2">
+        <input
+          class="searchInput"
+          placeholder="Nhập tên người dùng"
+          pInputText
+        />
+        <p-button
+          [size]="'small'"
+          label="Xóa học viên"
+          [outlined]="true"
+          severity="danger"
+        />
+      </div>
+    </div>
+    <div>
+      @if(enrollUsers$ | async; as users) {
+      <ng-container *ngFor="let user of users">
+        <course-manager-enroll-item [user]="user"></course-manager-enroll-item>
+      </ng-container>
+      }
+    </div>
+    <div class="paginator">
+      <p-paginator
+        (onPageChange)="onPageOfChange($event)"
+        [first]="paginator.first"
+        [rows]="paginator.rows"
+        [totalRecords]="paginator.total"
+      />
+    </div>
+  </div>
+</div>

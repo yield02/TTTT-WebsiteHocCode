@@ -12,7 +12,7 @@ import { Course } from '../../../models/Course';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducer';
 import { selectCourseFromCourseId } from '../../../store/courses/courses.selector';
-import { FetchingCourseFromCourseId } from '../../../store/courses/courses.actions';
+import { FetchingCourseFromCourseId, UserEnrollCourse } from '../../../store/courses/courses.actions';
 import { ChapterComponent } from './chapter/chapter.component';
 import { Chapter } from '../../../models/Chapter';
 import { selectChaptersFromCourseId } from '../../../store/chapters/chapters.selectors';
@@ -72,5 +72,10 @@ export class CourseComponent implements OnInit {
 
   toggleCollapseAll(): void {
     this.isCollapseAll = !this.isCollapseAll;
+  }
+
+
+  enroll(course_id: String) {
+    this._store.dispatch(UserEnrollCourse({ course_id: course_id }));
   }
 }

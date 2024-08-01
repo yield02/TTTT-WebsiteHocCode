@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { LearningHeaderComponent } from './components/learning-header/learning-header.component';
 import { LessonComponent } from './components/lesson-content/lesson-content.component';
 import { SidebarModule } from 'primeng/sidebar';
-import { TreeNode } from 'primeng/api';
 import { ChapterlistComponent } from './components/chapterlist/chapterlist.component';
 import { ActivatedRoute } from '@angular/router';
 import { Course } from '../../models/Course';
@@ -43,6 +42,9 @@ export class LearningComponent implements OnInit {
   constructor(private _activatedRoute: ActivatedRoute, private _store: Store<AppState>) {
 
   }
+
+
+
 
 
   ngOnInit(): void {

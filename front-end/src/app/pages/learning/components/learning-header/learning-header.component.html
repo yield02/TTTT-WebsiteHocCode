@@ -1,3 +1,4 @@
+@if(course$ | async; as course) {
 <div class="learning-header flex justify-between items-center">
   <div class="flex justify-center items-center">
     <div class="navigation-home" routerLink="/home">
@@ -10,9 +11,11 @@
   <div class="flex justify-center items-center">
     <img
       class="course-img"
-      src="https://bkhost.vn/wp-content/uploads/2022/05/angular-JS-logo.jpg"
+      [src]="
+        'data:' + course.image!.contentType! + ';base64,' + course.image!.buffer
+      "
     />
-    <h4 class="course-name">100 ngày với angular</h4>
+    <h4 class="course-name">{{ course.course_name }}</h4>
   </div>
   <div class="sumary-info px-4">
     <p-button
@@ -33,3 +36,4 @@
     </p-button>
   </div>
 </div>
+}

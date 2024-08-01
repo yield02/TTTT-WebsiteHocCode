@@ -1,7 +1,9 @@
-const course = require("../models/Course");
+const Course = require("../models/Course");
+const User = require("../models/User");
 const apiError = require("../utils/apiError");
 const resize = require("../utils/resize");
 const fs = require("fs");
+var mongoose = require("mongoose");
 
 exports.create = async (data, file) => {
   const buffer = file.buffer;
@@ -14,7 +16,7 @@ exports.create = async (data, file) => {
   };
 
   try {
-    const newCourse = new course({
+    const newCourse = new Course({
       course_name: data.course_name,
       description: data.description,
       subject_id: data.subject_id,
@@ -42,24 +44,9 @@ exports.create = async (data, file) => {
   }
 };
 
-exports.getById = async (courseId) => {
-  try {
-    const courseData = await course.findOne({
-      _id: courseId,
-      "status.state": "active",
-    });
-    if (!courseData) {
-      throw new apiError(404, "Course not found");
-    }
-    return { ...courseData._doc };
-  } catch (error) {
-    throw new apiError(500, error.message);
-  }
-};
-
 exports.update = async (data, file, authorId) => {
   try {
-    const courseData = await course.findOne({
+    const courseData = await Course.findOne({
       _id: data._id,
       author_id: authorId,
     });
@@ -103,9 +90,24 @@ exports.update = async (data, file, authorId) => {
   }
 };
 
+exports.getById = async (courseId) => {
+  try {
+    const courseData = await Course.findOne({
+      _id: courseId,
+      "status.state": "active",
+    });
+    if (!courseData) {
+      throw new apiError(404, "Course not found");
+    }
+    return { ...courseData._doc };
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
 exports.getByAuthor = async (authorId) => {
   try {
-    const courses = await course.find({ author_id: authorId });
+    const courses = await Course.find({ author_id: authorId });
     return {
       courses: courses.map((course) => {
         return { ...course._doc };
@@ -118,7 +120,7 @@ exports.getByAuthor = async (authorId) => {
 
 exports.getBySubjectId = async (subjectId) => {
   try {
-    const courses = await course.find({
+    const courses = await Course.find({
       subject_id: subjectId,
       "status.state": "active",
     });
@@ -132,58 +134,66 @@ exports.getBySubjectId = async (subjectId) => {
 
 exports.userEnroll = async (course_id, user_id) => {
   try {
-    const course = await course.findByIdAndUpdate(
+    const course = await Course.findByIdAndUpdate(
       course_id,
       {
         $push: { waiting_enroll: user_id },
       },
       { new: true }
     );
-    return {
-      course: course._doc,
-    };
-  } catch (error) {
-    throw new apiError(500, error.message);
-  }
-};
-exports.acceptEnroll = async (course_id, user_id, author_id) => {
-  try {
-    const course = await course.findOneAndUpdate(
-      { _id: course_id, author_id },
-      {
-        $pull: { waiting_enroll: user_id },
-        $push: { enroll: user_id },
-      },
-      { new: true }
-    );
-    return {
-      course: course._doc,
-    };
+    return course;
   } catch (error) {
     throw new apiError(500, error.message);
   }
 };
 
-exports.rejectEnroll = async (course_id, user_id, author_id) => {
+exports.acceptEnroll = async (course_id, users_id, author_id) => {
+  console.log("co vo day");
   try {
-    const course = await course.findOneAndUpdate(
+    const course = await Course.findOneAndUpdate(
       { _id: course_id, author_id },
       {
-        $pull: { waiting_enroll: user_id },
+        $pull: { waiting_enroll: { $in: users_id } },
+        $push: { enroll: users_id },
+      },
+      { new: true }
+    );
+
+    console.log(course);
+
+    const updateLearningOfUser = await User.updateMany(
+      { _id: { $in: users_id } },
+      {
+        $push: { learning: course_id },
+      }
+    );
+
+    return course;
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
+exports.rejectEnroll = async (course_id, users_id, author_id) => {
+  try {
+    console.log(users_id, course_id);
+    const course = await Course.findOneAndUpdate(
+      { _id: course_id, author_id },
+      {
+        $pull: { waiting_enroll: { $in: users_id } },
       },
       { new: true }
     );
     // Thông báo cho người dùng khi từ chối.
-    return {
-      course: course._doc,
-    };
+    return course;
   } catch (error) {
     throw new apiError(500, error.message);
   }
 };
 exports.deleteEnrollFromAuthor = async (course_id, user_id, author_id) => {
   try {
-    const course = await course.findOneAndUpdate(
+    console.log("xóa tác giả");
+    const course = await Course.findOneAndUpdate(
       { _id: course_id, author_id },
       {
         $pull: { enroll: user_id },
@@ -191,9 +201,7 @@ exports.deleteEnrollFromAuthor = async (course_id, user_id, author_id) => {
       { new: true }
     );
     // Thông báo cho người dùng khi hủy đăng ký.
-    return {
-      course: course._doc,
-    };
+    return course;
   } catch (error) {
     throw new apiError(500, error.message);
   }
@@ -201,7 +209,7 @@ exports.deleteEnrollFromAuthor = async (course_id, user_id, author_id) => {
 
 exports.deleteEnrollFromUser = async (course_id, user_id) => {
   try {
-    const course = await course.findByIdAndUpdate(
+    const course = await Course.findByIdAndUpdate(
       course_id,
       {
         $pull: { enroll: user_id },
@@ -209,9 +217,7 @@ exports.deleteEnrollFromUser = async (course_id, user_id) => {
       { new: true }
     );
     // Thông báo cho người dùng khi hủy đăng ký.
-    return {
-      course: course._doc,
-    };
+    return course;
   } catch (error) {
     throw new apiError(500, error.message);
   }

@@ -49,7 +49,8 @@
       />
     </div>
     <div class="flex justify-center mt-10">
-      @if(user$ | async; as user) { @if( course?.enroll?.includes(user._id) ) {
+      @if(user$ | async; as user) { @if( course?.enroll?.includes(user._id) ||
+      course?.author_id == user._id) {
       <p-button
         [routerLink]="'/learning/' + course._id"
         label="Bắt đầu học"
@@ -57,9 +58,17 @@
         [raised]="true"
         severity="info"
       />
+      } @else if(course?.waiting_enroll?.includes(user._id)) {
+      <p-button
+        disabled="true"
+        label="Chờ Admin duyệt yêu cầu"
+        [text]="true"
+        [raised]="true"
+        severity="help"
+      />
       } @else {
       <p-button
-        [routerLink]="'/learning/' + course._id"
+        (onClick)="enroll(course._id!)"
         label="Đăng ký khóa học"
         [text]="true"
         [raised]="true"

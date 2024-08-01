@@ -1,11 +1,14 @@
+@if (course$ | async; as course) {
 <div class="course-manager-container">
   <div class="flex p-2">
     <img
       class="course-img"
-      src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+      [src]="
+        'data:' + course.image?.contentType + ';base64,' + course.image?.buffer
+      "
     />
     <div>
-      <h1 class="course-name">100 ngày với Angular</h1>
+      <h1 class="course-name">{{ course.course_name }}</h1>
       <div class="rating inline-flex items-center">
         4
         <ng-icon class="rating-icon text-yellow" name="heroStarSolid"></ng-icon>
@@ -16,85 +19,12 @@
     <p-tabPanel header="Quản lý thành viên">
       <div class="member-manager flex justify-center items-center">
         <div class="container flex flex-col justify-center items-center">
-          <h1 class="title">Người đăng ký</h1>
-          <div class="enroll-list w-full">
-            <div class="tools flex justify-between items-center">
-              <div>
-                <p-checkbox [binary]="true" inputId="checkAll" />
-                <label class="ml-1 max-md:hidden" for="checkAll"
-                  >Đánh dấu tất cả</label
-                >
-              </div>
-              <div class="flex justify-center items-center gap-2">
-                <input
-                  class="searchInput"
-                  placeholder="Nhập tên người dùng"
-                  pInputText
-                />
-                <p-button
-                  class="max-sm:hidden"
-                  [size]="'small'"
-                  label="Từ chối"
-                  [outlined]="true"
-                  severity="danger"
-                />
-                <p-button
-                  [size]="'small'"
-                  label="Chấp nhận"
-                  [outlined]="true"
-                  severity="info"
-                />
-              </div>
-            </div>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <div class="paginator">
-              <p-paginator
-                [first]="paginatorEnroll.first"
-                [rows]="5"
-                [totalRecords]="10"
-              />
-            </div>
-          </div>
-          <h1 class="title mt-4">Người học</h1>
-          <div class="enroll-list w-full">
-            <div class="tools flex justify-between items-center">
-              <div>
-                <p-checkbox [binary]="true" inputId="checkAll" />
-                <label class="ml-1 max-md:hidden" for="checkAll"
-                  >Đánh dấu tất cả</label
-                >
-              </div>
-              <div class="flex justify-center items-center gap-2">
-                <input
-                  class="searchInput"
-                  placeholder="Nhập tên người dùng"
-                  pInputText
-                />
-                <p-button
-                  [size]="'small'"
-                  label="Xóa học viên"
-                  [outlined]="true"
-                  severity="danger"
-                />
-              </div>
-            </div>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <course-manager-enroll-item></course-manager-enroll-item>
-            <div class="paginator">
-              <p-paginator
-                [first]="paginatorEnroll.first"
-                [rows]="5"
-                [totalRecords]="10"
-              />
-            </div>
-          </div>
+          <course-manager-waiting-list class="w-full" [course]="course">
+          </course-manager-waiting-list>
+          <course-manager-enroll-list
+            class="w-full"
+            [course]="course"
+          ></course-manager-enroll-list>
         </div>
       </div>
     </p-tabPanel>
@@ -110,3 +40,5 @@
     </p-tabPanel>
   </p-tabView>
 </div>
+
+}

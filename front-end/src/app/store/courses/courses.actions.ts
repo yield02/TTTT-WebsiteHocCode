@@ -11,3 +11,6 @@ export const Create = createAction('[Courses Component] Create', props<{ course:
 export const Update = createAction('[Courses Component] Update', props<{ updateValue: any }>());
 export const Delete = createAction('[Courses Component] Delete');
 
+export const UserEnrollCourse = createAction('[Courses Component] UserEnrollCourse', props<{ course_id: String }>());
+export const UserEnrollCourseSucess = createAction('[Courses Component] UserEnrollCourseSucess', props<{ course: Course }>());
+

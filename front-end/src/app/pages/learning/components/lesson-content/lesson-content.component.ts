@@ -2,7 +2,7 @@ import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
 
 registerLocaleData(vi);
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionChatboxOutline } from '@ng-icons/ionicons';
 import { select, Store } from '@ngrx/store';
@@ -15,6 +15,8 @@ import { selectLessonFromId } from '../../../../store/lessons/lessons.selectors'
 import { FetchingLessons } from '../../../../store/lessons/lessons.actions';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HoursFormatPipe } from '../../../../pipe/my-datetime-format.pipe';
+import { User } from '../../../../models/User';
+import { checkUserEnroll, selectCourseFromCourseId } from '../../../../store/courses/courses.selector';
 @Component({
   selector: 'learning-lesson-content',
   standalone: true,
@@ -30,10 +32,11 @@ import { HoursFormatPipe } from '../../../../pipe/my-datetime-format.pipe';
   styleUrl: './lesson-content.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LessonComponent implements OnInit {
+export class LessonComponent implements OnInit, AfterViewInit {
   isComment: boolean = false;
   course_id!: String;
   lesson$!: Observable<Lesson | undefined>;
+  user$: Observable<User | undefined> = this._store.select(state => state.user);
   isFetched: boolean = false;
 
 
@@ -56,6 +59,17 @@ export class LessonComponent implements OnInit {
     );
 
 
+  }
+
+  ngAfterViewInit(): void {
+    this._store.pipe(select(checkUserEnroll(this._activatedRoute.snapshot.paramMap.get("courseId")!)), tap((isEnroll) => {
+      if (isEnroll) {
+        console.log('đã enroll');
+      }
+      else {
+        console.log('chưa enroll');
+      }
+    })).subscribe()
   }
 
   toggleIsComment(): void {

@@ -11,6 +11,7 @@ import { myCourseManagerReducer } from './mycoursemanager/mycoursemanager.reduce
 import { subjectsReducer } from './subjects/subjects.reducer';
 import { userReducer } from './user/user.reducer';
 import { ActionReducerMap } from '@ngrx/store';
+import { usersReducer } from './users/users.reducer';
 
 export interface AppState {
     user: User,
@@ -19,6 +20,7 @@ export interface AppState {
     chapters: Chapter[],
     lessons: Lesson[],
     subjects: Subject[],
+    users: User[],
 }
 
 
@@ -29,6 +31,7 @@ const reducers: ActionReducerMap<AppState> = {
     chapters: chaptersReducer,
     lessons: lessonsReducer,
     subjects: subjectsReducer,
+    users: usersReducer,
 }
 
 export default reducers;

@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subscriber, Subscription, map, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { User } from '../models/User';
 import { CookieService } from 'ngx-cookie-service';
 import { MessageService } from 'primeng/api';
 import { Delete, Update } from '../store/user/user.actions';
 import { Router } from '@angular/router';
 import { AppState } from '../store/reducer';
+import { selectCourseFromCourseId } from '../store/courses/courses.selector';
 
 interface LoginResponse {
   user: User,
@@ -49,6 +50,8 @@ export class AuthService {
       })
     );
   }
+
+
 
 
   isLoginGuard(): Observable<boolean> {

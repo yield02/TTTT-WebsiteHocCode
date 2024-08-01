@@ -32,6 +32,5 @@ export class CourseComponent implements OnInit {
   @Input() course!: Course;
 
   ngOnInit(): void {
-    console.log(this.course);
   }
 }

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
+const userMask = require("../utils/formatUser");
 
 const userSchema = new mongoose.Schema(
   {
@@ -7,10 +8,36 @@ const userSchema = new mongoose.Schema(
     avatar: { type: Object, require: false },
     username: { type: String, require: true },
     password: { type: String, require: true },
-    email: { type: String, require: true },
     fullname: { type: String, require: false },
-    phone: { type: Object, require: true },
-    address: { type: String, require: false },
+    email: {
+      type: {
+        data: { type: String, require: false },
+        accuracy: { type: Boolean, require: false, default: false },
+        hidden: { type: Boolean, require: false, default: false },
+      },
+      require: false,
+      get: (v) => {
+        if (v?.hidden == true) {
+          return userMask.maskEmail(v?.data);
+        }
+        return v?.data;
+      },
+    },
+    phone: {
+      type: {
+        data: { type: String, require: false },
+        accuracy: { type: Boolean, require: false, default: false },
+        hidden: { type: Boolean, require: false, default: false },
+      },
+      require: false,
+    },
+    address: {
+      type: {
+        data: { type: String, require: false },
+        accuracy: { type: Boolean, require: false },
+      },
+      require: false,
+    },
     gender: { type: Boolean, require: false, default: false },
     status: {
       type: {
@@ -38,8 +65,9 @@ const userSchema = new mongoose.Schema(
         },
       ],
     } /* member: Thành Viên Chính Thức, dynamic Thành Viên Năng Động, old: Thành Viên Lâu Năm, admin */,
+    learning: [{ type: mongoose.Schema.ObjectId, ref: "Course" }],
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { getters: true } }
 );
 
 userSchema.plugin(AutoIncrement, { inc_field: "user_id", start_seq: 1000 });

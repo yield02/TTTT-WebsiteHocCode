@@ -14,9 +14,8 @@ import { LessonFormComponent } from './lesson-form/lesson-form.component';
 import { ChapterFormComponent } from './chapter-form/chapter-form.component';
 import { Course } from '../../models/Course';
 import { CourseManagerService } from '../../services/course-manger.service';
-import { Add } from '../../store/mycoursemanager/mycoursemanager.actions';
+import { Add, UpdateCourseManager } from '../../store/mycoursemanager/mycoursemanager.actions';
 import { Store } from '@ngrx/store';
-import { Update } from '../../store/mycoursemanager/mycoursemanager.actions';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Observable, of, switchMap, take, tap } from 'rxjs';
@@ -191,7 +190,7 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
       fb.append('_id', this.course._id.toString());
       this.courseManagerService.updateCourse(fb).subscribe(({ course }) => {
         this.course = { ...course };
-        this.store.dispatch(Update({ course: course }))
+        this.store.dispatch(UpdateCourseManager({ course: course }))
         this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật khóa học thành công' })
       }, (error) => {
         this.messageService.add({ severity: 'error', summary: 'Thất bại', detail: 'Cập nhật khóa học thất bại' })

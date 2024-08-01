@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Create, Update, Delete, Add, AddChapter } from './mycoursemanager.actions';
+import { Create, Add, AddChapter, UpdateCourseManager, DeleteCourseManager } from './mycoursemanager.actions';
 import { Course } from '../../models/Course';
 
 
@@ -9,13 +9,12 @@ export const initialState: Course[] = []
 export const myCourseManagerReducer = createReducer(
     initialState,
     on(Create, (state, { course }) => {
-        console.log(course);
         return state
     }),
     on(Add, (state, { courses }) => {
         return [...state, ...courses];
     }),
-    on(Update, (state, { course }) => {
+    on(UpdateCourseManager, (state, { course }) => {
         return state.map((item) => {
             if (item._id === course._id) {
                 return course;
@@ -23,8 +22,8 @@ export const myCourseManagerReducer = createReducer(
             return item;
         });
     }),
-    on(Delete, (state) => {
-        return initialState;
+    on(DeleteCourseManager, (state, { course_id }) => {
+        return state.filter((item) => item._id !== course_id);
     }),
     on(AddChapter, (state, { course_id, chapter_id }) => {
         return [...state.map(item => {

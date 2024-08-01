@@ -93,7 +93,7 @@ exports.getLessonList = async (chapter_id, user_id) => {
       lessons: lessonList.map((lesson) => {
         // When user is author or user was enrolled in the course
         if (
-          lesson.author_id === user_id ||
+          lesson.author_id == user_id ||
           lesson.course_id.enroll.includes(user_id)
         ) {
           return { ...lesson._doc, course_id: lesson._doc.course_id._id };
