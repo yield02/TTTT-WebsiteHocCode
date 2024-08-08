@@ -1,5 +1,6 @@
 <div class="comment-container flex flex-col">
-  <div class="flex">
+  @if(isEdit == false) {
+  <div class="flex flex-grow-0">
     <div class="flex items-start">
       <p-avatar
         label="V"
@@ -9,17 +10,13 @@
         shape="circle"
       />
     </div>
-    <div class="body">
+    <div class="body flex-1">
       <div class="head flex items-center gap-4">
         <h1 class="name">Thanh Nhường</h1>
         -
         <a class="course-name text-gray-dark underline">Cài đặt Angular</a>
       </div>
-      <div class="content">
-        Bài học hay lắm mong anh ra thêm nhiều bài học bổ ích nữa ạ At vero eos
-        et accusamus et iusto odio dignissimos... At vero eos et accusamus et
-        iusto odio dignissimos...
-      </div>
+      <div class="content" [innerHTML]="comment.content"></div>
       <div class="actions">
         <button class="action-btn active">Thích</button>
         <button class="action-btn" (click)="toggleIsReply()">Trả lời</button>
@@ -28,11 +25,11 @@
     </div>
     <div class="more flex items-center sm:p-8 max-sm:hidden">
       <!-- <button class="more-btn text-gray-dark">
-        <ng-icon name="ionEllipsisHorizontalOutline"></ng-icon>
-      </button> -->
+          <ng-icon name="ionEllipsisHorizontalOutline"></ng-icon>
+        </button> -->
       <p-speedDial
         className="more-action  max-sm:hidden"
-        [model]="items"
+        [model]="items$ | async"
         type="circle"
         transitionDelay="80"
         showIcon="pi pi-ellipsis-h"
@@ -59,4 +56,11 @@
       </div>
     </div>
   </ng-template>
+  }@else {
+  <h4 class="edit-comment">Chỉnh sửa bình luận</h4>
+  <app-comment-editor
+    [comment]="comment.content"
+    (submit)="onSubmitEditComment($event)"
+  ></app-comment-editor>
+  }
 </div>

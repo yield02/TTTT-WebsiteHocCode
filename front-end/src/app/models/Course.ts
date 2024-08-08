@@ -1,4 +1,3 @@
-import { Chapter } from "./Chapter"
 
 export interface Course {
     _id?: String,

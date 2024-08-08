@@ -1,0 +1,25 @@
+<div class="comment-dialog" #commentBox>
+  <app-comment-editor (submit)="submitComment($event)"></app-comment-editor>
+  @if((discussList$ | async); as discussList) { @if(discussList.length > 0) {
+  <ng-container *ngFor="let discuss of discussList.slice(0, maxLength)">
+    <app-comment
+      [comment]="discuss"
+      [user]="user$ | async"
+      (delete)="onDeleteDiscuss($event)"
+      (edit)="onEditDiscussion($event)"
+      (report)="onReportDiscuss($event)"
+    ></app-comment>
+  </ng-container>
+  }@else { Không có bình luận nào. cho tài liệu! } @if (discussList.length > 10
+  && discussList.length > maxLength) {
+  <div class="flex justify-center">
+    <p-button
+      [link]="true"
+      (onClick)="loadMoreComment()"
+      [size]="'small'"
+      class="load-more-btn"
+      >Tải thêm bình luận</p-button
+    >
+  </div>
+  } }
+</div>

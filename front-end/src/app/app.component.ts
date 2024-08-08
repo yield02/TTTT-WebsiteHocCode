@@ -1,4 +1,4 @@
-import { Component, OnInit, isDevMode } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, isDevMode } from '@angular/core';
 
 
 
@@ -6,6 +6,7 @@ import { Component, OnInit, isDevMode } from '@angular/core';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   title = 'Học Lập Trình Trực Tuyến';

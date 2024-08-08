@@ -1,0 +1,14 @@
+.content-box {
+  height: 100%;
+}
+
+
+.chat-btn {
+  position: fixed;
+  bottom: 5px;
+  left: 16px;
+  font-size: 28px;
+  padding: 4px 12px 0px 12px;
+  border-radius: 50%;
+}
+

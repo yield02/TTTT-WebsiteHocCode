@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DoCheck, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { LearningHeaderComponent } from './components/learning-header/learning-header.component';
 import { LessonComponent } from './components/lesson-content/lesson-content.component';
 import { SidebarModule } from 'primeng/sidebar';
@@ -27,7 +27,7 @@ import { FetchingCourseFromCourseId } from '../../store/courses/courses.actions'
   styleUrl: './learning.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LearningComponent implements OnInit {
+export class LearningComponent implements OnInit, DoCheck {
 
   @ViewChild('content') content!: ElementRef<HTMLDivElement>;
   @ViewChild('lessonBar') lessonBar!: ElementRef<HTMLDivElement>;
@@ -43,9 +43,14 @@ export class LearningComponent implements OnInit {
 
   }
 
+  ngDoCheck(): void {
+    console.log('render');
+  }
 
-
-
+  checkrender() {
+    console.log('render');
+    return 'render check'
+  }
 
   ngOnInit(): void {
     const course_id = this._activatedRoute.snapshot.paramMap.get('courseId');

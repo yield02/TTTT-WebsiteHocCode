@@ -2,7 +2,7 @@ import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
 
 registerLocaleData(vi);
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionChatboxOutline } from '@ng-icons/ionicons';
 import { select, Store } from '@ngrx/store';
@@ -17,6 +17,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HoursFormatPipe } from '../../../../pipe/my-datetime-format.pipe';
 import { User } from '../../../../models/User';
 import { checkUserEnroll, selectCourseFromCourseId } from '../../../../store/courses/courses.selector';
+import { ContentComponent } from './content/content.component';
 @Component({
   selector: 'learning-lesson-content',
   standalone: true,
@@ -25,6 +26,7 @@ import { checkUserEnroll, selectCourseFromCourseId } from '../../../../store/cou
     ButtonModule,
     NgIconComponent,
 
+    ContentComponent,
     HoursFormatPipe,
   ],
   providers: [provideIcons({ ionChatboxOutline })],
@@ -33,7 +35,6 @@ import { checkUserEnroll, selectCourseFromCourseId } from '../../../../store/cou
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LessonComponent implements OnInit, AfterViewInit {
-  isComment: boolean = false;
   course_id!: String;
   lesson$!: Observable<Lesson | undefined>;
   user$: Observable<User | undefined> = this._store.select(state => state.user);
@@ -72,18 +73,14 @@ export class LessonComponent implements OnInit, AfterViewInit {
     })).subscribe()
   }
 
-  toggleIsComment(): void {
-    this.isComment = !this.isComment;
-  }
 
-  test(): String {
-    console.log('đã render');
-    return 'test';
-  }
-  sanitizeUrl(url: string): SafeResourceUrl {
 
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  sanitizeUrl(url?: string): SafeResourceUrl | undefined {
+    if (url) {
+      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
 
+    return undefined;
   }
 
   formatDateAndTime(date: String): String {

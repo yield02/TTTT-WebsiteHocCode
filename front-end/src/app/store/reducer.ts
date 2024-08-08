@@ -12,6 +12,8 @@ import { subjectsReducer } from './subjects/subjects.reducer';
 import { userReducer } from './user/user.reducer';
 import { ActionReducerMap } from '@ngrx/store';
 import { usersReducer } from './users/users.reducer';
+import { Discuss } from '../models/Discuss';
+import { discussReducer } from './discuss/discuss.reducer';
 
 export interface AppState {
     user: User,
@@ -21,6 +23,7 @@ export interface AppState {
     lessons: Lesson[],
     subjects: Subject[],
     users: User[],
+    discuss: Discuss[],
 }
 
 
@@ -32,6 +35,7 @@ const reducers: ActionReducerMap<AppState> = {
     lessons: lessonsReducer,
     subjects: subjectsReducer,
     users: usersReducer,
+    discuss: discussReducer,
 }
 
 export default reducers;

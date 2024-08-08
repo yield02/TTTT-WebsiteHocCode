@@ -1,0 +1,16 @@
+<div class="discuss-container">
+  <div class="relative">
+    <editor
+      class="editor flex-1"
+      [init]="initEditor"
+      outputFormat="html"
+      [(ngModel)]="comment"
+      licenseKey="gpl"
+      apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+    ></editor>
+    <button class="submit-btn" (click)="submitComment()">
+      <ng-icon class="icon text-blue-500" name="ionSendOutline"></ng-icon>
+    </button>
+  </div>
+  <!-- <div class="message text-red-500 text-center">{{ message }}</div> -->
+</div>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { loginGuardGuard } from './guard/LoginGuard.guard';
 import { MessageService } from 'primeng/api';
+import { ErrorComponent } from './pages/error/error.component';
 
 
 
@@ -37,6 +38,11 @@ const routes: Routes = [
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
+  },
+  {
+    path: "**",
+    pathMatch: 'full',
+    component: ErrorComponent,
   }
 ];
 
