@@ -31,7 +31,7 @@ exports.login = async (data) => {
     throw new apiError(404, "Tài khoản không tồn tại");
   } else {
     if (await bcrypt.compareSync(data.password, user.password)) {
-      const { password, avatar, ...jwtInfor } = user._doc;
+      const { password, ...jwtInfor } = user._doc;
       const token = jwt.sign(jwtInfor, process.env.JWT_SECRET_KEY, {
         expiresIn: "12h",
       });

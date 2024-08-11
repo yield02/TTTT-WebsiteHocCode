@@ -1,0 +1,82 @@
+<div class="required-information container flex justify-center items-center">
+  <div class="information-box flex justify-center items-center flex-col gap-4">
+    <h1 class="heading-text">Thông Tin</h1>
+    <p class="discription-text italic text-slate-500">
+      Vui lòng nhập thêm thông tin để hoàn tất quá trình đăng nhập
+    </p>
+    <form
+      class="w-full"
+      [formGroup]="requiredInformationForm"
+      (ngSubmit)="requiredInformationForm.valid && onSubmit()"
+    >
+      <div class="input-box mb-2 w-full flex flex-col justify-start">
+        <label for="username">Tên đăng nhập</label>
+        <input
+          pInputText
+          id="username"
+          formControlName="username"
+          aria-describedby="username-help"
+        />
+        <small class="flex flex-col gap-1" id="username-help">
+          @if (requiredInformationForm.get("username")?.getError("required")) {
+          <span class="text-red-500"> Vui lòng nhập tên đăng nhập </span>
+          } @if (requiredInformationForm.get("username")?.getError("minlength"))
+          {
+          <span class="text-red-500"> Tên đăng nhập tối thiểu 6 ký tự </span>
+          } @if(requiredInformationForm.get("username")?.getError("username")) {
+          <span class="text-red-500">{{
+            requiredInformationForm.get("username")?.getError("username")
+          }}</span>
+          }
+          @if(requiredInformationForm.get("username")?.getError("usernameExist"))
+          {
+          <span class="text-red-500">Tài khoản đã có người sử dụng</span>
+          }
+        </small>
+      </div>
+      <div class="input-box mb-2 w-full flex flex-col justify-start">
+        <label for="password">Mật khẩu</label>
+        <input
+          pInputText
+          id="password"
+          type="password"
+          formControlName="password"
+          aria-describedby="password-help"
+        />
+        <small class="flex flex-col gap-1" id="password-help">
+          @if (requiredInformationForm.get("password")?.getError("required")) {
+          <span class="text-red-500"> Vui lòng nhập mật khẩu </span>
+          } @if (requiredInformationForm.get("password")?.getError("minlength"))
+          {
+          <span class="text-red-500"> Mật khẩu tối thiểu 6 ký tự </span>
+          }
+        </small>
+      </div>
+      <div class="input-box mb-2 w-full flex flex-col justify-start">
+        <label for="re-password">Xác thực mật khẩu</label>
+        <input
+          pInputText
+          id="re-password"
+          type="password"
+          formControlName="repassword"
+          aria-describedby="re-password-help"
+        />
+        <small class="flex flex-col gap-1" id="re-password-help">
+          @if (requiredInformationForm.get("repassword")?.getError("required"))
+          {
+          <span class="text-red-500"> Vui lòng nhập mật khẩu xác thực</span>
+          } @if
+          (requiredInformationForm.get('repassword')?.getError("comparePassword"))
+          {
+          <span class="text-red-500">
+            Mật khẩu xác thực không khớp vui lòng nhập lại
+          </span>
+          }
+        </small>
+      </div>
+      <div class="flex w-full justify-end">
+        <p-button type="submit" [size]="'small'">Xác nhận</p-button>
+      </div>
+    </form>
+  </div>
+</div>

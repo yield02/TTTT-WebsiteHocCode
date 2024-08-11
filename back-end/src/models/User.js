@@ -5,14 +5,14 @@ const userMask = require("../utils/formatUser");
 const userSchema = new mongoose.Schema(
   {
     user_id: Number,
-    avatar: { type: Object, require: false },
+    avatar: { type: Object, require: false }, // if contentType = URL => use URL, else user buffer,
     username: { type: String, require: true },
     password: { type: String, require: true },
     fullname: { type: String, require: false },
     email: {
       type: {
         data: { type: String, require: false },
-        accuracy: { type: Boolean, require: false, default: false },
+        verify: { type: Boolean, require: false, default: false },
         hidden: { type: Boolean, require: false, default: false },
       },
       require: false,
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: {
         data: { type: String, require: false },
-        accuracy: { type: Boolean, require: false, default: false },
+        verify: { type: Boolean, require: false, default: false },
         hidden: { type: Boolean, require: false, default: false },
       },
       require: false,
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
     address: {
       type: {
         data: { type: String, require: false },
-        accuracy: { type: Boolean, require: false },
+        hidden: { type: Boolean, require: false },
       },
       require: false,
     },

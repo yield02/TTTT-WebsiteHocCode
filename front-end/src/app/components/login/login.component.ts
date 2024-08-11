@@ -75,6 +75,10 @@ export class LoginComponent implements OnInit {
 
   }
 
+  loginGoogle() {
+    this.authService.loginWithGoogle().subscribe();
+  }
+
 
   toggleDialog() {
     this.visible = !this.visible;

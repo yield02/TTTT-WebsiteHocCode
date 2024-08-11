@@ -31,7 +31,16 @@ export class AuthService {
   }
 
 
-
+  isAddRequiredInformation(): Observable<boolean> {
+    return this.store.select('user').pipe(
+      switchMap(data => {
+        if (!data.username) {
+          return of(true);
+        }
+        return of(false);
+      })
+    );
+  }
 
   isAuth(): Observable<boolean> {
     return this.store.select('user').pipe(
@@ -84,6 +93,9 @@ export class AuthService {
     return this.http.get(`${environment.apiUrl}auth/userinfor`, { withCredentials: true }).pipe(map((data: any) => {
       if (data?.user) {
         this.store.dispatch(Update({ updateValue: data?.user }));
+        if (!data?.user?.username) {
+          this.router.navigate(['/settings/required-information']);
+        }
         return true;
       }
       else {
@@ -101,4 +113,19 @@ export class AuthService {
       this.messageService.add({ severity: 'error', summary: 'Thật bại', detail: 'Đăng xuất thất bại, có lỗi xảy ra' });
     });
   }
+
+  loginWithGoogle() {
+    return this.http.post<{ url: string }>(`${environment.apiUrl}oauth/authentication/google`, {}).pipe(map((data) => {
+      window.location.href = data.url;
+    }));
+  }
+
+
+  updateRequiredInformation(username: String, password: String): Observable<User> {
+    return this.http.post<User>(`${environment.apiUrl}oauth/update-required-information`, { username, password }, {
+      withCredentials: true,
+    });
+  }
+
 }
+
