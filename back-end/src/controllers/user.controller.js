@@ -2,6 +2,16 @@ const ApiError = require("../utils/apiError");
 const userService = require("../services/user.service");
 const jwt = require("jsonwebtoken");
 
+exports.getUsers = async (req, res, next) => {
+  try {
+    const users_id = JSON.parse(req.query.users);
+    const users = await userService.getUsersFromUserId(users_id);
+    return res.status(200).json(users);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
 exports.getUsersInCourse = async (req, res, next) => {
   try {
     const course_id = req.params.course_id;

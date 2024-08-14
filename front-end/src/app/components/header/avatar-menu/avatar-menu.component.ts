@@ -5,7 +5,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent } from '@ng-icons/core';
 import { AuthService } from '../../../services/auth.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../store/reducer';
+import { User } from '../../../models/User';
 
 
 @Component({
@@ -24,7 +27,10 @@ import { Subscription } from 'rxjs';
 })
 export class AvatarMenuComponent implements OnDestroy {
   $observer: Subscription = new Subscription();
-  constructor(private authService: AuthService) {
+
+  $user: Observable<User> = this._store.select(state => state.user);
+
+  constructor(private authService: AuthService, private _store: Store<AppState>) {
 
   }
 

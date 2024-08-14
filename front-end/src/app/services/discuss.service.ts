@@ -29,4 +29,8 @@ export class DiscussService {
     return this._http.delete<Discuss>(`${environment.apiUrl}discuss/${discuss_id}`, { withCredentials: true });
   }
 
+  InteractDiscuss(discuss_id: String): Observable<Discuss> {
+    return this._http.patch<Discuss>(`${environment.apiUrl}discuss/likes/${discuss_id}`, null, { withCredentials: true });
+  }
+
 }

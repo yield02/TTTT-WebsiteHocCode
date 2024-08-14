@@ -1,20 +1,20 @@
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
-const discussSchema = new mongoose.Schema(
+const replyDiscussSchema = new mongoose.Schema(
   {
     author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
-    lesson_id: {
+    discuss_id: {
       type: mongoose.Schema.ObjectId,
-      ref: "Lesson",
+      ref: "Discuss",
       required: true,
     },
     content: { type: String, required: true },
-    replies: [{ type: mongoose.Schema.ObjectId, ref: "ReplyDiscuss" }],
     likes: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );
 
 module.exports =
-  mongoose.models?.Discuss || mongoose.model("Discuss", discussSchema);
+  mongoose.models?.ReplyDiscuss ||
+  mongoose.model("ReplyDiscuss", replyDiscussSchema);

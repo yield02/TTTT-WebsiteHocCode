@@ -1,4 +1,6 @@
 const Discuss = require("../models/Discuss");
+const ReplyDiscuss = require("../models/ReplyDiscuss");
+var mongoose = require("mongoose");
 const ApiError = require("../utils/apiError");
 exports.create = async (data) => {
   try {
@@ -18,7 +20,7 @@ exports.create = async (data) => {
 
 exports.getDiscussByLessonId = async (lesson_id) => {
   try {
-    const discusses = await Discuss.find({ lesson_id });
+    const discusses = await Discuss.find({ lesson_id }).sort({ createdAt: -1 });
     return { discusses: discusses };
   } catch (error) {
     throw new ApiError(500, error.message);
@@ -51,10 +53,33 @@ exports.deleteDiscussByAuthor = async (discuss_id, author_id) => {
         "Thông tin yêu cầu không đầy đủ, hoặc bạn không có quyền truy cập"
       );
     }
-    return await Discuss.findOneAndDelete({
+    const result = await Discuss.findOneAndDelete({
       _id: discuss_id,
       author_id: author_id,
     });
+
+    if (result && result?.replies?.length > 0) {
+      await ReplyDiscuss.deleteMany({ _id: { $in: result.replies } });
+    }
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
+exports.InteractDiscuss = async (discuss_id, author_id) => {
+  try {
+    if (!discuss_id || !author_id) {
+      throw new ApiError(400, "Thông tin yêu cầu không đầy đ��");
+    }
+    const result = await Discuss.findById(discuss_id);
+    if (result.likes.includes(author_id)) {
+      result.likes = result.likes.filter((id) => id != author_id);
+      console.log(result.likes);
+    } else {
+      result.likes.push(author_id);
+    }
+    await result.save();
+    return result;
   } catch (error) {
     throw new ApiError(500, error.message);
   }

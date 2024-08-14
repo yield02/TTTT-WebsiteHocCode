@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Discuss } from '../../models/Discuss';
-import { AddDiscuss, DeleteDiscussSuccess, UpdateDiscussSuccess } from './discuss.actions';
+import { AddDiscuss, AddReplyDiscussToDiscuss, DeleteDiscussSuccess, DeleteReplyDiscussFromDiscuss, UpdateDiscussSuccess } from './discuss.actions';
 import { Update } from '../user/user.actions';
 
 export const initialState: Discuss[] = [];
@@ -14,5 +14,21 @@ export const discussReducer = createReducer(
         }
         return item;
     })),
-    on(DeleteDiscussSuccess, (state, { discuss_id }) => state.filter(item => item._id !== discuss_id))
+    on(DeleteDiscussSuccess, (state, { discuss_id }) => state.filter(item => item._id !== discuss_id)),
+    on(AddReplyDiscussToDiscuss, (state, { discuss_id, replyDiscuss_id }) => state.map((item: Discuss) => {
+        if (item._id === discuss_id) {
+
+            const replies: String[] = item.replies || [];
+
+            return { ...item, replies: [replyDiscuss_id, ...replies] };
+        }
+        return item;
+    })),
+    on(DeleteReplyDiscussFromDiscuss, (state, { discuss_id, replyDiscuss_id }) => state.map((item: Discuss) => {
+        if (item._id === discuss_id) {
+            const replies: String[] = item.replies?.filter(reply => reply !== replyDiscuss_id) || [];
+            return { ...item, replies: [...replies] };
+        }
+        return item;
+    })),
 );

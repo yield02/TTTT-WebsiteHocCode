@@ -11,9 +11,15 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { Discuss } from '../../models/Discuss';
 import { CommentEditorComponent } from '../comment-editor/comment-editor.component';
 import { User } from '../../models/User';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { AppState } from '../../store/reducer';
-import { BehaviorSubject, Observable, Subscriber, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscriber, Subscription, tap } from 'rxjs';
+import { selectUserFromId } from '../../store/users/users.selector';
+import { fromNowTimeFormat } from '../../pipe/fromNowTimeFormat';
+import { CreateReplyDiscuss, DeleteReplyDiscuss, FetchReplyDiscuss, InteractReplyDiscuss, UpdateReplyDiscuss } from '../../store/reply-discuss/reply-discuss.actions';
+import { CreateReplyDiscussInterface, ReplyDiscuss } from '../../models/ReplyDiscuss';
+import { selectReplyDiscussFromDiscussId } from '../../store/reply-discuss/reply-discuss.selectors';
+import { InteractDiscuss } from '../../store/discuss/discuss.actions';
 
 @Component({
   selector: 'app-comment',
@@ -28,6 +34,7 @@ import { BehaviorSubject, Observable, Subscriber, Subscription } from 'rxjs';
     SpeedDialModule,
 
     CommentEditorComponent,
+    fromNowTimeFormat,
   ],
   providers: [provideIcons({ ionEllipsisHorizontalOutline, ionSendOutline })],
   templateUrl: './comment.component.html',
@@ -35,12 +42,20 @@ import { BehaviorSubject, Observable, Subscriber, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentComponent implements OnInit, OnDestroy {
-  @Input() comment!: Discuss;
+  @Input() comment!: Discuss | ReplyDiscuss;
+  @Input() isAdmin: boolean = false;
+
+  @Input() type: 'comment' | 'reply' = 'comment';
+
   @Input() user?: User | null;
 
-  @Output() delete = new EventEmitter<Discuss>();
-  @Output() edit = new EventEmitter<Discuss>();
-  @Output() report = new EventEmitter<Discuss>();
+  @Output() delete = new EventEmitter<Discuss | ReplyDiscuss>();
+  @Output() edit = new EventEmitter<Discuss | ReplyDiscuss>();
+  @Output() report = new EventEmitter<Discuss | ReplyDiscuss>();
+
+
+
+  reply$: BehaviorSubject<Discuss[]> = new BehaviorSubject<ReplyDiscuss[]>([]);
 
   items$: BehaviorSubject<MenuItem[]> = new BehaviorSubject<MenuItem[]>([
     {
@@ -55,9 +70,14 @@ export class CommentComponent implements OnInit, OnDestroy {
     },
 
   ]);
+
+  author$!: Observable<User | undefined>;
+
   replyValue: String = '';
   isReply: boolean = false;
   isEdit: boolean = false;
+
+  loadReply: boolean = false;
 
 
   subcription: Subscription[] = [];
@@ -70,6 +90,9 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.author$ = this._store.select(selectUserFromId(this.comment.author_id!));
+
     if (this.user?._id == this.comment?.author_id) {
       this.items$.next([
         {
@@ -105,6 +128,42 @@ export class CommentComponent implements OnInit, OnDestroy {
 
       ])
     }
+    else if (this.isAdmin) {
+      this.items$.next([
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Xóa',
+            tooltipPosition: 'left'
+          },
+          icon: 'pi pi-trash',
+          command: () => {
+            this.delete.emit(this.comment);
+          }
+        },
+        {
+          icon: 'pi pi-flag',
+          tooltipOptions: {
+            tooltipLabel: 'Báo cáo',
+            tooltipPosition: 'left'
+          },
+          command: () => {
+            this.report.emit(this.comment);
+          }
+        },
+
+      ])
+    }
+
+    if (this.type === 'comment') {
+      this._store.select(selectReplyDiscussFromDiscussId(this.comment._id!)).pipe(tap((data) => {
+        if (data.fetchReplyDiscussId.length > 0) {
+          this._store.dispatch(FetchReplyDiscuss({ replyDiscucssesId: data.fetchReplyDiscussId as String[] }));
+        }
+        if (data.replyDiscusses.length > 0) {
+          this.reply$.next(data.replyDiscusses);
+        }
+      })).subscribe();
+    }
 
   }
 
@@ -112,8 +171,22 @@ export class CommentComponent implements OnInit, OnDestroy {
     this.isReply = !this.isReply;
   }
 
+  handleLoadReply(): void {
+    this.loadReply = true;
+
+  }
+
   toggleIsEdit(): void {
     this.isEdit = !this.isEdit;
+  }
+
+  onSubmitReply(content: String): void {
+    const data: CreateReplyDiscussInterface = {
+      content: content,
+      discuss_id: this.comment._id!,
+    }
+    this._store.dispatch(CreateReplyDiscuss({ replyDiscuss: data }));
+    this.isReply = false;
   }
 
   onSubmitEditComment(content: String): void {
@@ -122,6 +195,27 @@ export class CommentComponent implements OnInit, OnDestroy {
     }
     this.toggleIsEdit();
   }
+
+
+
+  onEditReply(replyDiscuss: ReplyDiscuss) {
+    this._store.dispatch(UpdateReplyDiscuss({ replyDiscuss }));
+  }
+
+  onDeleteReply(replyDiscuss: ReplyDiscuss) {
+    this._store.dispatch(DeleteReplyDiscuss({ replyDiscussId: replyDiscuss._id!, discuss_id: this.comment._id! }));
+  }
+
+  onInteract() {
+    if (this.type === 'comment') {
+      this._store.dispatch(InteractDiscuss({ discuss_id: this.comment._id! }));
+    }
+    if (this.type === 'reply') {
+      this._store.dispatch(InteractReplyDiscuss({ replyDiscussId: this.comment._id! }));
+    }
+  }
+
+
 
   ngOnDestroy(): void {
 

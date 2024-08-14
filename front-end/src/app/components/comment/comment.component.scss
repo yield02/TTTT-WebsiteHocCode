@@ -64,37 +64,12 @@
   //     display: flex;
   //   }
   // }
-
+  .reply-btn {
+    font-size: 12px;
+    padding-left: 100px;
+  }
   .rely-container {
-    padding: 0px 0px 0px 48px;
-    .wapper {
-      padding-right: 12px;
-      max-width: 600px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.1);
-      .text-input {
-        background: transparent;
-        height: 100%;
-        border-color: transparent;
-        &:focus {
-          border-color: transparent;
-          box-shadow: none;
-        }
-      }
-    }
-    .send-btn {
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      font-size: 18px;
-      color: blue;
-      padding: 4px;
-      &:hover {
-        background: rgba(0, 0, 0, 0.15);
-      }
-    }
+    padding: 8px 0px 0px 48px;
   }
 
   .edit-comment {

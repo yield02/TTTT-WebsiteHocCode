@@ -3,12 +3,19 @@ import { Course } from "../../models/Course";
 import { AppState } from "../reducer";
 import { User } from "../../models/User";
 import { Filter } from "../../models/Filter";
+import { selectUser } from "../user/user.selectors";
 
 
 
 export const selectUsers = (state: AppState) => state.users;
 export const selectCourses = (state: AppState) => state.courses;
 export const selectCoursesManger = (state: AppState) => state.myCourseManager;
+
+
+
+export const selectUserFromId = (user_id: String) => createSelector(selectUsers, (users: User[]) => {
+    return users.find((user: User) => user._id === user_id);
+})
 
 export const selectUsersEnrollFetchFromCourseId = (course_id: String) => createSelector(
     selectCourses,

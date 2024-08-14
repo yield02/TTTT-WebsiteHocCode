@@ -1,19 +1,23 @@
+@if($user | async; as user) {
 <div class="avatar-container">
   <button [matMenuTriggerFor]="menuAvatar">
     <img
       class="avatar-img"
-      src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
+      [src]="user.avatar?.url || 'assets/images/avatar-user-default.png'"
     />
   </button>
   <mat-menu class="menu-avatar" #menuAvatar="matMenu">
     <div class="user flex items-center">
       <img
         class="avatar-img"
-        src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
+        [src]="
+          user.avatar?.url ||
+          'https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg'
+        "
       />
       <div class="flex flex-col">
-        <h6 class="name">Thanh Nhường</h6>
-        <span class="tagname">#thanhnhuong</span>
+        <h6 class="name">{{ user.fullname || user.username }}</h6>
+        <span class="tagname">#{{ user.username }}</span>
       </div>
     </div>
     <div class="menu-item">
@@ -37,3 +41,4 @@
     </div>
   </mat-menu>
 </div>
+}

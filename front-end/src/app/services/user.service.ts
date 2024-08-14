@@ -13,7 +13,7 @@ export class UserService {
 
   getUsersFromUsersId(users_id: String[]) {
     return this._http.get<User[]>(`${environment.apiUrl}user/`, {
-      params: { users_id: users_id.toString() }
+      params: { users: JSON.stringify(users_id) }
     });
   }
 }

@@ -1,6 +1,6 @@
-import type { CanActivateFn, CanMatchFn } from '@angular/router';
+import type { CanMatchFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { Injectable, inject } from '@angular/core';
+import { inject } from '@angular/core';
 
 export const AddRequiredInformation: CanMatchFn = (route, state) => {
     const authService = inject(AuthService);

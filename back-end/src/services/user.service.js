@@ -81,3 +81,19 @@ exports.getUsersInCourseWithUserName = async (
   }
   return course[typeList];
 };
+
+exports.getUsersFromUserId = async (usersId) => {
+  try {
+    const users = await User.find({ _id: { $in: usersId } }, [
+      "_id",
+      "username",
+      "email",
+      "avatar",
+      "fullname",
+      "phone",
+    ]);
+    return users;
+  } catch (error) {
+    throw new ApiError("Server Error", error.message);
+  }
+};

@@ -7,11 +7,13 @@ import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { AppState } from '../../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
 import { CreateDiscuss, DeleteDiscussByAuthor, FetchingDiscusses, UpdateContentDiscuss } from '../../../../../store/discuss/discuss.actions';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, switchMap, tap } from 'rxjs';
 import { Discuss } from '../../../../../models/Discuss';
 import { selectDiscussFromLessonId } from '../../../../../store/discuss/discuss.selectors';
 import { Observable } from 'rxjs';
 import { User } from '../../../../../models/User';
+import { selectUsersAndFetchingUsers } from '../../../../../store/users/users.selector';
+import { FetchUsers } from '../../../../../store/users/users.actions';
 
 @Component({
     selector: 'learning-lesson-comment-dialog',
@@ -46,13 +48,28 @@ export class CommentDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._store.pipe(select(selectDiscussFromLessonId(this._dialogConfig.data.lesson_id)), tap((discusses => {
-            if (discusses.length <= 0 && !this.fetched) {
-                this._store.dispatch(FetchingDiscusses({ lesson_id: this._dialogConfig.data.lesson_id }));
-                this.fetched = true;
-            }
-            this.discussList$.next(discusses);
-        }))).subscribe();
+        this._store.pipe(
+            select(selectDiscussFromLessonId(this._dialogConfig.data.lesson_id)),
+            switchMap((discusses => {
+                if (discusses.length <= 0 && !this.fetched) {
+                    this._store.dispatch(FetchingDiscusses({ lesson_id: this._dialogConfig.data.lesson_id }));
+                    this.fetched = true;
+                }
+                const users = discusses.reduce((acc: String[], discuss: Discuss) => {
+                    if (!acc.includes(discuss.author_id!)) {
+                        acc.push(discuss.author_id!);
+                    }
+                    return acc;
+                }, []);
+                this.discussList$.next(discusses);
+                return this._store.pipe(select(selectUsersAndFetchingUsers(users)))
+            })),
+            tap((data) => {
+                if (data.fetchUsers.length > 0) {
+                    this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }))
+                }
+            })
+        ).subscribe();
     }
 
     submitComment(comment: String) {

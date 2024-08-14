@@ -9,5 +9,10 @@ export interface User {
     phone?: String | undefined,
     address: String | undefined,
     status: Object,
+    avatar?: {
+        url?: String,
+        contentType?: String,
+        buffer?: String,
+    }
 }
 

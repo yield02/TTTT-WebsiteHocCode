@@ -11,7 +11,7 @@ import { User } from '../../../../../../models/User';
 import { AppState } from '../../../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
 import { selectUserInCourseFromCourseId } from '../../../../../../store/users/users.selector';
-import { fetchUsers } from '../../../../../../store/users/users.actions';
+import { FetchUsers } from '../../../../../../store/users/users.actions';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AcceptEnroll, fetchUsersInCourse, RejectEnroll } from '../../../../../../store/mycoursemanager/mycoursemanager.actions';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';

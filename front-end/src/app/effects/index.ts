@@ -4,6 +4,7 @@ import { CoursesManagerEffects } from "./course-manager.effects";
 import { CourseEffects } from "./course.effect";
 import { DiscussEffects } from "./discuss.effects";
 import { LessonEffects } from "./lesson.effects";
+import { ReplyDiscussEffects } from "./reply-discuss.effects";
 import { SubjectEffects } from "./subject.effects";
 import { UsersEffects } from "./users.effects";
 
@@ -16,6 +17,8 @@ const effects: Array<any> = [
     UsersEffects,
     CoursesManagerEffects,
     DiscussEffects,
+    ReplyDiscussEffects,
+
 ];
 
 export default effects;

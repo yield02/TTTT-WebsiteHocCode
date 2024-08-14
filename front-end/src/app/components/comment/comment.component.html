@@ -1,9 +1,13 @@
 <div class="comment-container flex flex-col">
   @if(isEdit == false) {
   <div class="flex flex-grow-0">
+    @if(author$ | async; as author) {
     <div class="flex items-start">
       <p-avatar
-        label="V"
+        [image]="
+          author.avatar?.url?.toString() ||
+          'assets/images/avatar-user-default.png'
+        "
         styleClass="mr-2"
         size="large"
         [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
@@ -12,17 +16,29 @@
     </div>
     <div class="body flex-1">
       <div class="head flex items-center gap-4">
-        <h1 class="name">Thanh Nhường</h1>
+        <h1 class="name">{{ author.fullname || author.username }}</h1>
         -
         <a class="course-name text-gray-dark underline">Cài đặt Angular</a>
       </div>
       <div class="content" [innerHTML]="comment.content"></div>
       <div class="actions">
-        <button class="action-btn active">Thích</button>
+        <button
+          (click)="onInteract()"
+          [class]="
+            comment.likes?.includes(user?._id!)
+              ? 'action-btn active'
+              : 'action-btn'
+          "
+        >
+          ({{ comment.likes?.length }}) Thích
+        </button>
+        @if(type == 'comment') {
         <button class="action-btn" (click)="toggleIsReply()">Trả lời</button>
-        <span class="time">3 giờ trước</span>
+        }
+        <span class="time">{{ comment.createdAt! | FromNowTime }}</span>
       </div>
     </div>
+    }
     <div class="more flex items-center sm:p-8 max-sm:hidden">
       <!-- <button class="more-btn text-gray-dark">
           <ng-icon name="ionEllipsisHorizontalOutline"></ng-icon>
@@ -38,25 +54,34 @@
       />
     </div>
   </div>
-  <ng-template [ngIf]="isReply">
-    <div class="rely-container">
-      <div class="wapper flex">
-        <textarea
-          placeholder="Nhập nội dung trả lời"
-          class="text-input grow"
-          pInputTextarea
-          [(ngModel)]="replyValue"
-        >
-        </textarea>
-        <div class="flex justify-center items-end">
-          <button class="send-btn">
-            <ng-icon name="ionSendOutline"></ng-icon>
-          </button>
-        </div>
-      </div>
+  <div class="rely-container">
+    <ng-template [ngIf]="isReply">
+      <app-comment-editor (submit)="onSubmitReply($event)"></app-comment-editor>
+    </ng-template>
+    @if(loadReply) {
+    <div class="reply-list">
+      @if(reply$ | async; as replyList) {
+      <ng-container *ngFor="let reply of replyList">
+        <app-comment
+          type="reply"
+          (edit)="onEditReply($event)"
+          (delete)="onDeleteReply($event)"
+          [user]="user"
+          [comment]="reply"
+        ></app-comment>
+      </ng-container>
+      }
     </div>
-  </ng-template>
-  }@else {
+    }
+  </div>
+
+  @if(type === 'comment') { @if(comment.replies?.length && loadReply == false) {
+  <div class="reply-btn">
+    <button class="text-blue-600 underline" (click)="handleLoadReply()">
+      Tải thêm {{ comment.replies?.length }} phản hồi
+    </button>
+  </div>
+  } } }@else {
   <h4 class="edit-comment">Chỉnh sửa bình luận</h4>
   <app-comment-editor
     [comment]="comment.content"
