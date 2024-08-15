@@ -7,6 +7,7 @@ import { CreateReplyDiscussInterface, ReplyDiscuss } from '../../models/ReplyDis
 export const FetchReplyDiscuss = createAction('[Reply-discuss component] Fetch ReplyDiscuss', props<{ replyDiscucssesId: String[] }>());
 export const CreateReplyDiscuss = createAction("[Reply-discuss component] Create ReplyDiscuss", props<{ replyDiscuss: CreateReplyDiscussInterface }>());
 export const DeleteReplyDiscuss = createAction("[Reply-discuss component] Delete ReplyDiscuss", props<{ replyDiscussId: String, discuss_id: String }>());
+export const DeleteReplyDiscussByAuthorCourse = createAction("[Reply-discuss component] Delete ReplyDiscuss By Author Course", props<{ replyDiscussId: String, discuss_id: String }>());
 export const UpdateReplyDiscuss = createAction("[Reply-discuss component] Update ReplyDiscuss", props<{ replyDiscuss: ReplyDiscuss }>());
 export const InteractReplyDiscuss = createAction("[Reply-discuss component] Interact ReplyDiscuss", props<{ replyDiscussId: String }>());
 

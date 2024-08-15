@@ -30,6 +30,10 @@ export class ReplyDiscussService {
     return this._http.delete<ReplyDiscuss>(`${environment.apiUrl}reply-discuss/${discuss_id}/${replyDiscuss_id}`, { withCredentials: true });
   }
 
+  DeleteReplyDiscussByAuhtorCourse(replyDiscuss_id: String, discuss_id: String): Observable<ReplyDiscuss> {
+    return this._http.delete<ReplyDiscuss>(`${environment.apiUrl}reply-discuss/author/${discuss_id}/${replyDiscuss_id}`, { withCredentials: true });
+  }
+
   InteractReplyDiscuss(replyDiscuss_id: String): Observable<ReplyDiscuss> {
     return this._http.patch<ReplyDiscuss>(`${environment.apiUrl}reply-discuss/likes/${replyDiscuss_id}`, null, { withCredentials: true });
   }

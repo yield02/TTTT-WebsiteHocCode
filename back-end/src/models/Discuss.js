@@ -9,6 +9,11 @@ const discussSchema = new mongoose.Schema(
       ref: "Lesson",
       required: true,
     },
+    course_id: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Course",
+      required: true,
+    },
     content: { type: String, required: true },
     replies: [{ type: mongoose.Schema.ObjectId, ref: "ReplyDiscuss" }],
     likes: [{ type: mongoose.Schema.ObjectId, ref: "User" }],

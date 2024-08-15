@@ -13,4 +13,8 @@ export const selectDiscussFromLessonId = (lesson_id: String) => createSelector(
         return discuss.filter((c: Discuss) => c.lesson_id === lesson_id);
     })
 
-
+export const selectDiscussFromCourseId = (course_id: String) => createSelector(
+    selectDisucsses,
+    (discuss: Discuss[]): Discuss[] => {
+        return discuss.filter((c: Discuss) => c.course_id === course_id);
+    })

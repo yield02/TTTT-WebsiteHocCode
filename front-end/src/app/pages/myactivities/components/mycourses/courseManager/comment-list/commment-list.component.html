@@ -1,9 +1,23 @@
 <div class="comment-list">
-  <!-- <app-comment></app-comment>
-  <app-comment></app-comment>
-  <app-comment></app-comment>
-  <app-comment></app-comment>
-  <app-comment></app-comment> -->
+  @if(discusses$ | async; as discusses) {
+  <ng-container
+    *ngFor="
+      let item of discusses.slice(
+        paginator.pageIndex,
+        paginator.pageIndex + paginator.pageSize
+      )
+    "
+  >
+    <app-comment
+      (deleteReply)="onDeleteReplyByAdmin($event)"
+      (delete)="onDeleteDiscussByAdmin($event)"
+      [isAdmin]="true"
+      [comment]="item"
+    ></app-comment>
+  </ng-container>
+  }
+
+  <!-- <app-comment ></app-comment> -->
   <p-paginator
     (onPageChange)="onPageChange($event)"
     [first]="paginator.pageIndex"

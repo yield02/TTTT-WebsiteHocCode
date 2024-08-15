@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { UserService } from "../services/user.service";
 import { DiscussService } from "../services/discuss.service";
-import { AddDiscuss, CreateDiscuss, DeleteDiscussByAuthor, DeleteDiscussSuccess, FetchingDiscusses, InteractDiscuss, UpdateContentDiscuss, UpdateDiscussSuccess } from "../store/discuss/discuss.actions";
+import { AddDiscuss, CreateDiscuss, DeleteDiscussByAuthor, DeleteDiscussByAuthorCourse, DeleteDiscussSuccess, FetchingDiscusses, FetchingDiscussesFromCourseId, InteractDiscuss, UpdateContentDiscuss, UpdateDiscussSuccess } from "../store/discuss/discuss.actions";
 import { catchError, map, of, switchMap, tap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -37,6 +37,14 @@ export class DiscussEffects {
         ))
     ))
 
+    loadDiscussFromCourse$ = createEffect(() => this.actions$.pipe(
+        ofType(FetchingDiscussesFromCourseId),
+        switchMap((_action) => this._discussService.getDiscussesFromCourseId(_action.course_id).pipe(
+            map(discusses => AddDiscuss({ discusses })),
+            catchError(error => of())
+        ))
+    ))
+
     updateContentDiscuss$ = createEffect(() => this.actions$.pipe(
         ofType(UpdateContentDiscuss),
         switchMap(_action => this._discussService.updateContentDiscuss(_action.discuss).pipe(
@@ -48,6 +56,15 @@ export class DiscussEffects {
     deleteDiscussByAuthor$ = createEffect(() => this.actions$.pipe(
         ofType(DeleteDiscussByAuthor),
         switchMap(_action => this._discussService.DeleteDiscussByAuthor(_action.discuss_id).pipe(
+            map(discuss => DeleteDiscussSuccess({ discuss_id: _action.discuss_id })),
+            catchError(error => of(error))
+        ))
+    ));
+
+
+    deleteDiscussByAuthorCourse$ = createEffect(() => this.actions$.pipe(
+        ofType(DeleteDiscussByAuthorCourse),
+        switchMap(_action => this._discussService.DeleteDiscussByAuthorCourses(_action.discuss_id).pipe(
             map(discuss => DeleteDiscussSuccess({ discuss_id: _action.discuss_id })),
             catchError(error => of(error))
         ))

@@ -63,6 +63,7 @@
       @if(reply$ | async; as replyList) {
       <ng-container *ngFor="let reply of replyList">
         <app-comment
+          [isAdmin]="isAdmin"
           type="reply"
           (edit)="onEditReply($event)"
           (delete)="onDeleteReply($event)"

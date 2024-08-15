@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { User } from '../../../../../models/User';
 import { selectUsersAndFetchingUsers } from '../../../../../store/users/users.selector';
 import { FetchUsers } from '../../../../../store/users/users.actions';
+import { DeleteReplyDiscuss } from '../../../../../store/reply-discuss/reply-discuss.actions';
 
 @Component({
     selector: 'learning-lesson-comment-dialog',
@@ -90,6 +91,10 @@ export class CommentDialogComponent implements OnInit {
 
     onEditDiscussion(discuss: Discuss) {
         this._store.dispatch(UpdateContentDiscuss({ discuss }));
+    }
+
+    onDeleteReply(data: { reply_id: String, discuss_id: String }) {
+        this._store.dispatch(DeleteReplyDiscuss({ replyDiscussId: data.reply_id, discuss_id: data.discuss_id }));
     }
 
     loadMoreComment() {

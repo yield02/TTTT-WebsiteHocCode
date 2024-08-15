@@ -5,9 +5,12 @@ import { Discuss } from '../../models/Discuss';
 
 
 export const FetchingDiscusses = createAction('[Discuss component] Fetching Discusses', props<{ lesson_id: String }>());
+export const FetchingDiscussesFromCourseId = createAction('[Discuss component] Fetching Discusses From CourseId', props<{ course_id: String }>());
+
 export const CreateDiscuss = createAction('[Discuss component] Create Discuss', props<{ discuss: Discuss }>());
 export const UpdateContentDiscuss = createAction('[Discuss component] Update Discuss', props<{ discuss: Discuss }>());
 export const DeleteDiscussByAuthor = createAction('[Discuss component] Delete Discuss', props<{ discuss_id: String }>());
+export const DeleteDiscussByAuthorCourse = createAction('[Discuss component] Delete Discuss By Author Course', props<{ discuss_id: String }>());
 export const InteractDiscuss = createAction('[Discuss component] Interaction', props<{ discuss_id: String }>());
 
 export const AddDiscuss = createAction("[Discuss component] Add Discuss", props<{ discusses: Discuss[] }>());

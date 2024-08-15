@@ -7,7 +7,7 @@ export const initialState: Discuss[] = [];
 
 export const discussReducer = createReducer(
     initialState,
-    on(AddDiscuss, (state, { discusses }) => [...state, ...discusses]),
+    on(AddDiscuss, (state, { discusses }) => [...discusses, ...state]),
     on(UpdateDiscussSuccess, (state, { discuss }) => state.map(item => {
         if (item._id === discuss._id) {
             return discuss;

@@ -1,6 +1,7 @@
 const apiError = require("../utils/apiError");
 const ReplyDiscuss = require("../models/ReplyDiscuss");
-const DisCuss = require("../models/DisCuss");
+const Discuss = require("../models/Discuss");
+const Course = require("../models/Course");
 
 exports.createReplyDiscuss = async (data, author_id) => {
   try {
@@ -13,7 +14,7 @@ exports.createReplyDiscuss = async (data, author_id) => {
       discuss_id: data.discuss_id,
     });
     await replyDiscuss.save();
-    const discuss = await DisCuss.findByIdAndUpdate(data.discuss_id, {
+    const discuss = await Discuss.findByIdAndUpdate(data.discuss_id, {
       $push: { replies: replyDiscuss._id },
     });
     return replyDiscuss;
@@ -65,7 +66,7 @@ exports.DeleteReplyDiscussByAuthor = async (
       author_id: author_id,
     });
     if (result) {
-      await DisCuss.findByIdAndUpdate(discuss_id, {
+      await Discuss.findByIdAndUpdate(discuss_id, {
         $pull: { replies: reply_id },
       });
     }
@@ -87,6 +88,39 @@ exports.InteractReplyDiscuss = async (reply_id, author_id) => {
       result.likes.push(author_id);
     }
     await result.save();
+    return result;
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
+exports.deleteReplyDiscussByAuthorCourse = async (
+  replyDiscusses_id,
+  discuss_id,
+  author_id
+) => {
+  try {
+    if (!discuss_id || !replyDiscusses_id || !author_id) {
+      throw new apiError(
+        400,
+        "Thông tin yêu cầu không đầy đu��, hoă��c ba��n không có quyền truy câ��p"
+      );
+    }
+
+    const discuss = await Discuss.findById({
+      _id: discuss_id,
+    });
+
+    const course = await Course.findOne({
+      _id: discuss.course_id,
+      author_id: author_id,
+    });
+    if (!course) {
+      throw new apiError(404, "Bạn không có quyền truy cập khóa học");
+    }
+    discuss.replies = discuss.replies.filter((id) => id != replyDiscusses_id);
+    const result = await ReplyDiscuss.findByIdAndDelete(replyDiscusses_id);
+    await discuss.save();
     return result;
   } catch (error) {
     throw new apiError(500, error.message);

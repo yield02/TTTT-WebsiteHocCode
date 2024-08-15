@@ -50,6 +50,7 @@ export class CommentComponent implements OnInit, OnDestroy {
   @Input() user?: User | null;
 
   @Output() delete = new EventEmitter<Discuss | ReplyDiscuss>();
+  @Output() deleteReply = new EventEmitter<{ reply_id: String, discuss_id: String }>();
   @Output() edit = new EventEmitter<Discuss | ReplyDiscuss>();
   @Output() report = new EventEmitter<Discuss | ReplyDiscuss>();
 
@@ -203,7 +204,7 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   onDeleteReply(replyDiscuss: ReplyDiscuss) {
-    this._store.dispatch(DeleteReplyDiscuss({ replyDiscussId: replyDiscuss._id!, discuss_id: this.comment._id! }));
+    this.deleteReply.emit({ reply_id: replyDiscuss._id!, discuss_id: this.comment._id! });
   }
 
   onInteract() {

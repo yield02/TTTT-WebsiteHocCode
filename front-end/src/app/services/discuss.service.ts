@@ -21,12 +21,21 @@ export class DiscussService {
     return this._http.get<{ discusses: Discuss[] }>(`${environment.apiUrl}discuss/lesson/${lesson_id}`, { withCredentials: true }).pipe(map(data => data.discusses));
   }
 
+  getDiscussesFromCourseId(course_id: String): Observable<Discuss[]> {
+    return this._http.get<Discuss[]>(`${environment.apiUrl}discuss/course/${course_id}`, { withCredentials: true });
+  }
+
   updateContentDiscuss(discuss: Discuss): Observable<Discuss> {
     return this._http.patch<Discuss>(`${environment.apiUrl}discuss/${discuss._id}`, { content: discuss.content }, { withCredentials: true });
   }
 
   DeleteDiscussByAuthor(discuss_id: String): Observable<Discuss> {
     return this._http.delete<Discuss>(`${environment.apiUrl}discuss/${discuss_id}`, { withCredentials: true });
+  }
+
+  DeleteDiscussByAuthorCourses(discuss_id: String): Observable<Discuss> {
+    return this._http.delete<Discuss>(`${environment.apiUrl}discuss/author/${discuss_id}`, { withCredentials: true });
+
   }
 
   InteractDiscuss(discuss_id: String): Observable<Discuss> {
