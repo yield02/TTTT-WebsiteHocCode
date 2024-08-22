@@ -1,0 +1,31 @@
+<div class="rating-container p-4">
+  <p class="warning mb-2">
+    Vui lòng cân nhắc đi đánh giá, vì không thể sửa lại!
+  </p>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    class="flex flex-col justify-center items-center gap-5 mb-2"
+  >
+    <p-rating formControlName="rating" [cancel]="false"></p-rating>
+    <textarea
+      formControlName="description"
+      rows="5"
+      cols="30"
+      pInputTextarea
+    ></textarea>
+    <div class="text-center">
+      <span class="text-red-500">{{ message }}</span>
+    </div>
+    <div class="button-action flex justify-end gap-4">
+      <p-button size="small" type="submit" label="Lưu"></p-button>
+      <p-button
+        size="small"
+        label="Hủy"
+        [severity]="'danger'"
+        outlined="true"
+        (onClick)="onClose()"
+      ></p-button>
+    </div>
+  </form>
+</div>

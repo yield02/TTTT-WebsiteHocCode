@@ -1,16 +1,24 @@
 import { createReducer, on } from '@ngrx/store';
 import { Update, Delete } from './user.actions';
-import { User } from '../../models/User';
+import { AuthUser, User } from '../../models/User';
 
-export const initialState: User = {
+export const initialState: AuthUser = {
     _id: '',
     user_id: 0,
     username: '',
-    email: '',
+    email: {
+        data: '',
+        verify: false,
+        hidden: false,
+    },
     fullname: '',
     role: [],
     gender: false,
-    phone: '',
+    phone: {
+        data: '',
+        verify: false,
+        hidden: false,
+    },
     address: '',
     status: {},
 }

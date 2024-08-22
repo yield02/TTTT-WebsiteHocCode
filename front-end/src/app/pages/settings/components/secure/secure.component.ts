@@ -12,6 +12,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { comparePassword } from '../../../../tools/Validator/comparePasswordValidation';
 import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
+import { AuthService } from '../../../../services/auth.service';
 @Component({
   selector: 'setting-secure',
   standalone: true,
@@ -43,7 +44,7 @@ export class SecureComponent {
   formChangePassword: FormGroup
 
 
-  constructor(private messageService: MessageService, private fb: FormBuilder) {
+  constructor(private messageService: MessageService, private fb: FormBuilder, private _authService: AuthService) {
     this.formChangePassword = this.fb.group({
       oldPassword: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
       newPassword: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
@@ -65,5 +66,32 @@ export class SecureComponent {
   submitVerifiedEmail() {
     console.log(this.formChangePassword.value);
     this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: 'Mã xác thực không đúng!!!' });
+  }
+
+  submitChangePassword() {
+
+    if (this.formChangePassword.invalid) {
+      this.formChangePassword.markAllAsTouched();
+      return;
+    }
+
+    console.log(this.formChangePassword.value);
+
+    this._authService.changePassword(this.formChangePassword.value.oldPassword, this.formChangePassword.value.newPassword).subscribe(
+      (data) => {
+
+        this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật mật khẩu thành công' });
+        this.isChangePassword = false;
+      },
+      (error) => {
+        if (error.status == 401) {
+          this.formChangePassword.get('oldPassword')?.setErrors({ notValid: true });
+        }
+        console.log(error)
+      }
+    )
+
+
+
   }
 }

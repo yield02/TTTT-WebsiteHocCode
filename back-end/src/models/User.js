@@ -7,7 +7,13 @@ const userSchema = new mongoose.Schema(
     user_id: Number,
     avatar: { type: Object, require: false }, // if contentType = URL => use URL, else user buffer,
     username: { type: String, require: true },
-    password: { type: String, require: true },
+    password: {
+      type: String,
+      require: true,
+      get: (v) => {
+        return "";
+      },
+    },
     fullname: { type: String, require: false },
     email: {
       type: {
@@ -31,14 +37,16 @@ const userSchema = new mongoose.Schema(
       },
       require: false,
     },
+    birthday: { type: String, require: false },
     address: {
-      type: {
-        data: { type: String, require: false },
-        hidden: { type: Boolean, require: false },
-      },
+      type: String,
       require: false,
     },
-    gender: { type: Boolean, require: false, default: false },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      default: "male",
+    },
     status: {
       type: {
         _id: false,

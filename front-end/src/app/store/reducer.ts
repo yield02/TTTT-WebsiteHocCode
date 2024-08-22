@@ -3,7 +3,7 @@ import { Chapter } from '../models/Chapter';
 import { Course } from '../models/Course';
 import { Lesson } from '../models/Lesson';
 import { Subject } from '../models/Subject';
-import { User } from '../models/User';
+import { AuthUser, User } from '../models/User';
 import { chaptersReducer } from './chapters/chapters.reducer';
 import { coursesReducer } from './courses/courses.reducer';
 import { lessonsReducer } from './lessons/lessons.reducer';
@@ -16,9 +16,11 @@ import { Discuss } from '../models/Discuss';
 import { discussReducer } from './discuss/discuss.reducer';
 import { replyDiscussReducer } from './reply-discuss/reply-discuss.reducer';
 import { ReplyDiscuss } from '../models/ReplyDiscuss';
+import { RatingInterface } from '../models/Rating';
+import { ratingReducer } from './rating/rating.reducer';
 
 export interface AppState {
-    user: User,
+    user: AuthUser,
     courses: Course[],
     myCourseManager: Course[],
     chapters: Chapter[],
@@ -26,7 +28,8 @@ export interface AppState {
     subjects: Subject[],
     users: User[],
     discuss: Discuss[],
-    replyDiscuss: ReplyDiscuss[]
+    replyDiscuss: ReplyDiscuss[],
+    rating: RatingInterface[],
 }
 
 
@@ -40,6 +43,7 @@ const reducers: ActionReducerMap<AppState> = {
     users: usersReducer,
     discuss: discussReducer,
     replyDiscuss: replyDiscussReducer,
+    rating: ratingReducer,
 }
 
 export default reducers;

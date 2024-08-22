@@ -1,9 +1,10 @@
 const Discuss = require("../models/Discuss");
 const ReplyDiscuss = require("../models/ReplyDiscuss");
 const Course = require("../models/Course");
+const ApiError = require("../utils/apiError");
+const Lesson = require("../models/Lesson");
 
 var mongoose = require("mongoose");
-const ApiError = require("../utils/apiError");
 exports.create = async (data) => {
   try {
     if (!data.content || !data.author_id || !data.lesson_id) {

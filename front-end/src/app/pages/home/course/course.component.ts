@@ -17,7 +17,7 @@ import { ChapterComponent } from './chapter/chapter.component';
 import { Chapter } from '../../../models/Chapter';
 import { selectChaptersFromCourseId } from '../../../store/chapters/chapters.selectors';
 import { FetchingChapters } from '../../../store/chapters/chapters.actions';
-import { User } from '../../../models/User';
+import { AuthUser } from '../../../models/User';
 
 @Component({
   selector: 'app-course',
@@ -42,7 +42,7 @@ export class CourseComponent implements OnInit {
   rating: number = 4.5;
   chapters$!: Observable<Chapter[]>;
   course$!: Observable<Course | undefined>;
-  user$: Observable<User> = this._store.select(state => state.user);
+  user$: Observable<AuthUser> = this._store.select(state => state.user);
 
   isCollapseAll: boolean = true;
   fetchedCourse: boolean = false;

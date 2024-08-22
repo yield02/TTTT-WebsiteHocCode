@@ -15,5 +15,6 @@ export interface Course {
     chapters?: String[],
     createdAt?: String,
     updatedAt?: String,
-    subject_id?: String
+    subject_id?: String,
+    averageRating?: Number,
 }

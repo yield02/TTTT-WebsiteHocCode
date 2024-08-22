@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
+const Rating = require("./Rating");
+
 const courseSchema = new mongoose.Schema(
   {
     course_id: Number,
@@ -36,8 +38,11 @@ const courseSchema = new mongoose.Schema(
         ref: "Chapter",
       },
     ],
+    rating: [{ type: mongoose.Schema.ObjectId, ref: "Rating" }],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 courseSchema.plugin(AutoIncrement, { inc_field: "course_id", start_seq: 1000 });

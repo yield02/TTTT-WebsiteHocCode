@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducer';
-import { User } from '../../../models/User';
+import { AuthUser } from '../../../models/User';
 
 
 @Component({
@@ -28,7 +28,7 @@ import { User } from '../../../models/User';
 export class AvatarMenuComponent implements OnDestroy {
   $observer: Subscription = new Subscription();
 
-  $user: Observable<User> = this._store.select(state => state.user);
+  $user: Observable<AuthUser> = this._store.select(state => state.user);
 
   constructor(private authService: AuthService, private _store: Store<AppState>) {
 

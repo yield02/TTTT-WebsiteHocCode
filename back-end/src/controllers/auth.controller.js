@@ -52,3 +52,30 @@ exports.logout = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.updateInformation = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    const result = await authService.updateInformation(userInfor._id, req.body);
+    res.status(200).json(result.user);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.changePassword = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await authService.changePassword(
+      userInfor._id,
+      req.body.oldPassword,
+      req.body.newPassword
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

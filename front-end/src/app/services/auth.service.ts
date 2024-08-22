@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subscriber, Subscription, map, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { select, Store } from '@ngrx/store';
-import { User } from '../models/User';
+import { AuthUser, UpdateUserInformationInteraface, User } from '../models/User';
 import { CookieService } from 'ngx-cookie-service';
 import { MessageService } from 'primeng/api';
 import { Delete, Update } from '../store/user/user.actions';
@@ -12,7 +12,7 @@ import { AppState } from '../store/reducer';
 import { selectCourseFromCourseId } from '../store/courses/courses.selector';
 
 interface LoginResponse {
-  user: User,
+  user: AuthUser,
   token: string,
 }
 
@@ -121,8 +121,20 @@ export class AuthService {
   }
 
 
-  updateRequiredInformation(username: String, password: String): Observable<User> {
-    return this.http.post<User>(`${environment.apiUrl}oauth/update-required-information`, { username, password }, {
+  updateRequiredInformation(username: String, password: String): Observable<AuthUser> {
+    return this.http.post<AuthUser>(`${environment.apiUrl}oauth/update-required-information`, { username, password }, {
+      withCredentials: true,
+    });
+  }
+
+  updateInformation(userInfor: UpdateUserInformationInteraface): Observable<AuthUser> {
+    return this.http.post<AuthUser>(`${environment.apiUrl}auth/update-information`, userInfor, {
+      withCredentials: true,
+    });
+  }
+
+  changePassword(oldPassword: String, newPassword: String) {
+    return this.http.post(`${environment.apiUrl}auth/change-password`, { oldPassword, newPassword }, {
       withCredentials: true,
     });
   }

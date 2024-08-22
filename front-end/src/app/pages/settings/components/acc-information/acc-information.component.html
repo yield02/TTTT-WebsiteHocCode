@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="information-container">
   <h1 class="information-heading-text">Thông tin cá nhân</h1>
   <div class="information-box">
@@ -33,75 +34,161 @@
 
     <form [formGroup]="InformationForm" (ngSubmit)="onSubmit()">
       <div class="information-item flex flex-wrap justify-start items-center">
-        <div class="flex-item md:basis-1/2 basis-full px-4 mb-3">
-          <label class="label">Họ và tên</label>
-          <p-inputGroup>
-            <input
-              type="text"
-              pInputText
-              placeholder="Họ và tên"
-              formControlName="fullname"
-            />
-            <p-inputGroupAddon>
-              <ng-icon name="ionPersonOutline"></ng-icon>
-            </p-inputGroupAddon>
-          </p-inputGroup>
+        <div class="flex-item md:basis-1/2 basis-full px-4">
+          <div>
+            <label class="label">Họ và tên</label>
+            <p-inputGroup>
+              <input
+                type="text"
+                pInputText
+                placeholder="Họ và tên"
+                formControlName="fullname"
+                aria-describedby="fullname-help"
+              />
+              <p-inputGroupAddon>
+                <ng-icon name="ionPersonOutline"></ng-icon>
+              </p-inputGroupAddon>
+            </p-inputGroup>
+          </div>
+          <small class="help-infor" id="fullname-help">
+            @if(InformationForm.get("fullname")?.getError("required") &&
+            InformationForm.get('fullname')?.touched) {
+            <span class="text-red-500">Vui lòng nhập họ và tên</span>
+            }
+          </small>
         </div>
-        <div class="flex-item md:basis-1/2 basis-full px-4 mb-3">
-          <label class="label">Email</label>
-          <p-inputGroup>
-            <input
-              type="email"
-              pInputText
-              placeholder="Email"
-              formControlName="email"
-            />
-            <p-inputGroupAddon>
-              <ng-icon name="ionMailOutline"></ng-icon>
-            </p-inputGroupAddon>
-          </p-inputGroup>
+        <div class="flex-item md:basis-1/2 basis-full px-4">
+          <div>
+            <label class="label">Ngày/Tháng/Năm sinh</label>
+            <p-inputGroup>
+              <input
+                type="date"
+                pInputText
+                placeholder="Ngày/Tháng/Năm sinh"
+                formControlName="birthday"
+                aria-describedby="birthday-help"
+              />
+              <p-inputGroupAddon>
+                <ng-icon name="heroCake"></ng-icon>
+              </p-inputGroupAddon>
+            </p-inputGroup>
+          </div>
+          <small class="help-infor" id="birthday-help">
+            @if(InformationForm.get("birthday")?.getError("required") &&
+            InformationForm.get('birthday')?.touched) {
+            <span class="text-red-500">Vui lòng nhập ngày sinh</span>
+            }
+          </small>
         </div>
-        <div class="flex-item md:basis-1/2 basis-full px-4 mb-3">
-          <label class="label">Số điện thoại</label>
-          <p-inputGroup>
-            <input
-              type="text"
-              pInputText
-              placeholder="Số điện thoại"
-              formControlName="phone"
-            />
-            <p-inputGroupAddon>
-              <ng-icon name="heroDevicePhoneMobile"></ng-icon>
-            </p-inputGroupAddon>
-          </p-inputGroup>
+        <div class="flex-item md:basis-1/2 basis-full px-4">
+          <fieldset class="flex flex-col gap-2" formGroupName="email">
+            <div>
+              <div>
+                <label class="label">Email</label>
+                <p-inputGroup>
+                  <input
+                    id="email-input"
+                    type="email"
+                    pInputText
+                    placeholder="Email"
+                    formControlName="data"
+                    aria-describedby="email-help"
+                  />
+                  <p-inputGroupAddon
+                    [class]="
+                      InformationForm.get('email')?.value.verify
+                        ? 'text-green-500'
+                        : 'text-red-500'
+                    "
+                  >
+                    <ng-icon name="ionMailOutline"></ng-icon>
+                  </p-inputGroupAddon>
+                </p-inputGroup>
+              </div>
+              <small class="help-infor" id="email-help">
+                @if(InformationForm.get("email")?.get("data")?.getError("required")
+                && InformationForm.get("email")?.get("data")?.touched) {
+                <span class="text-red-500">Vui lòng nhập email</span>
+                }
+                @if(InformationForm.get("email")?.get("data")?.getError("email")
+                && InformationForm.get("email")?.get("data")?.touched) {
+                <span class="text-red-500"
+                  >Vui lòng nhập đúng định dạng email</span
+                >
+                }
+                @if(InformationForm.get("email")?.get("data")?.getError("emailExist"))
+                {
+                <span class="text-red-500"
+                  >Email đã tồn tại, vui lòng sử dụng email khác.</span
+                >
+                }
+              </small>
+            </div>
+            <div class="flex gap-2 justify-between">
+              <label class="label">Hiển thị email: </label>
+              <p-inputSwitch formControlName="hidden" />
+            </div>
+          </fieldset>
         </div>
-        <div class="flex-item md:basis-1/2 basis-full px-4 mb-3">
-          <label class="label">Ngày/Tháng/Năm sinh</label>
-          <p-inputGroup>
-            <input
-              type="text"
-              pInputText
-              placeholder="Ngày/Tháng/Năm sinh"
-              formControlName="birthday"
-            />
-            <p-inputGroupAddon>
-              <ng-icon name="heroCake"></ng-icon>
-            </p-inputGroupAddon>
-          </p-inputGroup>
+        <div class="flex-item md:basis-1/2 basis-full px-4">
+          <fieldset class="flex flex-col gap-2" formGroupName="phone">
+            <div>
+              <div>
+                <label class="label">Số điện thoại</label>
+                <p-inputGroup>
+                  <input
+                    type="text"
+                    pInputText
+                    placeholder="Số điện thoại"
+                    formControlName="data"
+                    aria-describedby="phone-help"
+                  />
+                  <p-inputGroupAddon>
+                    <ng-icon name="heroDevicePhoneMobile"></ng-icon>
+                  </p-inputGroupAddon>
+                </p-inputGroup>
+              </div>
+              <small class="help-infor" id="phone-help">
+                @if(InformationForm.get("phone")?.get("data")?.getError("required")
+                && InformationForm.get("phone")?.get("data")?.touched) {
+                <span class="text-red-500">Vui lòng nhập số điện thoại</span>
+                }
+                @if(InformationForm.get("phone")?.get("data")?.getError("pattern")
+                && InformationForm.get("phone")?.get("data")?.touched) {
+                <span class="text-red-500"
+                  >Số điện thoại không đúng định dạng</span
+                >
+                }
+              </small>
+            </div>
+            <div class="flex gap-2 justify-between">
+              <label class="label">Hiển thị số điện thoại: </label>
+              <p-inputSwitch formControlName="hidden" />
+            </div>
+          </fieldset>
         </div>
         <div class="flex-item basis-full px-4 mb-3">
-          <label class="label">Địa chỉ</label>
-          <p-inputGroup>
-            <input
-              type="text"
-              pInputText
-              placeholder="Địa chỉ"
-              formControlName="address"
-            />
-            <p-inputGroupAddon>
-              <ng-icon name="heroHome"></ng-icon>
-            </p-inputGroupAddon>
-          </p-inputGroup>
+          <div>
+            <label class="label">Địa chỉ</label>
+            <p-inputGroup>
+              <input
+                type="text"
+                pInputText
+                placeholder="Địa chỉ"
+                formControlName="address"
+                aria-describedby="address-help"
+              />
+              <p-inputGroupAddon>
+                <ng-icon name="heroHome"></ng-icon>
+              </p-inputGroupAddon>
+            </p-inputGroup>
+          </div>
+          <small class="help-infor" id="address-help">
+            @if(InformationForm.get("address")?.getError("required") &&
+            InformationForm.get('address')?.touched) {
+            <span class="text-red-500">Vui lòng nhập địa chỉ</span>
+            }
+          </small>
         </div>
       </div>
       <div class="flex-item basis-1/2 px-4 mb-3 flex">
@@ -128,7 +215,7 @@
       <div class="flex justify-end items-center">
         <p-button
           label="Lưu thông tin"
-          (onClick)="onSubmit()"
+          type="submit"
           [rounded]="true"
           severity="info"
         />

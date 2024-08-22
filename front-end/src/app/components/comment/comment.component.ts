@@ -10,7 +10,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { Discuss } from '../../models/Discuss';
 import { CommentEditorComponent } from '../comment-editor/comment-editor.component';
-import { User } from '../../models/User';
+import { AuthUser, User } from '../../models/User';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../store/reducer';
 import { BehaviorSubject, Observable, Subscriber, Subscription, tap } from 'rxjs';
@@ -47,7 +47,7 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   @Input() type: 'comment' | 'reply' = 'comment';
 
-  @Input() user?: User | null;
+  @Input() user?: AuthUser | null;
 
   @Output() delete = new EventEmitter<Discuss | ReplyDiscuss>();
   @Output() deleteReply = new EventEmitter<{ reply_id: String, discuss_id: String }>();

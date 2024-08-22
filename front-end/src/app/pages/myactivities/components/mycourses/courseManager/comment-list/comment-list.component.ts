@@ -7,10 +7,12 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../../../store/reducer';
 import { ActivatedRoute } from '@angular/router';
 import { selectDiscussFromCourseId } from '../../../../../../store/discuss/discuss.selectors';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, of, switchMap, tap } from 'rxjs';
 import { Discuss } from '../../../../../../models/Discuss';
 import { DeleteDiscussByAuthorCourse, FetchingDiscussesFromCourseId } from '../../../../../../store/discuss/discuss.actions';
 import { DeleteReplyDiscussByAuthorCourse } from '../../../../../../store/reply-discuss/reply-discuss.actions';
+import { selectUsersAndFetchingUsers, selectUsersFromUsersId } from '../../../../../../store/users/users.selector';
+import { FetchUsers } from '../../../../../../store/users/users.actions';
 
 @Component({
   selector: 'course-manager-comment-list',
@@ -43,13 +45,23 @@ export class CommentListComponent implements OnInit {
     const courseId = this._route.snapshot.paramMap.get('courseId');
 
     this._store.select(selectDiscussFromCourseId(courseId!)).pipe(
-      tap(discusses => {
+      switchMap(discusses => {
         if (discusses.length <= 0 && !this.fetched) {
           this._store.dispatch(FetchingDiscussesFromCourseId({ course_id: courseId! }));
           this.fetched = true;
         }
         this.paginator.totalRecord = discusses.length;
         this.discusses$.next(discusses);
+        if (discusses.length > 0) {
+          let userList: String[] = discusses.map(discuss => discuss.author_id!) || [];
+          return this._store.select(selectUsersAndFetchingUsers(userList));
+        }
+        return of();
+      }),
+      tap(data => {
+        if (data.fetchUsers.length > 0) {
+          this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }))
+        }
       })
     ).subscribe();
 

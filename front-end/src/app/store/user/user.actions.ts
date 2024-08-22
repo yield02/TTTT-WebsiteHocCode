@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { User } from '../../models/User';
+import { AuthUser } from '../../models/User';
 
-export const Update = createAction('[User Component] Update', props<{ updateValue: any }>());
+export const Update = createAction('[User Component] Update', props<{ updateValue: AuthUser }>());
 export const Delete = createAction('[User Component] Delete');

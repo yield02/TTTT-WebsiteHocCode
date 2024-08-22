@@ -60,52 +60,104 @@
         [(visible)]="isChangePassword"
         [style]="{ width: '50rem' }"
       >
-        <form [formGroup]="formChangePassword">
+        <form
+          [formGroup]="formChangePassword"
+          (ngSubmit)="submitChangePassword()"
+        >
           <div
             class="flex flex-col justify-center align-items-center gap-5 mb-5"
           >
-            <p-password
-              promptLabel="Độ an toàn"
-              placeholder="Mật khẩu cũ"
-              formControlName="oldPassword"
-              [toggleMask]="true"
-              weakLabel="Quá yếu"
-              mediumLabel="Mạnh"
-              strongLabel="Rất mạnh"
-            >
-            </p-password>
-            <p-password
-              promptLabel="Độ an toàn"
-              placeholder="Mật khẩu mới"
-              formControlName="newPassword"
-              [toggleMask]="true"
-              weakLabel="Quá yếu"
-              mediumLabel="Mạnh"
-              strongLabel="Rất mạnh"
-            >
-            </p-password>
-            <p-password
-              promptLabel="Độ an toàn"
-              placeholder="Mật khẩu xác nhận"
-              formControlName="reNewPassword"
-              [toggleMask]="true"
-              weakLabel="Quá yếu"
-              mediumLabel="Mạnh"
-              strongLabel="Rất mạnh"
-            >
-            </p-password>
+            <div>
+              <p-password
+                promptLabel="Độ an toàn"
+                placeholder="Mật khẩu cũ"
+                formControlName="oldPassword"
+                [toggleMask]="true"
+                weakLabel="Quá yếu"
+                mediumLabel="Mạnh"
+                strongLabel="Rất mạnh"
+                aria-describedby="old-password"
+              >
+              </p-password>
+              <small class="help-input" id="old-password">
+                @if(formChangePassword.get('oldPassword')?.touched) {
+                @if(formChangePassword.get('oldPassword')?.getError('required'))
+                {
+                <span class="text-red-500">Nhập mật khẩu cũ</span>
+                }
+                @if(formChangePassword.get('oldPassword')?.getError('minLength'))
+                {
+                <span class="text-red-500">Mật khẩu tối thiểu 6 ký tự</span>
+                }
+                @if(formChangePassword.get('oldPassword')?.getError('notValid'))
+                {
+                <span class="text-red-500">Mật khẩu cũ không đúng</span>
+                } }
+              </small>
+            </div>
+            <div>
+              <p-password
+                promptLabel="Độ an toàn"
+                placeholder="Mật khẩu mới"
+                formControlName="newPassword"
+                [toggleMask]="true"
+                weakLabel="Quá yếu"
+                mediumLabel="Mạnh"
+                strongLabel="Rất mạnh"
+                aria-describedby="new-password"
+              >
+              </p-password>
+              <small class="help-input" id="new-password">
+                @if(formChangePassword.get('newPassword')?.touched) {
+                @if(formChangePassword.get('newPassword')?.getError('required'))
+                {
+                <span class="text-red-500">Nhập mật khẩu mới</span>
+                }
+                @if(formChangePassword.get('newPassword')?.getError('minLength'))
+                {
+                <span class="text-red-500">Mật khẩu tối thiểu 6 ký tự</span>
+                } }
+              </small>
+            </div>
+            <div>
+              <p-password
+                promptLabel="Độ an toàn"
+                placeholder="Mật khẩu xác nhận"
+                formControlName="reNewPassword"
+                [toggleMask]="true"
+                weakLabel="Quá yếu"
+                mediumLabel="Mạnh"
+                strongLabel="Rất mạnh"
+                aria-describedby="re-new-password"
+              >
+              </p-password>
+              <small class="help-input" id="re-new-password">
+                @if(formChangePassword.get('reNewPassword')?.touched) {
+                @if(formChangePassword.get('reNewPassword')?.getError('required'))
+                {
+                <span class="text-red-500">Nhập mật khẩu xác thực</span>
+                }
+                @if(formChangePassword.get('reNewPassword')?.getError('minLength'))
+                {
+                <span class="text-red-500">Mật khẩu tối thiểu 6 ký tự</span>
+                }
+                @if(formChangePassword.get('reNewPassword')?.getError('comparePassword'))
+                {
+                <span class="text-red-500">Mật khẩu xác nhận không đúng</span>
+                } }
+              </small>
+            </div>
+          </div>
+          <div class="flex justify-center gap-2">
+            <p-button
+              size="small"
+              label="Hủy"
+              severity="secondary"
+              (click)="isChangePassword = false"
+            />
+            <p-button size="small" label="Lưu" type="submit" />
           </div>
         </form>
-
-        <div class="flex justify-center gap-2">
-          <p-button
-            size="small"
-            label="Hủy"
-            severity="secondary"
-            (click)="isChangePassword = false"
-          />
-          <p-button size="small" label="Lưu" (click)="submitVerifiedEmail()" />
-        </div>
       </p-dialog>
     </div>
   </div>

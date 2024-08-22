@@ -7,6 +7,7 @@ const userRouter = require("./user");
 const discussRouter = require("./discuss");
 const oAuthRouter = require("./oauth");
 const replyDiscussRouter = require("./reply-discuss");
+const ratingRouter = require("./rating");
 
 function route(app) {
   app.use("/api/auth", authRouter);
@@ -18,5 +19,6 @@ function route(app) {
   app.use("/api/discuss", discussRouter);
   app.use("/api/oauth", oAuthRouter);
   app.use("/api/reply-discuss", replyDiscussRouter);
+  app.use("/api/rating", ratingRouter);
 }
 module.exports = route;

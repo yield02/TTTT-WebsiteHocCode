@@ -1,14 +1,9 @@
 <div class="rating-list">
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
-  <course-manager-rating-item></course-manager-rating-item>
+  @if (ratings$ | async; as ratingList) {
+  <ng-container *ngFor="let rating of ratingList">
+    <course-manager-rating-item [rating]="rating"></course-manager-rating-item>
+  </ng-container>
+  }
   <p-paginator
     (onPageChange)="onPageChange($event)"
     [first]="paginator.pageIndex"

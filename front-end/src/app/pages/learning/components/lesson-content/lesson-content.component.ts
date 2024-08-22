@@ -15,7 +15,7 @@ import { selectLessonFromId } from '../../../../store/lessons/lessons.selectors'
 import { FetchingLessons } from '../../../../store/lessons/lessons.actions';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HoursFormatPipe } from '../../../../pipe/my-datetime-format.pipe';
-import { User } from '../../../../models/User';
+import { AuthUser, User } from '../../../../models/User';
 import { checkUserEnroll, selectCourseFromCourseId } from '../../../../store/courses/courses.selector';
 import { ContentComponent } from './content/content.component';
 @Component({
@@ -37,7 +37,7 @@ import { ContentComponent } from './content/content.component';
 export class LessonComponent implements OnInit, AfterViewInit {
   course_id!: String;
   lesson$!: Observable<Lesson | undefined>;
-  user$: Observable<User | undefined> = this._store.select(state => state.user);
+  user$: Observable<AuthUser | undefined> = this._store.select(state => state.user);
   isFetched: boolean = false;
 
 

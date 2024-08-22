@@ -11,7 +11,7 @@ import { BehaviorSubject, switchMap, tap } from 'rxjs';
 import { Discuss } from '../../../../../models/Discuss';
 import { selectDiscussFromLessonId } from '../../../../../store/discuss/discuss.selectors';
 import { Observable } from 'rxjs';
-import { User } from '../../../../../models/User';
+import { AuthUser, User } from '../../../../../models/User';
 import { selectUsersAndFetchingUsers } from '../../../../../store/users/users.selector';
 import { FetchUsers } from '../../../../../store/users/users.actions';
 import { DeleteReplyDiscuss } from '../../../../../store/reply-discuss/reply-discuss.actions';
@@ -41,7 +41,7 @@ export class CommentDialogComponent implements OnInit {
     totalComments: number = 0;
     maxLength: number = 10;
     discussList$ = new BehaviorSubject<Discuss[]>([]);
-    user$: Observable<User> = this._store.select(state => state.user);
+    user$: Observable<AuthUser> = this._store.select(state => state.user);
 
 
 

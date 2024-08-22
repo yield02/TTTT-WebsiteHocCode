@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const evaluateSchema = new mongoose.Schema(
+const ratingSchema = new mongoose.Schema(
   {
     author_id: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
     course_id: {
@@ -8,11 +8,11 @@ const evaluateSchema = new mongoose.Schema(
       ref: "Course",
       required: true,
     },
-    star: { type: Number, required: true },
+    star: { type: Number, min: 1, max: 5, required: true },
     description: { type: String, required: false },
   },
   { timestamps: true }
 );
 
 module.exports =
-  mongoose.models?.Evaluate || mongoose.model("Evaluate", evaluateSchema);
+  mongoose.models?.Rating || mongoose.model("Rating", ratingSchema);
