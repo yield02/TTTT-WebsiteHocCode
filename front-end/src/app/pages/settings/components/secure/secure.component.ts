@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, NgZone, OnChanges } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { ionCheckmark, ionCloseOutline } from '@ng-icons/ionicons';
+import { ionCheckmark, ionCheckmarkCircle, ionCloseOutline } from '@ng-icons/ionicons';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,6 +13,10 @@ import { comparePassword } from '../../../../tools/Validator/comparePasswordVali
 import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
 import { AuthService } from '../../../../services/auth.service';
+import { Observable, Observer, throttleTime } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../store/reducer';
+import { AuthUser } from '../../../../models/User';
 @Component({
   selector: 'setting-secure',
   standalone: true,
@@ -29,7 +33,7 @@ import { AuthService } from '../../../../services/auth.service';
     DividerModule
   ],
   providers: [
-    provideIcons({ ionCloseOutline, ionCheckmark }),
+    provideIcons({ ionCloseOutline, ionCheckmark, ionCheckmarkCircle }),
     MessageService
   ]
   ,
@@ -37,18 +41,38 @@ import { AuthService } from '../../../../services/auth.service';
   styleUrl: './secure.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SecureComponent {
+export class SecureComponent implements AfterViewInit, OnChanges {
   isVerifiedEmail: boolean = false;
+  isUnverifiedEmail: boolean = false;
+
   isChangePassword: boolean = false;
+  waitTimeVerify = 0;
+
+  $user: Observable<AuthUser> = this._store.select(state => state.user);
+
 
   formChangePassword: FormGroup
 
 
-  constructor(private messageService: MessageService, private fb: FormBuilder, private _authService: AuthService) {
+  constructor(private _store: Store<AppState>, private messageService: MessageService, private fb: FormBuilder, private _authService: AuthService, private _ngZone: NgZone, private cdr: ChangeDetectorRef) {
     this.formChangePassword = this.fb.group({
       oldPassword: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
       newPassword: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
       reNewPassword: ['', Validators.compose([Validators.required, Validators.minLength(6), comparePassword('newPassword', 'reNewPassword')])],
+    });
+  }
+  ngOnChanges(): void {
+
+  }
+
+  ngAfterViewInit(): void {
+    this._ngZone.runOutsideAngular(() => {
+      setInterval(() => {
+        if (this.waitTimeVerify > 0) {
+          this.waitTimeVerify--;
+          this.cdr.detectChanges(); // Manually trigger change detection
+        }
+      }, 1000)
     });
   }
 
@@ -59,13 +83,20 @@ export class SecureComponent {
     this.isVerifiedEmail = true;
   }
 
+  showUnverifiedDialog(): void {
+    this.isUnverifiedEmail = true;
+  }
+
   showChangePassword(): void {
     this.isChangePassword = true;
   }
 
   submitVerifiedEmail() {
-    console.log(this.formChangePassword.value);
-    this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: 'Mã xác thực không đúng!!!' });
+    this.sendVerifyEmail();
+  }
+
+  submitUnverifiedEmail() {
+    this.sendUnverifyEmail();
   }
 
   submitChangePassword() {
@@ -75,7 +106,6 @@ export class SecureComponent {
       return;
     }
 
-    console.log(this.formChangePassword.value);
 
     this._authService.changePassword(this.formChangePassword.value.oldPassword, this.formChangePassword.value.newPassword).subscribe(
       (data) => {
@@ -93,5 +123,29 @@ export class SecureComponent {
 
 
 
+  }
+
+  sendVerifyEmail() {
+    this._authService.sendVerifyEmail().subscribe(
+      (data) => {
+        this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Gửi email xác thực thành công' });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    this.waitTimeVerify = 60;
+  }
+
+  sendUnverifyEmail() {
+    this._authService.sendUnverifyEmail().subscribe(
+      (data) => {
+        this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Gửi email hủy xác thực thành công' });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    this.waitTimeVerify = 60;
   }
 }

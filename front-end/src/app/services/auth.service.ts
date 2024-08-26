@@ -9,7 +9,6 @@ import { MessageService } from 'primeng/api';
 import { Delete, Update } from '../store/user/user.actions';
 import { Router } from '@angular/router';
 import { AppState } from '../store/reducer';
-import { selectCourseFromCourseId } from '../store/courses/courses.selector';
 
 interface LoginResponse {
   user: AuthUser,
@@ -137,6 +136,19 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}auth/change-password`, { oldPassword, newPassword }, {
       withCredentials: true,
     });
+  }
+
+  sendVerifyEmail() {
+    return this.http.get(`${environment.apiUrl}auth/send-verify-email`, { withCredentials: true });
+  }
+
+  sendUnverifyEmail() {
+    return this.http.get(`${environment.apiUrl}auth/send-unverify-email`, { withCredentials: true });
+  }
+
+  updateAvatar(data: FormData) {
+    console.log(data);
+    return this.http.post(`${environment.apiUrl}auth/update-avatar`, data, { withCredentials: true });
   }
 
 }

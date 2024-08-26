@@ -20,14 +20,18 @@ exports.CheckUserAndRegister = async (data) => {
 
     await newUser.save();
 
-    const token = jwt.sign(newUser._doc, process.env.JWT_SECRET_KEY, {
+    const { avatar, password, ...userInfor } = newUser._doc;
+
+    const token = jwt.sign(userInfor, process.env.JWT_SECRET_KEY, {
       expiresIn: "12h",
     });
 
     return token;
   }
 
-  const token = jwt.sign(user._doc, process.env.JWT_SECRET_KEY, {
+  const { avatar, password, ...userInfor } = user._doc;
+
+  const token = jwt.sign(userInfor, process.env.JWT_SECRET_KEY, {
     expiresIn: "12h",
   });
   return token;
@@ -49,7 +53,6 @@ function isValidString(str) {
 exports.UpdateRequiredInformation = async (user_id, data) => {
   try {
     if (!isValidString(data.username)) {
-      console.log(data.username);
       throw new apiError(400, "Invalid username");
     }
 

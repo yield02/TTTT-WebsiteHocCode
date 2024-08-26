@@ -9,7 +9,7 @@ var mongoose = require("mongoose");
 exports.create = async (data, file) => {
   const buffer = file.buffer;
 
-  const resizeBuffer = await resize(buffer);
+  const resizeBuffer = await resize.resizeCourseImage(buffer);
 
   var finalImage = {
     contentType: file.mimetype,
@@ -61,7 +61,7 @@ exports.update = async (data, file, authorId) => {
 
     if (file) {
       const buffer = file.buffer;
-      var resizeBuffer = await resize(buffer);
+      var resizeBuffer = await resize.resizeCourseImage(buffer);
       var finalImage = {
         contentType: file?.mimetype,
         buffer: Buffer.from(resizeBuffer.toString("base64"), "base64"),

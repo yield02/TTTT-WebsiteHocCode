@@ -2,6 +2,8 @@ const User = require("../models/User");
 const apiError = require("../utils/apiError");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const EmailVerify = require("../utils/sendEmail");
+const resize = require("../utils/resize");
 
 exports.signup = async (data) => {
   const userIsExits = await User.exists({ username: data.username });
@@ -36,7 +38,7 @@ exports.login = async (data) => {
         user.get("password", null, { getters: false })
       )
     ) {
-      const { password, ...jwtInfor } = user._doc;
+      const { password, avatar, ...jwtInfor } = user._doc;
       const token = jwt.sign(jwtInfor, process.env.JWT_SECRET_KEY, {
         expiresIn: "12h",
       });
@@ -158,6 +160,168 @@ exports.changePassword = async (user_id, oldpassword, newpassword) => {
 
     return {
       message: "Đổi mật khẩu thành công",
+    };
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+
+exports.verifyEmail = async (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (!decoded) {
+      throw new apiError(401, "Token không hợp lệ");
+    }
+
+    console.log(decoded);
+
+    const user = await User.findOneAndUpdate(
+      {
+        _id: decoded._id,
+        "email.data": decoded.email,
+      },
+      { "email.verify": true },
+      { new: true }
+    );
+
+    if (!user) {
+      throw new apiError(404, "Tài khoản không tồn tại");
+    }
+
+    return {
+      message: "Xác nhận email thành công",
+    };
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+
+exports.sendVerifyEmail = async (user_id) => {
+  try {
+    const user = await User.findById(user_id, ["email.data", "username"]);
+    if (!user) {
+      throw new apiError(404, "Tài khoản không tồn tại");
+    }
+
+    const token = jwt.sign(
+      {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: 900,
+      }
+    );
+
+    const email = await EmailVerify.sendingMail({
+      from: `${process.env.EMAIL_ADDRESS} no-rep-email`,
+      to: user.email,
+      subject: "Xác nhận email",
+      text: EmailVerify.EmailTextVerify(
+        user.username,
+        "http://localhost:3000/api/auth/verify-email?token=" + token
+      ),
+    });
+    return user;
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+
+exports.sendUnVerifyEmail = async (user_id) => {
+  try {
+    const user = await User.findById(user_id, ["email.data", "username"]);
+    if (!user) {
+      throw new apiError(404, "Tài khoản không tồn tại");
+    }
+
+    const token = jwt.sign(
+      {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: 900,
+      }
+    );
+
+    const email = await EmailVerify.sendingMail({
+      from: `${process.env.EMAIL_ADDRESS} no-rep-email`,
+      to: user.email,
+      subject: "Hủy Liên Kết Email",
+      text: EmailVerify.EmailTextUnverified(
+        user.username,
+        "http://localhost:3000/api/auth/unverify-email?token=" + token
+      ),
+    });
+    return user;
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+
+exports.unverifyEmail = async (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (!decoded) {
+      throw new apiError(401, "Token không hợp lệ");
+    }
+
+    const user = await User.findOneAndUpdate(
+      {
+        _id: decoded._id,
+        "email.data": decoded.email,
+        "email.verify": true,
+      },
+      { "email.verify": false },
+      { new: true }
+    );
+
+    if (!user) {
+      throw new apiError(404, "Tài khoản không tồn tại");
+    }
+
+    return {
+      message: "Hủy xác thực email thành công",
+    };
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+
+exports.updateAvatar = async (user_id, file) => {
+  try {
+    if (!file) {
+      throw new apiError(400, "Tệp ảnh không tồn tại");
+    }
+
+    const user = await User.findById(user_id);
+
+    const buffer = file.buffer;
+
+    var resizeBuffer = await resize.resizeAvatar(buffer);
+    var finalImage = {
+      contentType: file?.mimetype,
+      buffer: Buffer.from(resizeBuffer.toString("base64"), "base64"),
+    };
+
+    user.avatar = finalImage;
+
+    const newInforUser = await user.save();
+
+    return {
+      user: {
+        ...newInforUser._doc,
+        password: "",
+        avatar: {
+          contentType: file?.mimetype,
+          buffer: resizeBuffer.toString("base64"),
+        },
+      },
     };
   } catch (error) {
     throw new apiError(error.statusCode, error.message);

@@ -3,7 +3,15 @@
   <button [matMenuTriggerFor]="menuAvatar">
     <img
       class="avatar-img"
-      [src]="user.avatar?.url || 'assets/images/avatar-user-default.png'"
+      [src]="
+        (user?.avatar?.contentType == 'url' && user?.avatar?.url?.toString()) ||
+        (user?.avatar?.buffer &&
+          'data:' +
+            user?.avatar?.contentType +
+            ';base64,' +
+            user?.avatar?.buffer) ||
+        'assets/images/avatar-user-default.png'
+      "
     />
   </button>
   <mat-menu class="menu-avatar" #menuAvatar="matMenu">

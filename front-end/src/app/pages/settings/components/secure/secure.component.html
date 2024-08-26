@@ -1,33 +1,82 @@
+@if($user | async; as user) {
 <div class="secure-container">
   <p-toast />
 
   <h1 class="secure-heading-text">Bảo mật</h1>
   <div class="secure-box">
     <div class="secure-item">
-      <h4 class="title">Email</h4>
+      <h4 class="title">
+        Email @if(user?.email?.verify) {
+        <ng-icon class="text-green-500" name="ionCheckmarkCircle"></ng-icon>
+        }
+      </h4>
       <div class="flex justify-between items-center">
-        <span class="content">nhuongb2014682&#64;gmail.com</span>
+        <span class="content">{{ user.email?.data }}</span>
+        @if(user?.email?.verify == false) {
         <button class="verify-btn" (click)="showVerifiedDialog()">
           xác thực
         </button>
+        } @else {
+        <button class="verify-btn" (click)="showUnverifiedDialog()">
+          Hủy liên kết
+        </button>
+        }
       </div>
+      <p-dialog
+        header="Hủy xác thực email"
+        [modal]="true"
+        [(visible)]="isUnverifiedEmail"
+        [style]="{ width: '25rem' }"
+      >
+        <span class="block mb-5 text-center"
+          >Bấm xác thực để gửi thông tin qua email của bạn.</span
+        >
+        <!-- <div class="flex justify-center align-items-center gap-3 mb-5">
+            <input placeholder="Nhập mã xác thực" type="text" pInputText />
+          </div> -->
+        <div class="retry flex flex-col items-center mb-5">
+          <span class="p-text-secondary"
+            >Bạn không nhận được thông tin xác thực?
+          </span>
+          @if(waitTimeVerify > 0) {
+          <span>gửi lại sau {{ waitTimeVerify }}s</span>
+          }
+        </div>
+
+        <div class="flex justify-center gap-2">
+          <p-button
+            size="small"
+            label="Hủy"
+            severity="secondary"
+            (click)="isUnverifiedEmail = false"
+          />
+          <p-button
+            size="small"
+            label="Xác thực"
+            [disabled]="!!waitTimeVerify"
+            (click)="submitUnverifiedEmail()"
+          />
+        </div>
+      </p-dialog>
       <p-dialog
         header="Xác thực Email"
         [modal]="true"
         [(visible)]="isVerifiedEmail"
         [style]="{ width: '25rem' }"
       >
-        <span class="p-text-secondary block mb-5 text-center"
-          >Mã xác thực đã được gửi qua email của bạn</span
+        <span class="block mb-5 text-center"
+          >Bấm xác thực để gửi thông tin qua email của bạn.</span
         >
-        <div class="flex justify-center align-items-center gap-3 mb-5">
-          <input placeholder="Nhập mã xác thực" type="text" pInputText />
-        </div>
-        <div class="retry mb-5">
+        <!-- <div class="flex justify-center align-items-center gap-3 mb-5">
+            <input placeholder="Nhập mã xác thực" type="text" pInputText />
+          </div> -->
+        <div class="retry flex flex-col items-center mb-5">
           <span class="p-text-secondary"
-            >Bạn không nhận được mã xác thực?
+            >Bạn không nhận được thông tin xác thực?
           </span>
-          <button class="retry-btn">gửi lại mã</button>
+          @if(waitTimeVerify > 0) {
+          <span>gửi lại sau {{ waitTimeVerify }}s</span>
+          }
         </div>
 
         <div class="flex justify-center gap-2">
@@ -39,7 +88,8 @@
           />
           <p-button
             size="small"
-            label="Xác Thực"
+            label="Xác thực"
+            [disabled]="!!waitTimeVerify"
             (click)="submitVerifiedEmail()"
           />
         </div>
@@ -162,6 +212,7 @@
     </div>
   </div>
 </div>
+}
 
 <ng-template #invalid>
   <ng-icon class="invalid-icon" name="ionCloseOutline"></ng-icon>

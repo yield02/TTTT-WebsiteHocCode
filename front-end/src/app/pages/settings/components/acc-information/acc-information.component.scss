@@ -30,6 +30,14 @@
       position: relative;
     }
 
+    .p-fileupload-files {
+      display: none;
+    }
+
+    .p-progressbar {
+      display: none;
+    }
+
     .upload-button {
       z-index: 10;
       border-radius: 50%;

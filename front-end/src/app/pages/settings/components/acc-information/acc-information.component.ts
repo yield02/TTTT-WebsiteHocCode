@@ -21,10 +21,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-interface UploadEvent {
-  originalEvent: Event;
-  files: File[];
-}
+
 
 @Component({
   selector: 'setting-acc-information',
@@ -55,6 +52,21 @@ interface UploadEvent {
 export class AccInformationComponent implements OnInit {
 
   InformationForm: FormGroup;
+  avatar?: {
+    objectURL: string,
+    lastModified: Number,
+    lastModifiedDate: any;
+    name: string,
+    size: Number,
+    type: String,
+    webkitRelativePath: String,
+    creationTime: any,
+  } | undefined;
+
+  fileAvatar?: File;
+
+  user?: AuthUser;
+
 
   user$: Observable<AuthUser> = this._store.select(state => state.user);
 
@@ -80,6 +92,7 @@ export class AccInformationComponent implements OnInit {
   ngOnInit(): void {
     this.user$.subscribe(user => {
       if (user) {
+        this.user = user;
         this.InformationForm.patchValue({
           fullname: user.fullname,
           email: {
@@ -139,7 +152,32 @@ export class AccInformationComponent implements OnInit {
   }
 
 
-  onBasicUploadAuto(event: any) {
-    console.log(event.files);
+
+
+  selectImage(event: any) {
+    const file = event.files[0];
+    this.avatar = file;
+    this.fileAvatar = file;
   }
+
+  uploadAvatar() {
+    if (!this.avatar) {
+      return;
+    }
+    let form = new FormData();
+    form.append('avatar', this.fileAvatar!);
+    this._authService.updateAvatar(form).subscribe((data: any) => {
+      this._messageService.add({ severity: 'success', summary: 'Success', detail: 'Tải ảnh đại diện thành công' });
+      this._authService.updateAvatar(data.url);
+    }, (error: any) => {
+      console.log(error);
+      this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Tải ảnh đại diện thất bại' });
+    });
+  }
+
+  cancelUploadAvatar() {
+    this.avatar = undefined;
+  }
+
+
 }

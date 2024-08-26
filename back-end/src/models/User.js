@@ -36,6 +36,12 @@ const userSchema = new mongoose.Schema(
         hidden: { type: Boolean, require: false, default: false },
       },
       require: false,
+      get: (v) => {
+        if (v?.hidden == true) {
+          return userMask.maskPhone(v?.data);
+        }
+        return v?.data;
+      },
     },
     birthday: { type: String, require: false },
     address: {

@@ -4,12 +4,15 @@
   <div class="information-box">
     <div class="change-avatar px-4 flex items-center">
       <p-fileUpload
+        class="upload-image"
+        mode="advanced"
         name="demo[]"
-        url="https://www.primefaces.org/cdn/api/upload.php"
+        chooseIcon="pi pi-upload"
         accept="image/*"
+        showUploadButton="false"
+        cancelLabel="Hủy"
         maxFileSize="1000000"
-        (onUpload)="onBasicUploadAuto($event)"
-        [auto]="true"
+        (onSelect)="selectImage($event)"
       >
         <ng-template
           pTemplate="header"
@@ -25,11 +28,39 @@
         </ng-template>
         <ng-template pTemplate="content"
           ><p-avatar
-            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+            [image]="
+              avatar?.objectURL ||
+              (user?.avatar?.contentType == 'url' &&
+                user?.avatar?.url?.toString()) ||
+              (user?.avatar?.buffer &&
+                'data:' +
+                  user?.avatar?.contentType +
+                  ';base64,' +
+                  user?.avatar?.buffer) ||
+              'assets/images/avatar-user-default.png'
+            "
             size="xlarge"
             shape="circle"
         /></ng-template>
       </p-fileUpload>
+      @if(avatar) {
+      <div class="ml-8 flex gap-4">
+        <p-button
+          (onClick)="uploadAvatar()"
+          size="small"
+          outlined
+          severity="info"
+          >Áp dụng</p-button
+        >
+        <p-button
+          (onClick)="cancelUploadAvatar()"
+          size="small"
+          outlined
+          severity="secondary"
+          >Hủy</p-button
+        >
+      </div>
+      }
     </div>
 
     <form [formGroup]="InformationForm" (ngSubmit)="onSubmit()">

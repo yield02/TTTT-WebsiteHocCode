@@ -87,7 +87,6 @@ exports.InteractDiscuss = async (discuss_id, author_id) => {
     const result = await Discuss.findById(discuss_id);
     if (result.likes.includes(author_id)) {
       result.likes = result.likes.filter((id) => id != author_id);
-      console.log(result.likes);
     } else {
       result.likes.push(author_id);
     }

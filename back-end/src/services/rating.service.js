@@ -12,7 +12,6 @@ exports.createRating = async (data, course_id, author_id) => {
       throw new ApiError("Không tìm thấy khóa học", 404);
     }
     if (!course.enroll.includes(author_id)) {
-      console.log(course.enroll, author_id);
       throw new ApiError("Bạn chưa tham gia khóa học này", 400);
     }
     const rating = await Rating.findOne({ course_id, author_id });

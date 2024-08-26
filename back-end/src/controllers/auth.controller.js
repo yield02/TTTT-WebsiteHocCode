@@ -79,3 +79,56 @@ exports.changePassword = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.verifyEmail = async (req, res, next) => {
+  try {
+    const token = req.query.token;
+    const result = await authService.verifyEmail(token);
+    res.redirect(303, "http://localhost:4200/settings/security");
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.sendVerifyEmail = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await authService.sendVerifyEmail(userInfor._id);
+    res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.sendUnVerifyEmail = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await authService.sendUnVerifyEmail(userInfor._id);
+    res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.unverifyEmail = async (req, res, next) => {
+  try {
+    const token = req.query.token;
+    const result = await authService.unverifyEmail(token);
+    res.redirect(303, "http://localhost:4200/settings/security");
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.updateAvatar = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await authService.updateAvatar(userInfor._id, req?.file);
+    res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

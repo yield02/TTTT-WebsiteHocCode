@@ -43,7 +43,6 @@ exports.create = async (
 
 exports.update = async (lesson_id, data, author_id) => {
   try {
-    console.log(lesson_id, author_id);
     const lesson = await Lesson.findOneAndUpdate(
       { _id: lesson_id, author_id: author_id },
       {
