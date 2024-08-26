@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, of, switchMap, take, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap, take, tap } from 'rxjs';
 import { LessonService } from '../services/lesson.service';
 import { CreateLesson, CreateLessonSucess, DeleteLesson, DeleteLessonSucess, FetchingLessons, FetchingLessonSucess, UpdateLesson, UpdateLessonSucess } from '../store/lessons/lessons.actions';
 import { ChapterCreateLesson, ChapterDeleteLesson, ChapterUpdateLesson } from '../store/chapters/chapters.actions';

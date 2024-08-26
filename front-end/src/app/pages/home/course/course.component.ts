@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { RatingModule } from 'primeng/rating';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
 import { Course } from '../../../models/Course';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducer';
@@ -18,6 +18,12 @@ import { Chapter } from '../../../models/Chapter';
 import { selectChaptersFromCourseId } from '../../../store/chapters/chapters.selectors';
 import { FetchingChapters } from '../../../store/chapters/chapters.actions';
 import { AuthUser } from '../../../models/User';
+import { selectRatingOfCourse } from '../../../store/rating/rating.selector';
+import { getRatingByCourseId } from '../../../store/rating/rating.action';
+import { selectUsersAndFetchingUsers } from '../../../store/users/users.selector';
+import { FetchUsers } from '../../../store/users/users.actions';
+import { RatingInterface } from '../../../models/Rating';
+import { RatingItemComponent } from '../../myactivities/components/mycourses/courseManager/rating-item/rating-item.component';
 
 @Component({
   selector: 'app-course',
@@ -31,6 +37,7 @@ import { AuthUser } from '../../../models/User';
     RouterLink,
 
     ChapterComponent,
+    RatingItemComponent
   ],
   providers: [provideIcons({ ionDocumentTextOutline, bootstrapPersonVideo })],
   templateUrl: './course.component.html',
@@ -39,14 +46,19 @@ import { AuthUser } from '../../../models/User';
 })
 export class CourseComponent implements OnInit {
 
-  rating: number = 4.5;
+  rating: number = 0;
   chapters$!: Observable<Chapter[]>;
   course$!: Observable<Course | undefined>;
   user$: Observable<AuthUser> = this._store.select(state => state.user);
+  ratings$: BehaviorSubject<RatingInterface[]> = new BehaviorSubject<RatingInterface[]>([]);
 
+
+
+  isShowRating: boolean = false;
   isCollapseAll: boolean = true;
   fetchedCourse: boolean = false;
   fetchedChapters: boolean = false;
+  isFetchRating: boolean = false;
 
 
 
@@ -68,6 +80,32 @@ export class CourseComponent implements OnInit {
         this.fetchedChapters = true;
       }
     }));
+
+
+    this._store.select((selectRatingOfCourse(course_id!))).pipe(
+      switchMap((ratings) => {
+        if (ratings.length <= 0 && !this.isFetchRating) {
+          this._store.dispatch(getRatingByCourseId({ courseId: course_id! }));
+          this.isFetchRating = true;
+        }
+        if (ratings.length > 0) {
+          let userList = ratings.map(rating => rating.author_id!) || [];
+          this.ratings$.next(ratings);
+          return this._store.select(selectUsersAndFetchingUsers(userList));
+        }
+        return of();
+      }),
+      tap((data) => {
+        if (data.fetchUsers && data.fetchUsers.length > 0) {
+          this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }));
+        }
+      })
+    ).subscribe();
+
+  }
+
+  toggleRating(): void {
+    this.isShowRating = !this.isShowRating;
   }
 
   toggleCollapseAll(): void {

@@ -19,8 +19,14 @@
       <img
         class="avatar-img"
         [src]="
-          user.avatar?.url ||
-          'https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg'
+          (user?.avatar?.contentType == 'url' &&
+            user?.avatar?.url?.toString()) ||
+          (user?.avatar?.buffer &&
+            'data:' +
+              user?.avatar?.contentType +
+              ';base64,' +
+              user?.avatar?.buffer) ||
+          'assets/images/avatar-user-default.png'
         "
       />
       <div class="flex flex-col">

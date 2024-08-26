@@ -15,12 +15,16 @@
             <b>{{ chapters.length }}</b> phần</span
           >
         </div>
-        <div class="flex">
-          <button (click)="toggleCollapseAll()" class="expandAllBtn">
-            Xem tất cả
+        <div class="flex gap-4">
+          <button (click)="toggleRating()" class="expandAllBtn">
+            Xem đánh giá
           </button>
+          <!-- <button (click)="toggleCollapseAll()" class="expandAllBtn">
+            Xem tất cả
+          </button> -->
         </div>
       </div>
+      @if(!isShowRating) {
       <div class="content-body">
         <ng-container *ngFor="let chapter of chapters">
           <home-course-chapter
@@ -29,6 +33,17 @@
           ></home-course-chapter>
         </ng-container>
       </div>
+      } @if(isShowRating) {
+      <div class="showRating">
+        @if (ratings$ | async; as ratingList) {
+        <ng-container *ngFor="let rating of ratingList">
+          <course-manager-rating-item
+            [rating]="rating"
+          ></course-manager-rating-item>
+        </ng-container>
+        }
+      </div>
+      }
     </div>
     }
   </div>
