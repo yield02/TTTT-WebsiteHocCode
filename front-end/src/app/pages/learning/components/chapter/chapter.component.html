@@ -19,7 +19,7 @@
   </div>
   @if(!isCollapsed) {
   <div class="lesson-collapse pl-4">
-    <ng-container *ngFor="let lesson of lessons$ | async; index as stt">
+    <ng-container *ngFor="let lesson of lessons; index as stt">
       <learning-lesson
         [lesson]="lesson"
         [index]="stt + 1"

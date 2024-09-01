@@ -14,10 +14,12 @@
     </div>
   </div>
   <div class="">
+    @if(learned) {
     <ng-icon
       class="checked-icon text-green-500"
       name="heroCheckCircleSolid"
     ></ng-icon>
+    }
   </div>
 </div>
 } @else {
@@ -33,6 +35,13 @@
       <ng-icon class="sub-icon" name="bootstrapPersonVideo"></ng-icon>
     </div>
   </div>
-  <div class=""></div>
+  <div class="">
+    @if(learned) {
+    <ng-icon
+      class="checked-icon text-green-500"
+      name="heroCheckCircleSolid"
+    ></ng-icon>
+    }
+  </div>
 </div>
 }

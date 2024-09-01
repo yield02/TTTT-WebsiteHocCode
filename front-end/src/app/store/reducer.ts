@@ -18,6 +18,8 @@ import { replyDiscussReducer } from './reply-discuss/reply-discuss.reducer';
 import { ReplyDiscuss } from '../models/ReplyDiscuss';
 import { RatingInterface } from '../models/Rating';
 import { ratingReducer } from './rating/rating.reducer';
+import { LearningInterFace } from '../models/Learning';
+import { learingReducer } from './learning/learning.reducer';
 
 export interface AppState {
     user: AuthUser,
@@ -30,6 +32,7 @@ export interface AppState {
     discuss: Discuss[],
     replyDiscuss: ReplyDiscuss[],
     rating: RatingInterface[],
+    learning: { [key: string]: LearningInterFace },
 }
 
 
@@ -44,6 +47,7 @@ const reducers: ActionReducerMap<AppState> = {
     discuss: discussReducer,
     replyDiscuss: replyDiscussReducer,
     rating: ratingReducer,
+    learning: learingReducer,
 }
 
 export default reducers;

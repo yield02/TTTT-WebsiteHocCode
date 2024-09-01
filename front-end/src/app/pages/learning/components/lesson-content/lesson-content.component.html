@@ -1,32 +1,43 @@
-<ng-container *ngIf="lesson$ | async as lesson">
-  <div class="lesson-container flex flex-col">
-    <ng-container *ngIf="lesson.video">
-      <div class="video-wrapper">
-        <div class="video-play-wapper">
-          <iframe
-            class="video"
-            width="100%"
-            height="100%"
-            [src]="sanitizeUrl(lesson.video?.toString())"
-            title="YouTube video player"
-            frameborder="0"
-            allowfullscreen
-            ng-show="showvideo"
-            allow="autoplay"
-          ></iframe>
-        </div>
+@if(lesson$ | async; as lesson) {
+<div class="lesson-container flex flex-col">
+  <ng-container *ngIf="lesson.video">
+    <div class="video-wrapper">
+      <div class="video-play-wapper">
+        <!-- <iframe
+          #lesson_video
+          class="video"
+          width="100%"
+          height="100%"
+          [src]="sanitizeUrl(lesson.video?.toString())"
+          title="YouTube video player"
+          frameborder="0"
+          allowfullscreen
+          ng-show="showvideo"
+          allow="autoplay"
+        ></iframe> -->
+        <youtube-player
+          allowfullscreen
+          #lesson_video
+          width="100"
+          height="100"
+          ng-show="showvideo"
+          class="video"
+          [videoId]="lesson.video.toString()"
+        />
+        {{ checkRender() }}
       </div>
-    </ng-container>
-    <div class="content-container">
-      <div class="my-8 flex justify-between items-center">
-        <h3 class="content-heading">{{ lesson.title }}</h3>
-        <span class="time-stamp"
-          >Ngày đăng {{ formatDateAndTime(lesson.createdAt!) }}</span
-        >
-      </div>
-      <learning-lesson-content-box [lesson_id]="lesson._id">
-        <div class="content-box mb-8" [innerHTML]="lesson.content"></div>
-      </learning-lesson-content-box>
     </div>
+  </ng-container>
+  <div class="content-container">
+    <div class="my-8 flex justify-between items-center">
+      <h3 class="content-heading">{{ lesson.title }}</h3>
+      <span class="time-stamp"
+        >Ngày đăng {{ formatDateAndTime(lesson.createdAt!) }}</span
+      >
+    </div>
+    <learning-lesson-content-box [lesson_id]="lesson._id">
+      <div class="content-box mb-8" [innerHTML]="lesson.content"></div>
+    </learning-lesson-content-box>
   </div>
-</ng-container>
+</div>
+}

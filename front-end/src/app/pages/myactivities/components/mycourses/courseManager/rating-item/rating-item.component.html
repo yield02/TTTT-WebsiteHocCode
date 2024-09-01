@@ -2,10 +2,17 @@
 <div class="rating-container flex py-4">
   <div>
     <p-avatar
-      label="V"
       styleClass="mr-2"
       size="large"
-      [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
+      [image]="
+        (user?.avatar?.contentType == 'url' && user?.avatar?.url?.toString()) ||
+        (user?.avatar?.buffer &&
+          'data:' +
+            user?.avatar?.contentType +
+            ';base64,' +
+            user?.avatar?.buffer) ||
+        'assets/images/avatar-user-default.png'
+      "
       shape="circle"
     />
   </div>

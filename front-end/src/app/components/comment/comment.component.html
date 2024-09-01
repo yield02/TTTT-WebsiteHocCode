@@ -5,7 +5,13 @@
     <div class="flex items-start">
       <p-avatar
         [image]="
-          author.avatar?.url?.toString() ||
+          (author?.avatar?.contentType == 'url' &&
+            author?.avatar?.url?.toString()) ||
+          (author?.avatar?.buffer &&
+            'data:' +
+              author?.avatar?.contentType +
+              ';base64,' +
+              author?.avatar?.buffer) ||
           'assets/images/avatar-user-default.png'
         "
         styleClass="mr-2"

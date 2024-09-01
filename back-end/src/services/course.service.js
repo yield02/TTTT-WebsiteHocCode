@@ -108,7 +108,7 @@ exports.getById = async (courseId) => {
 
     return {
       ...courseData._doc,
-      averageRating: averageRating[0].averageRating,
+      averageRating: averageRating[0]?.averageRating || 0,
     };
   } catch (error) {
     throw new apiError(500, error.message);

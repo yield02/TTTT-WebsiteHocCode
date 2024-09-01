@@ -2,14 +2,14 @@ import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
 
 registerLocaleData(vi);
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterRenderPhase, AfterRenderRef, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionChatboxOutline } from '@ng-icons/ionicons';
 import { select, Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { AppState } from '../../../../store/reducer';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, pipe, switchMap, tap } from 'rxjs';
+import { fromEvent, mergeMap, Observable, of, pipe, switchMap, tap } from 'rxjs';
 import { Lesson } from '../../../../models/Lesson';
 import { selectLessonFromId } from '../../../../store/lessons/lessons.selectors';
 import { FetchingLessons } from '../../../../store/lessons/lessons.actions';
@@ -18,6 +18,10 @@ import { HoursFormatPipe } from '../../../../pipe/my-datetime-format.pipe';
 import { AuthUser, User } from '../../../../models/User';
 import { checkUserEnroll, selectCourseFromCourseId } from '../../../../store/courses/courses.selector';
 import { ContentComponent } from './content/content.component';
+import { YouTubePlayer } from '@angular/youtube-player';
+import { updateAndCreateLearning } from '../../../../store/learning/learning.actions';
+import { selectLearningFromCourseId } from '../../../../store/learning/learning.selectors';
+import { LearningInterFace } from '../../../../models/Learning';
 @Component({
   selector: 'learning-lesson-content',
   standalone: true,
@@ -25,6 +29,7 @@ import { ContentComponent } from './content/content.component';
     CommonModule,
     ButtonModule,
     NgIconComponent,
+    YouTubePlayer,
 
     ContentComponent,
     HoursFormatPipe,
@@ -34,12 +39,14 @@ import { ContentComponent } from './content/content.component';
   styleUrl: './lesson-content.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LessonComponent implements OnInit, AfterViewInit {
+export class LessonComponent implements OnInit, AfterViewInit, AfterViewChecked {
+  @ViewChild('lesson_video') video!: YouTubePlayer;
+
   course_id!: String;
   lesson$!: Observable<Lesson | undefined>;
   user$: Observable<AuthUser | undefined> = this._store.select(state => state.user);
   isFetched: boolean = false;
-
+  learningFetched = false;
 
   constructor(private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private sanitizer: DomSanitizer) {
 
@@ -48,16 +55,40 @@ export class LessonComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.course_id = this._activatedRoute.snapshot.paramMap.get("courseId")!;
 
+    const lesson_id = this._activatedRoute.snapshot.paramMap.get("lesson_id")!;
+
     this.lesson$ = this._activatedRoute.queryParams.pipe(
       switchMap((params) => {
-        return this._store.pipe(select(selectLessonFromId(params['lesson_id']!), tap((lesson: Lesson) => {
-          if (!lesson || !lesson.video && !lesson.content && !this.isFetched) {
-            this._store.dispatch(FetchingLessons(params['chapter_id']));
-            this.isFetched = true;
+        return this._store.select(selectLessonFromId(params['lesson_id']!))
+      }));
+    //     .pipe(tap(lesson => {
+    //       console.log(lesson, lesson?.video, lesson?.content, params['chapter_id']);
+    //       if (!lesson || !lesson.video && !lesson.content && !this.isFetched) {
+    //         // this._store.dispatch(FetchingLessons({ chapter_id: params['chapter_id'] }));
+    //         this.isFetched = true;
+    //       }
+    //     }));
+    //   })
+    // );
+    this._activatedRoute.queryParams.pipe(
+      switchMap((params) => {
+        this.learningFetched = false;
+        return this._store.select(selectLearningFromCourseId(this.course_id)).pipe(tap(learning => {
+
+          if (this.learningFetched) {
+            return;
           }
-        })));
-      })
-    );
+          if (!params['chapter_id'] || !params['lesson_id']) {
+            return;
+          }
+
+          this.learningFetched = true;
+          this._store.dispatch(updateAndCreateLearning({ course_id: this.course_id, chapter_id: params['chapter_id'], lesson_id: params['lesson_id']!, learning_id: learning?._id }));
+        }));
+      })).subscribe();
+
+
+
 
 
   }
@@ -65,12 +96,31 @@ export class LessonComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this._store.pipe(select(checkUserEnroll(this._activatedRoute.snapshot.paramMap.get("courseId")!)), tap((isEnroll) => {
       if (isEnroll) {
-        console.log('đã enroll');
+        // console.log('đã enroll');
       }
       else {
-        console.log('chưa enroll');
+        // console.log('chưa enroll');
       }
-    })).subscribe()
+    })).subscribe();
+  }
+
+  ngAfterViewChecked(): void {
+    // this.video.stateChange.subscribe((event: YT.OnStateChangeEvent) => {
+    //   console.log(event);
+    //   if (event.data === YT.PlayerState.PLAYING) {
+    //     console.log('Video is playing');
+    //   }
+    // });
+
+
+
+
+  }
+
+
+
+  checkRender() {
+    console.log('render');
   }
 
 

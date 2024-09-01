@@ -42,7 +42,7 @@ export class ChapterlistComponent implements OnInit {
         this._store.dispatch(FetchingChapters({ course_id: courseId! }))
         this.isFetching = true;
       }
-    }))
+    }));
   }
 
   onRaiting() {

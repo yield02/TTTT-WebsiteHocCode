@@ -1,8 +1,8 @@
-import { CourseManagerComponent } from "../pages/myactivities/components/mycourses/courseManager/courseManager.component";
 import { ChapterEffects } from "./chapter.effects"
 import { CoursesManagerEffects } from "./course-manager.effects";
 import { CourseEffects } from "./course.effect";
 import { DiscussEffects } from "./discuss.effects";
+import { LearningEffects } from "./learning.effects";
 import { LessonEffects } from "./lesson.effects";
 import { RatingEffects } from "./rating.effects";
 import { ReplyDiscussEffects } from "./reply-discuss.effects";
@@ -20,6 +20,7 @@ const effects: Array<any> = [
     DiscussEffects,
     ReplyDiscussEffects,
     RatingEffects,
+    LearningEffects,
 ];
 
 export default effects;

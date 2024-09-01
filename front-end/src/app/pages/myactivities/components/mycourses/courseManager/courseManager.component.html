@@ -10,7 +10,7 @@
     <div>
       <h1 class="course-name">{{ course.course_name }}</h1>
       <div class="rating inline-flex items-center">
-        {{ course.averageRating || 0 }}
+        {{ course.averageRating?.toFixed(1) }}
         <ng-icon class="rating-icon text-yellow" name="heroStarSolid"></ng-icon>
       </div>
     </div>

@@ -1,6 +1,7 @@
 const apiError = require("../utils/apiError");
 const Chapter = require("../models/Chapter");
 const Lesson = require("../models/Lesson");
+const VideoUtils = require("../utils/getVideo");
 
 exports.create = async (
   { chapter_id, title, course_id, content, video },
@@ -18,10 +19,9 @@ exports.create = async (
       throw new apiError("Không tìm thấy chương", 404);
     }
 
-    const videoId = video.split("watch?v=")[1];
-    let embedUrl = video;
-    if (videoId) {
-      embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    const videoId = VideoUtils.getYoutubeVideoId(video);
+    if (!videoId) {
+      throw new apiError("Link video không hợp lệ, phải sử dụng youtube", 400);
     }
 
     const lesson = new Lesson({
@@ -29,7 +29,7 @@ exports.create = async (
       title: title,
       course_id: course_id,
       content: content,
-      video: embedUrl,
+      video: videoId,
       chapter_id: chapter_id,
     });
     const lessonSave = await lesson.save();
@@ -43,12 +43,17 @@ exports.create = async (
 
 exports.update = async (lesson_id, data, author_id) => {
   try {
+    const videoId = VideoUtils.getYoutubeVideoId(data.video);
+    if (!videoId) {
+      throw new apiError("Link video không hợp lệ, phải sử dụng youtube", 400);
+    }
+
     const lesson = await Lesson.findOneAndUpdate(
       { _id: lesson_id, author_id: author_id },
       {
         title: data.title,
         content: data.content,
-        video: data.video,
+        video: videoId,
       },
       { new: true }
     );
@@ -76,6 +81,7 @@ exports.update = async (lesson_id, data, author_id) => {
 };
 
 exports.getLessonList = async (chapter_id, user_id) => {
+  console.log(chapter_id, user_id);
   try {
     const chapter = await Chapter.findOne({
       _id: chapter_id,
