@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { AuthUser, User } from '../../models/User';
 import { LearningInterFace } from '../../models/Learning';
-import { addLearning, updateLearing } from './learning.actions';
+import { addAllLearning, addLearning, updateLearing } from './learning.actions';
 
 export const initialState: { [key: string]: LearningInterFace } = {};
 
@@ -30,5 +30,13 @@ export const learingReducer = createReducer(
             ...state,
             [course_id.toString()]: learning,
         }
+    }),
+    on(addAllLearning, (state, { learnings }) => {
+
+        let result: { [key: string]: LearningInterFace } = {};
+        learnings.forEach(learning => {
+            result[learning.course_id.toString()] = learning;
+        });
+        return result;
     })
 );

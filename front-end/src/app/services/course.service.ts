@@ -32,4 +32,10 @@ export class CourseService {
     });
   };
 
+  getCoursesByCourseIds(courseIds: String[]): Observable<Course[]> {
+    return this.http.get<Course[]>(`${environment.apiUrl}course/courses/${courseIds}`, {
+      withCredentials: true,
+    });
+  }
+
 }

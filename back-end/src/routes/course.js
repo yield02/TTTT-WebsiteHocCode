@@ -4,6 +4,7 @@ const courseController = require("../controllers/course.controller");
 const upload = require("../middleware/uploadMiddleware");
 
 router.get("/author", courseController.getCourseAuthor);
+router.get("/courses/:course_ids", courseController.getCoursesByCoursesId);
 router.post("/create", upload.single("image"), courseController.create);
 router.patch("/update", upload.single("image"), courseController.updateCourse);
 

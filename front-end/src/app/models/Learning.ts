@@ -5,6 +5,7 @@ export interface LearningInterFace {
     current_lesson: String,
     current_chapter: String,
     completed_lessons: String[],
-    createdAt: String,
-    updatedAt: String,
+    createdAt?: String,
+    updatedAt?: String,
+    total_lesson?: number,
 }

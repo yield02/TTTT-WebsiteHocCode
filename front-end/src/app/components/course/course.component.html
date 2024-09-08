@@ -1,4 +1,5 @@
 <div class="col-item">
+  @if(learning$ | async; as learningObject) {
   <ng-container *ngIf="type == 'learning'" #learning>
     <p-card class="card">
       <ng-template pTemplate="header">
@@ -13,7 +14,7 @@
           "
         />
         <div class="enroll flex justify-center items-center">
-          <a routerLink="course">
+          <a [routerLink]="'/learning/' + course._id">
             <p-button class="button" label="Tiếp tục học" severity="info" />
           </a>
         </div>
@@ -24,7 +25,7 @@
           <div class="detail-number">
             <p-progressBar
               class="learning-progress"
-              [value]="40"
+              [value]="calculatorLearning(learningObject)"
               [style]="{ height: '6px' }"
             >
               <ng-template pTemplate="content" let-value>
@@ -36,6 +37,7 @@
       </ng-template>
     </p-card>
   </ng-container>
+  }
 
   <ng-container *ngIf="type == 'introduce'" #introduce>
     <p-card class="card">

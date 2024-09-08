@@ -1,4 +1,5 @@
 const Learning = require("../models/Learning");
+const Lesson = require("../models/Lesson");
 const ApiError = require("../utils/apiError");
 
 exports.createAndUpdateLearning = async (data, course_id, user_id) => {
@@ -6,8 +7,6 @@ exports.createAndUpdateLearning = async (data, course_id, user_id) => {
     if (!course_id || !user_id) {
       throw new ApiError("Thông tin yêu cầu không đầy đ��", 400);
     }
-
-    console.log(data);
 
     if (data.learning_id) {
       const learning = await Learning.findById(data.learning_id);
@@ -59,6 +58,20 @@ exports.getLearningByUserIdAndCourseId = async (course_id, user_id) => {
       user_id,
     });
     return learning;
+  } catch (error) {
+    throw new ApiError(error.statusCode, error.message);
+  }
+};
+
+exports.getAllLearningOfUser = async (user_id) => {
+  try {
+    const learnings = await Learning.find({
+      user_id,
+    }).populate("total_lesson");
+
+    console.log(learnings.total_lesson);
+
+    return learnings;
   } catch (error) {
     throw new ApiError(error.statusCode, error.message);
   }

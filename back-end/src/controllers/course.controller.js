@@ -75,6 +75,17 @@ exports.getCourse = async (req, res, next) => {
   }
 };
 
+exports.getCoursesByCoursesId = async (req, res, next) => {
+  try {
+    const courses = await courseManagerService.getCoursesById(
+      req.params.course_ids
+    );
+    res.status(200).json(courses || []);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
 exports.userEnroll = async (req, res, next) => {
   try {
     const token = req.cookies.token;

@@ -26,8 +26,15 @@ const learningSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true } }
 );
+
+learningSchema.virtual("total_lesson", {
+  ref: "Lesson",
+  localField: "course_id",
+  foreignField: "course_id",
+  count: true,
+});
 
 module.exports =
   mongoose.models?.Learning || mongoose.model("Learning", learningSchema);

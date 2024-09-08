@@ -9,6 +9,11 @@ import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { Course } from '../../models/Course';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { LearningInterFace } from '../../models/Learning';
+import { AppState } from '../../store/reducer';
+import { select, Store } from '@ngrx/store';
+import { selectLearningFromCourseId } from '../../store/learning/learning.selectors';
 
 @Component({
   selector: 'app-course',
@@ -28,9 +33,27 @@ import { Course } from '../../models/Course';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseComponent implements OnInit {
-  @Input() type: string = 'introduce';
+  @Input() type: 'introduce' | 'learning' = 'introduce';
   @Input() course!: Course;
 
+  learning$?: Observable<LearningInterFace | undefined>;
+
+
+  constructor(private _store: Store<AppState>) {
+
+
+
+  }
+
+
   ngOnInit(): void {
+
+    this.learning$ = this._store.pipe(select(selectLearningFromCourseId(this.course._id!)));
+
+  }
+
+  calculatorLearning(learning: LearningInterFace): number {
+
+    return (learning.completed_lessons.length * 100) / learning.total_lesson!;
   }
 }

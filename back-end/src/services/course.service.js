@@ -115,6 +115,18 @@ exports.getById = async (courseId) => {
   }
 };
 
+exports.getCoursesById = async (coursesId) => {
+  try {
+    const courses = await Course.find({
+      _id: { $in: coursesId.split(",") },
+    });
+
+    return courses;
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+
 exports.getByAuthor = async (authorId) => {
   try {
     const courses = await Course.find({ author_id: authorId });

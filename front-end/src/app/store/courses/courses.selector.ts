@@ -63,3 +63,10 @@ export const selectFirstChapterAndLesson = (course_id: String) => createSelector
         return { chapter, lesson };
     }
 );
+
+export const selectCoursesFromCourseId = (courseId: String[]) => createSelector(
+    selectCoursesState,
+    (courses: Course[]): Course[] | undefined => {
+        return courses.filter(c => courseId.includes(c._id!));
+    }
+)

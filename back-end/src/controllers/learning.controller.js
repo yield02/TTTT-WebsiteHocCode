@@ -29,3 +29,14 @@ exports.getLearningByUserIdAndCourseId = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.getAllLearningOfUser = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const learning = await LearningService.getAllLearningOfUser(userInfor._id);
+    res.status(200).json(learning);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

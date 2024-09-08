@@ -1,7 +1,9 @@
-<div
-  class="courses-container flex flex-col justify-center items-center bg-grey"
->
-  <app-courses></app-courses>
-  <app-courses></app-courses>
-  <app-courses></app-courses>
+<div class="courses-container flex gap-4 justify-start items-center bg-grey">
+  @if(courses$ | async; as courses) {
+  <ng-container *ngFor="let course of courses">
+    <app-course [course]="course" type="learning"></app-course>
+  </ng-container>
+  @if(courses.length <= 0) {
+  <span>Bạn chưa học khóa học nào!!</span>
+  } }
 </div>

@@ -5,6 +5,8 @@ import { Course } from '../../models/Course';
 
 export const FetchingCoursesFromSubject = createAction('[Courses Component] fetching FromSubjectId', props<{ subject_id: String }>());
 export const FetchingCourseFromCourseId = createAction('[Courses Component] fetching FromCourseId', props<{ course_id: String }>());
+export const FetchingCourseFromCourseIds = createAction('[Courses Component] fetching CourseIds', props<{ course_ids: String[] }>());
+
 export const FetchingCoursesSucess = createAction('[CoursesSucess Component] fetching Sucess', props<{ courses: Course[] }>());
 
 export const Create = createAction('[Courses Component] Create', props<{ course: Course }>());

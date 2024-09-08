@@ -173,8 +173,6 @@ exports.verifyEmail = async (token) => {
       throw new apiError(401, "Token không hợp lệ");
     }
 
-    console.log(decoded);
-
     const user = await User.findOneAndUpdate(
       {
         _id: decoded._id,

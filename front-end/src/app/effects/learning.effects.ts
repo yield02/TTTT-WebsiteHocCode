@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Type } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { addLearning, fetchLearning, updateAndCreateLearning, updateLearing } from "../store/learning/learning.actions";
+import { addAllLearning, addLearning, fetchLearning, fetchLearnings, updateAndCreateLearning, updateLearing } from "../store/learning/learning.actions";
 import { LearningService } from "../services/learning.service";
-import { catchError, map, of, switchMap } from "rxjs";
+import { catchError, map, of, switchMap, tap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class LearningEffects {
@@ -28,7 +28,7 @@ export class LearningEffects {
                 map(learning => addLearning({ course_id: _action.course_id, learning: learning })),
                 catchError(error => of())
             ))
-    ))
+    ));
 
     createAndUpateLearning$ = createEffect(() => this.actions$.pipe(
         ofType(updateAndCreateLearning),
@@ -37,6 +37,14 @@ export class LearningEffects {
                 map(learning => updateLearing({ course_id: _action.course_id, learning: learning })),
                 catchError(error => of())
             ))
+    ));
+
+    fetchAllLearningOfuser$ = createEffect(() => this.actions$.pipe(
+        ofType(fetchLearnings),
+        switchMap(_action => this._learningService.fetchLearnings().pipe(
+            map(learnings => addAllLearning({ learnings: learnings })),
+            catchError(error => of())
+        ))
     ))
 
 }

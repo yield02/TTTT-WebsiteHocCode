@@ -43,8 +43,9 @@ exports.create = async (
 
 exports.update = async (lesson_id, data, author_id) => {
   try {
+    console.log(lesson_id);
     const videoId = VideoUtils.getYoutubeVideoId(data.video);
-    if (!videoId) {
+    if (!videoId && data.video.length != 11) {
       throw new apiError("Link video không hợp lệ, phải sử dụng youtube", 400);
     }
 
@@ -53,7 +54,7 @@ exports.update = async (lesson_id, data, author_id) => {
       {
         title: data.title,
         content: data.content,
-        video: videoId,
+        video: videoId || data.video,
       },
       { new: true }
     );
@@ -76,12 +77,12 @@ exports.update = async (lesson_id, data, author_id) => {
 
     return { lesson: lesson._doc };
   } catch (error) {
+    console.log(error);
     throw new apiError(500, error.message);
   }
 };
 
 exports.getLessonList = async (chapter_id, user_id) => {
-  console.log(chapter_id, user_id);
   try {
     const chapter = await Chapter.findOne({
       _id: chapter_id,

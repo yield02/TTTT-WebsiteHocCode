@@ -12,3 +12,10 @@ export const selectCourseManagerFromId = (_id: String) => createSelector(
     return myCourseManager.find(c => c._id === _id);
   }
 );
+
+export const selectCourseManagerWithName = (name: string) => createSelector(
+  selectMyCourseManager,
+  (myCourseManager: Course[]): Course[] => {
+    return myCourseManager.filter(c => c.course_name.toLowerCase().includes(name.toLowerCase()));
+  }
+)

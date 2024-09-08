@@ -22,4 +22,10 @@ export class LearningService {
     return this._http.put<LearningInterFace>(`${environment.apiUrl}learning/update/${course_id}`, { lesson_id, learning_id, chapter_id }, { withCredentials: true });
   }
 
+  fetchLearnings(): Observable<LearningInterFace[]> {
+    return this._http.get<LearningInterFace[]>(`${environment.apiUrl}learning/user`, {
+      withCredentials: true
+    });
+  }
+
 }

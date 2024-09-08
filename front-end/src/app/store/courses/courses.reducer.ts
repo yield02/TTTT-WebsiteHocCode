@@ -10,11 +10,9 @@ export const coursesReducer = createReducer(
         return [...state, ...courses];
     }),
     on(Create, (state, { course }) => {
-        console.log(course);
         return state
     }),
     on(Update, (state, { updateValue }) => {
-        console.log(updateValue);
         return { ...state, ...updateValue };
     }),
     on(Delete, (state) => {
