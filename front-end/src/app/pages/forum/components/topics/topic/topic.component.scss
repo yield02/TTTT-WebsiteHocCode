@@ -1,0 +1,64 @@
+.topic {
+  margin-bottom: 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+  border-radius: 4px;
+  padding: 12px;
+  transition: all 0.15s ease;
+  &:hover {
+    transform: scale(1.008);
+  }
+
+  .posts {
+    display: none;
+  }
+
+  .image-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 12px;
+    float: left;
+    object-fit: cover;
+  }
+
+  .title {
+    font-size: 14px;
+    display: inline-block;
+
+    p {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 1px;
+        left: 50%;
+        bottom: 1px;
+        transition: all 0.4s ease;
+      }
+
+      &:hover {
+        color: #2f89fc;
+
+        &::after {
+          content: "";
+          display: block;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: #2f89fc;
+        }
+      }
+    }
+  }
+  .description {
+    font-size: 12px;
+  }
+  .time-line {
+    font-size: 12px;
+  }
+}

@@ -9,14 +9,12 @@ import { SearchComponent } from "../../components/Search/Search.component";
 
 
 @NgModule({
-    declarations: [
-        ForumComponent
-    ],
+
     imports: [
         HeaderComponent,
         SidebarComponent,
         SearchComponent,
-
+        ForumComponent,
 
         CommonModule,
         ForumRoutingModule,

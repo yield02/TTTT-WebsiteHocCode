@@ -1,6 +1,34 @@
-<app-header>
+<app-header [toggleSideBar]="toggleSideBar.bind(this)">
   <app-search #search></app-search>
 </app-header>
-<app-sidebar>
-  <router-outlet />
+<app-sidebar [sidebarVisible]="sidebar">
+  <ng-template [ngTemplateOutlet]="breadcrumb"></ng-template>
+  <div class="main container">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="container mt-10">
+    <ng-template [ngTemplateOutlet]="breadcrumb"></ng-template>
+  </div>
 </app-sidebar>
+
+<ng-template #breadcrumb>
+  <div class="container my-4">
+    <p-breadcrumb class="max-w-full" [model]="itemsBreadcrumb">
+      <ng-template pTemplate="item" let-item>
+        <ng-container *ngIf="item.route; else elseBlock">
+          <a [routerLink]="item.route" class="p-menuitem-link">
+            <ng-container *ngIf="item?.icon">
+              <ng-icon [name]="item?.icon"></ng-icon>
+            </ng-container>
+            <span class="text-primary font-semibold">{{ item.label }}</span>
+          </a>
+        </ng-container>
+        <ng-template #elseBlock>
+          <a [href]="item.url">
+            <span class="text-color">{{ item.label }}</span>
+          </a>
+        </ng-template>
+      </ng-template>
+    </p-breadcrumb>
+  </div>
+</ng-template>

@@ -1,0 +1,21 @@
+<div class="">
+  <div class="header flex justify-between items-center">
+    <div class="title">Angular</div>
+    <div class="arrow">
+      <button (click)="toggleCollapse()" class="arrow-btn">
+        <ng-icon
+          class="arrow-icon"
+          [name]="isCollapsed == false ? 'ionCaretDown' : 'ionCaretUp'"
+        ></ng-icon>
+      </button>
+    </div>
+  </div>
+  @if(isCollapsed) {
+  <div class="collapse-box">
+    <forum-topic></forum-topic>
+    <forum-topic></forum-topic>
+    <forum-topic></forum-topic>
+    <forum-topic></forum-topic>
+  </div>
+  }
+</div>

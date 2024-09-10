@@ -1,0 +1,25 @@
+<div class="container topic-container">
+  <div
+    class="brand grid max-sm:grid-cols-4 max-md:grid-cols-6 grid-cols-7 gap-4"
+  >
+    <h1 class="text-gray-500 col-span-4">Tiêu đề</h1>
+    <h1 class="text-gray-500 text-end max-sm:hidden">Tác giả</h1>
+    <h1 class="text-gray-500 text-end max-md:hidden">Tương tác</h1>
+    <h1 class="text-gray-500 text-end max-sm:hidden">Sắp xếp</h1>
+  </div>
+  <div>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+    <topic-post></topic-post>
+  </div>
+  <div>
+    <p-paginator [first]="page.first" [rows]="page.rows" [totalRecords]="120" />
+  </div>
+</div>

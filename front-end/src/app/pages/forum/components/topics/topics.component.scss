@@ -1,0 +1,42 @@
+.header {
+  border-radius: 8px;
+  padding: 8px 8px 64px 8px;
+  box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 5px 0px,
+    rgba(255, 255, 255, 0.6) 0px 0px 1px 0px;
+  margin-bottom: -32px;
+  background-image: url("../../../../../assets/images/background-topics.jpg");
+  background-position: center center;
+  .title {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 500;
+    text-shadow: #000 1px 0 10px;
+  }
+  .arrow {
+    .arrow-btn {
+    }
+    .arrow-icon {
+      font-size: 32px;
+      color: #fff;
+    }
+  }
+}
+.collapse-box {
+  border-radius: 4px;
+  background: #fff;
+  margin: 0 8px 48px 8px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  animation: fadeIn 0.5s alternate ease;
+  padding: 8px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
