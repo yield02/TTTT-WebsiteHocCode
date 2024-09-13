@@ -1,0 +1,32 @@
+<div class="comment-list-container">
+  <h1 class="comment-heading-text">Danh sách bình luận</h1>
+  <div class="filter px-2 flex justify-between items-center">
+    <p-dropdown
+      class="dropdown-filter"
+      [options]="filter"
+      optionLabel="name"
+    ></p-dropdown>
+    <div class="text-slate-600">2/3</div>
+  </div>
+  <div class="comment-list-box">
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+    <forum-comment></forum-comment>
+  </div>
+  <div class="">
+    <p-paginator
+      [first]="paginator.first"
+      [rows]="paginator.rows"
+      [totalRecords]="120"
+      [showFirstLastIcon]="false"
+    ></p-paginator>
+  </div>
+</div>

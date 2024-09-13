@@ -1,0 +1,63 @@
+<div class="comment-container my-4 flex justify-between items-center">
+  <div>
+    <div class="flex" id="infor">
+      <p-avatar label="P" styleClass="mr-2" size="large" shape="circle" />
+      <div class="flex flex-col gap-1">
+        <h1 class="author_name hover:text-blue-700 cursor-pointer">
+          Thanh Nhường
+        </h1>
+        <div class="flex gap-4">
+          <span class="text-gray-600 description"
+            ><ng-icon class="description-icon" name="ionCafeOutline"></ng-icon>
+            Converstation Starter</span
+          >
+          <span class="text-gray-600 description"
+            ><ng-icon
+              class="description-icon"
+              name="ionCalendarNumberOutline"
+            ></ng-icon>
+            12/01/2022</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="content px-14 mt-2">
+      That cockup bleeding skive off such a fibber cup of char squiffy car boot,
+      lemon squeezy lavatory Richard jolly good tosser excuse my French, mush
+      barney.
+    </div>
+    <div class="action-btn py-2">
+      <p-button
+        label="Thích"
+        [text]="true"
+        severity="success"
+        size="small"
+        icon="pi pi-heart"
+      ></p-button>
+      <p-button
+        label="Trả lời"
+        [text]="true"
+        severity="info"
+        size="small"
+        icon="pi pi-comment-edit"
+      ></p-button>
+    </div>
+    <div class="replies">
+      <ng-container>
+        <!-- <forum-comment></forum-comment> -->
+      </ng-container>
+    </div>
+  </div>
+  <div class="flex justify-center items-center h-full">
+    <p-speedDial
+      className="more-action relative"
+      [model]="moreActions"
+      type="circle"
+      [radius]="40"
+      hideIcon="pi pi-times"
+      showIcon="pi pi-ellipsis-h"
+      buttonClassName="p-button-outlined"
+    >
+    </p-speedDial>
+  </div>
+</div>

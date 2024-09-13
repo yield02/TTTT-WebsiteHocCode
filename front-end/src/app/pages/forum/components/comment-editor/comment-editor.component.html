@@ -1,0 +1,20 @@
+<div>
+  <form>
+    <editor
+      class="editor flex-1"
+      [init]="initEditor"
+      outputFormat="html"
+      [(ngModel)]="comment"
+      licenseKey="gpl"
+      apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+    ></editor>
+    <div class="flex justify-end items-center mt-2">
+      <p-button
+        label="Đăng bình luận"
+        [text]="true"
+        severity="info"
+        size="small"
+      />
+    </div>
+  </form>
+</div>

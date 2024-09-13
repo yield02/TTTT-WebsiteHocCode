@@ -1,0 +1,17 @@
+.comment-container {
+  border-bottom: 1px solid #eee;
+  .content {
+  }
+}
+
+::ng-deep {
+  .comment-container {
+    .more-action {
+      .p-speeddial-button {
+        border: none;
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+  }
+}

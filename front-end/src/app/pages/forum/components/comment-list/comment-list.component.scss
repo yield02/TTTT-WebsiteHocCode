@@ -1,0 +1,22 @@
+.comment-list-container {
+  .comment-heading-text {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .filter {
+    border: 1px solid #eee;
+    border-radius: 4px;
+  }
+}
+
+::ng-deep {
+  .comment-list-container {
+    .filter {
+      .dropdown-filter {
+        .p-dropdown {
+          border: none;
+        }
+      }
+    }
+  }
+}

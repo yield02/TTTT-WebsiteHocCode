@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionTimeOutline } from '@ng-icons/ionicons';
 import { AvatarModule } from 'primeng/avatar';
@@ -11,6 +12,7 @@ import { AvatarModule } from 'primeng/avatar';
         CommonModule,
         NgIconComponent,
         AvatarModule,
+        RouterLink
     ],
     providers: [provideIcons({
         ionTimeOutline
