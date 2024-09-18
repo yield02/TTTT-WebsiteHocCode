@@ -1,14 +1,19 @@
 const authRouter = require("./auth");
-const courseRouter = require("./course");
-const chapterRouter = require("./chapter");
-const lessonRouter = require("./lesson");
-const subjectRouter = require("./subject");
 const userRouter = require("./user");
-const discussRouter = require("./discuss");
 const oAuthRouter = require("./oauth");
-const replyDiscussRouter = require("./reply-discuss");
-const ratingRouter = require("./rating");
-const learningRouter = require("./learning");
+
+const courseRouter = require("./study/course");
+const chapterRouter = require("./study/chapter");
+const lessonRouter = require("./study/lesson");
+const subjectRouter = require("./study/subject");
+const discussRouter = require("./study/discuss");
+const replyDiscussRouter = require("./study/reply-discuss");
+const ratingRouter = require("./study/rating");
+const learningRouter = require("./study/learning");
+
+const topicRouter = require("./forum/topic");
+const postRouter = require("./forum/post");
+const commentRouter = require("./forum/comment");
 
 function route(app) {
   app.use("/api/auth", authRouter);
@@ -22,5 +27,8 @@ function route(app) {
   app.use("/api/reply-discuss", replyDiscussRouter);
   app.use("/api/rating", ratingRouter);
   app.use("/api/learning", learningRouter);
+  app.use("/api/topic", topicRouter);
+  app.use("/api/post", postRouter);
+  app.use("/api/comment", commentRouter);
 }
 module.exports = route;
