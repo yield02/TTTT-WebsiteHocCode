@@ -28,10 +28,10 @@ export class CommentEditorComponent {
         menubar: false,
         statusbar: false,
         toolbar:
-            'fontsizeinput |' +
+            'codesample | fontsizeinput |' +
             'bold italic|',
         autoresize_on_init: true,
-        plugins: ['autoresize'],
+        plugins: ['codesample', 'autoresize'],
         placeholder: 'Nhập bình luận của bạn...',
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
         font_size_input_default_unit: 'px',

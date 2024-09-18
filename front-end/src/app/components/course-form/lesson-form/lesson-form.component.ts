@@ -62,9 +62,10 @@ export class LessonFormComponent implements OnInit {
       'code',
       'help',
       'wordcount',
+      'codesample'
     ],
     toolbar:
-      'undo redo | fontsizeinput | fontfamily |' +
+      'codesample | undo redo | fontsizeinput | fontfamily |' +
       'bold italic forecolor backcolor | alignleft aligncenter ' +
       'alignright alignjustify | bullist numlist outdent indent | ' + '| image |' +
       'removeformat | help',

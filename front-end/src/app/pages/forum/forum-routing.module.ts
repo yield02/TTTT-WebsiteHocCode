@@ -4,6 +4,7 @@ import { ForumComponent } from "./forum.layout";
 import { ForumHomePageComponent } from "./pages/forum-home-page/forum-home-page.component";
 import { ForumTopicPageComponent } from "./pages/forum-topic-page/forum-topic-page.component";
 import { ForumPostPageComponent } from "./pages/forum-post-page/forum-post-page.component";
+import { ForumCreateTopicPageComponent } from "./pages/forum-create-topic-page/forum-create-topic-page.component";
 
 
 
@@ -18,7 +19,16 @@ const routes: Routes = [
             },
             {
                 path: 'topic/:topicId',
-                component: ForumTopicPageComponent,
+                children: [
+                    {
+                        path: 'create',
+                        component: ForumCreateTopicPageComponent,
+                    },
+                    {
+                        path: '',
+                        component: ForumTopicPageComponent,
+                    }
+                ]
             },
             {
                 path: 'post/:postId',

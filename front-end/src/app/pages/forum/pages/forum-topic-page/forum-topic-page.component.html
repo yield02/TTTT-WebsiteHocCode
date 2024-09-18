@@ -1,3 +1,13 @@
+<div class="flex justify-end items-center mb-2">
+  <p-button
+    label="Đăng bài viết"
+    [text]="true"
+    [raised]="true"
+    severity="info"
+    size="small"
+    [routerLink]="['/forum', 'topic', 'abc', 'create']"
+  />
+</div>
 <div class="container topic-container">
   <div
     class="brand grid max-sm:grid-cols-4 max-md:grid-cols-6 grid-cols-7 gap-4"
@@ -7,6 +17,7 @@
     <h1 class="text-gray-500 text-end max-md:hidden">Tương tác</h1>
     <h1 class="text-gray-500 text-end max-sm:hidden">Sắp xếp</h1>
   </div>
+
   <div>
     <topic-post></topic-post>
     <topic-post></topic-post>

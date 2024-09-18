@@ -1,0 +1,24 @@
+<div class="forum-container mt-10">
+  <form>
+    <div class="mt-4">
+      <label for="title">Tiêu đề:</label>
+      <input id="title" class="w-full" type="text" pInputText />
+    </div>
+    <div class="mt-4">
+      <label for="title">Hashtag:</label>
+      <input id="title" class="w-full" type="text" pInputText />
+    </div>
+    <div class="mt-4">
+      <editor
+        [init]="editorInit"
+        outputFormat="html"
+        formControlName="content"
+        licenseKey="gpl"
+        apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+      ></editor>
+    </div>
+    <div class="mt-4 flex justify-end items-center">
+      <p-button size="small" label="Tạo bài viết"></p-button>
+    </div>
+  </form>
+</div>
