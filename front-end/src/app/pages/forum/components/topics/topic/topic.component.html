@@ -7,15 +7,19 @@
     />
   </div>
   <div class="flex-1 flex justify-center flex-col">
-    <a routerLink="/forum/topic/abc">
+    <a [routerLink]="'/forum/topic/' + topic._id">
       <h4 class="title">
-        <p>Kiểm tra xem</p>
+        <p>{{ topic.title }}</p>
       </h4>
     </a>
-    <span class="description">Trao đổi kinh nghiệm ứng dụng trong angular</span>
+    <span class="description">
+      {{ topic.description }}
+    </span>
   </div>
-  <div class="flex justify-center items-center">150</div>
-  <div class="flex flex-col justify-center items-center">
+  <div class="flex justify-center items-center max-md:hidden">
+    {{ topic.totalPost }}
+  </div>
+  <div class="flex flex-col justify-center items-center max-md:hidden">
     <span class="time-line">2 năm, 2 tháng trước</span>
     <div class="flex justify-center items-center gap-2">
       <span class="time-line">Thanh Nhường</span

@@ -1,8 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { AppState } from '../../../../store/reducer';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Hashtag } from '../../../../models/forum/Hashtag';
+import { createPost } from '../../../../store/forum/post/post.actions';
+import { Post } from '../../../../models/forum/Post';
 
 @Component({
     selector: 'forum-post-form',
@@ -11,14 +19,21 @@ import { InputTextModule } from 'primeng/inputtext';
         CommonModule,
         InputTextModule,
         ButtonModule,
+        MultiSelectModule,
         EditorComponent,
+        ReactiveFormsModule,
+
 
     ],
     templateUrl: './post-form.component.html',
     styleUrl: './post-form.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostFormComponent {
+export class PostFormComponent implements OnInit {
+
+    @Output() submitPost: EventEmitter<Post> = new EventEmitter<Post>();
+
+    postForm: FormGroup;
 
     editorInit: EditorComponent['init'] = {
         menubar: false,
@@ -53,6 +68,25 @@ export class PostFormComponent {
             'removeformat | help',
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
         font_size_input_default_unit: 'px',
+    }
+
+    hashtags$: Observable<Hashtag[]> = this._store.select(state => state.hashtag);
+
+
+    constructor(private fb: FormBuilder, private _store: Store<AppState>) {
+        this.postForm = this.fb.group({
+            title: [''],
+            content: [''],
+            hashtags: [],
+        });
+    }
+
+    ngOnInit(): void {
+        // this.hashtags = ['#trogiup', '#thaoluan', '#tintuc']
+    }
+
+    submit() {
+        this.submitPost.emit(this.postForm.value);
     }
 
 }

@@ -13,3 +13,12 @@ exports.createTopic = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.getAllTopic = async (req, res, next) => {
+  try {
+    const topics = await topicService.getAllTopic();
+    res.status(200).json(topics);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

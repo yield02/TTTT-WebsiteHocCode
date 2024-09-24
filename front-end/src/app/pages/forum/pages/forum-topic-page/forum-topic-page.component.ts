@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TopicPostComponent } from '../../components/topics/topic/post/post.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 interface PageEvent {
     first: number;
@@ -28,6 +28,10 @@ interface PageEvent {
 })
 export class ForumTopicPageComponent {
 
+
+    topic_id!: string;
+
+
     page: PageEvent = {
         first: 0,
         rows: 10,
@@ -35,6 +39,9 @@ export class ForumTopicPageComponent {
         pageCount: 10
     }
 
+    constructor(private _activatedRoute: ActivatedRoute) {
+        this.topic_id = this._activatedRoute.snapshot.params['topicId'];
+    }
 
 
 }

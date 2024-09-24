@@ -1,6 +1,12 @@
 <div class="">
   <div class="header flex justify-between items-center">
-    <div class="title">Angular</div>
+    <div class="title">
+      @if(title == 'announcement') {
+      <ng-container>Thông báo</ng-container>
+      } @else if(title == 'shared') {
+      <ng-container>Thảo luận</ng-container>
+      }
+    </div>
     <div class="arrow">
       <button (click)="toggleCollapse()" class="arrow-btn">
         <ng-icon
@@ -12,10 +18,9 @@
   </div>
   @if(isCollapsed) {
   <div class="collapse-box">
-    <forum-topic></forum-topic>
-    <forum-topic></forum-topic>
-    <forum-topic></forum-topic>
-    <forum-topic></forum-topic>
+    <ng-container *ngFor="let topic of topics">
+      <forum-topic [topic]="topic"></forum-topic>
+    </ng-container>
   </div>
   }
 </div>

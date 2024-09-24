@@ -2,6 +2,9 @@ import { ChapterEffects } from "./chapter.effects"
 import { CoursesManagerEffects } from "./course-manager.effects";
 import { CourseEffects } from "./course.effect";
 import { DiscussEffects } from "./discuss.effects";
+import { HashtagEffects } from "./forum/hashtag.effects";
+import { PostEffects } from "./forum/post.effects";
+import { TopicEffects } from "./forum/topic.effects";
 import { LearningEffects } from "./learning.effects";
 import { LessonEffects } from "./lesson.effects";
 import { RatingEffects } from "./rating.effects";
@@ -21,6 +24,9 @@ const effects: Array<any> = [
     ReplyDiscussEffects,
     RatingEffects,
     LearningEffects,
+    TopicEffects,
+    HashtagEffects,
+    PostEffects,
 ];
 
 export default effects;

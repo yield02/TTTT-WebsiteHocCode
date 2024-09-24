@@ -1,6 +1,8 @@
 <div class="container">
-  <forum-topics></forum-topics>
-  <forum-topics></forum-topics>
-  <forum-topics></forum-topics>
-  <forum-topics></forum-topics>
+  @if(topics$ | async; as topics) {
+
+  <ng-container *ngFor="let item of topics | keyvalue">
+    <forum-topics [title]="item.key" [topics]="item.value"></forum-topics>
+  </ng-container>
+  }
 </div>

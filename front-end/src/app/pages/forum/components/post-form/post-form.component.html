@@ -1,12 +1,24 @@
 <div class="forum-container mt-10">
-  <form>
+  <form [formGroup]="postForm" (ngSubmit)="submit()">
     <div class="mt-4">
       <label for="title">Tiêu đề:</label>
-      <input id="title" class="w-full" type="text" pInputText />
+      <input
+        id="title"
+        class="w-full"
+        type="text"
+        pInputText
+        formControlName="title"
+      />
     </div>
-    <div class="mt-4">
-      <label for="title">Hashtag:</label>
-      <input id="title" class="w-full" type="text" pInputText />
+    <div class="mt-4 flex flex-col">
+      <label for="hashtag">Hashtag:</label>
+      <p-multiSelect
+        id="hashtag"
+        optionLabel="name"
+        [options]="(hashtags$ | async) || []"
+        optionValue="_id"
+        formControlName="hashtags"
+      ></p-multiSelect>
     </div>
     <div class="mt-4">
       <editor
@@ -18,7 +30,7 @@
       ></editor>
     </div>
     <div class="mt-4 flex justify-end items-center">
-      <p-button size="small" label="Tạo bài viết"></p-button>
+      <p-button type="submit" size="small" label="Tạo bài viết"></p-button>
     </div>
   </form>
 </div>

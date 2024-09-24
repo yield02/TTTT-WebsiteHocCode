@@ -12,6 +12,10 @@ import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionDocumentTextOutline, ionHomeOutline } from '@ng-icons/ionicons';
 import { heroClipboardDocumentList } from '@ng-icons/heroicons/outline';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/reducer';
+import { loadTopic } from '../../store/forum/topic/topic.actions';
+import { loadHashtag } from '../../store/forum/hashtag/hashtag.actions';
 
 @Component({
   selector: 'app-forum',
@@ -36,6 +40,9 @@ export class ForumComponent implements OnInit {
   itemsBreadcrumb: MenuItem[] = [];
 
 
+  constructor(private _store: Store<AppState>) {
+
+  }
 
   ngOnInit(): void {
     this.itemsBreadcrumb = [
@@ -54,7 +61,10 @@ export class ForumComponent implements OnInit {
         route: '/forum/post/abc'
       },
 
-    ]
+    ];
+
+    this._store.dispatch(loadTopic());
+    this._store.dispatch(loadHashtag());
   }
 
 

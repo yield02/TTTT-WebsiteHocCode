@@ -20,6 +20,12 @@ import { RatingInterface } from '../models/Rating';
 import { ratingReducer } from './rating/rating.reducer';
 import { LearningInterFace } from '../models/Learning';
 import { learingReducer } from './learning/learning.reducer';
+import { Topic } from '../models/forum/Topic';
+import { topicReducer } from './forum/topic/topic.reducer';
+import { Hashtag } from '../models/forum/Hashtag';
+import { hashtagReducer } from './forum/hashtag/hashtag.reducer';
+import { Post } from '../models/forum/Post';
+import { postReducer } from './forum/post/post.reducer';
 
 export interface AppState {
     user: AuthUser,
@@ -33,6 +39,9 @@ export interface AppState {
     replyDiscuss: ReplyDiscuss[],
     rating: RatingInterface[],
     learning: { [key: string]: LearningInterFace },
+    topic: Topic[],
+    hashtag: Hashtag[],
+    post: Post[]
 }
 
 
@@ -48,6 +57,9 @@ const reducers: ActionReducerMap<AppState> = {
     replyDiscuss: replyDiscussReducer,
     rating: ratingReducer,
     learning: learingReducer,
+    topic: topicReducer,
+    hashtag: hashtagReducer,
+    post: postReducer,
 }
 
 export default reducers;

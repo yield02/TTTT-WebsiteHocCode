@@ -8,6 +8,12 @@ const postSchema = new mongoose.Schema(
     content: { type: Object, required: false },
     topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    hashtags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Hashtag",
+      },
+    ],
     like: [
       {
         type: mongoose.Schema.Types.ObjectId,

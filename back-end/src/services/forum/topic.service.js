@@ -1,4 +1,5 @@
 const Topic = require("../../models/Topic");
+const Post = require("../../models/Post");
 const ApiError = require("../../utils/apiError");
 
 exports.createTopic = () => {
@@ -11,5 +12,21 @@ exports.createTopic = () => {
     return newTopic.save();
   } catch (error) {
     throw new ApiError(500, "L��i tạo chủ đ��", error.message);
+  }
+};
+
+exports.getAllTopic = async () => {
+  try {
+    const topics = await Topic.find({});
+    const result = await Promise.all(
+      topics.map(async (topic) => {
+        const totalPost = await Post.countDocuments({ topic: topic._id });
+        return { ...topic._doc, totalPost };
+      })
+    );
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(500, "Lỗi danh sách chủ đề", error.message);
   }
 };

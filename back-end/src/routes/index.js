@@ -14,6 +14,7 @@ const learningRouter = require("./study/learning");
 const topicRouter = require("./forum/topic");
 const postRouter = require("./forum/post");
 const commentRouter = require("./forum/comment");
+const hashtagRouter = require("./forum/hashtag");
 
 function route(app) {
   app.use("/api/auth", authRouter);
@@ -30,5 +31,6 @@ function route(app) {
   app.use("/api/topic", topicRouter);
   app.use("/api/post", postRouter);
   app.use("/api/comment", commentRouter);
+  app.use("/api/hashtag", hashtagRouter);
 }
 module.exports = route;

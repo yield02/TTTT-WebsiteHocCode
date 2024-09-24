@@ -6,9 +6,11 @@ exports.createPost = async (body, author_id) => {
     const post = new Post({
       title: body.title,
       content: body.content,
+      topic: body.topic,
+      hashtags: body.hashtags,
       author: author_id,
     });
-    await post.save();
+    return await post.save();
   } catch (error) {
     throw new ApiError(500, error.message);
   }
