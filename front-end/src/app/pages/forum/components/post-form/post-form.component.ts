@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 import { ButtonModule } from 'primeng/button';
@@ -30,10 +30,14 @@ import { Post } from '../../../../models/forum/Post';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostFormComponent implements OnInit {
+    @Input() post?: Post | null;
+
 
     @Output() submitPost: EventEmitter<Post> = new EventEmitter<Post>();
 
-    postForm: FormGroup;
+
+
+    postForm!: FormGroup;
 
     editorInit: EditorComponent['init'] = {
         menubar: false,
@@ -74,19 +78,36 @@ export class PostFormComponent implements OnInit {
 
 
     constructor(private fb: FormBuilder, private _store: Store<AppState>) {
-        this.postForm = this.fb.group({
-            title: [''],
-            content: [''],
-            hashtags: [],
-        });
+
+
     }
 
     ngOnInit(): void {
+
+        if (this.post?._id) {
+            this.postForm = this.fb.group({
+                title: [this.post.title],
+                content: [this.post.content],
+                hashtags: [this.post.hashtags],
+            });
+        }
+        else {
+            this.postForm = this.fb.group({
+                title: [''],
+                content: [''],
+                hashtags: [],
+            });
+        }
         // this.hashtags = ['#trogiup', '#thaoluan', '#tintuc']
     }
 
+
+
     submit() {
-        this.submitPost.emit(this.postForm.value);
+        this.submitPost.emit({
+            ...this.post,
+            ...this.postForm.value
+        });
     }
 
 }

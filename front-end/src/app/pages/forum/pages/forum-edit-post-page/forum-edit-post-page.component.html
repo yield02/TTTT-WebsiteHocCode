@@ -1,0 +1,11 @@
+<div class="form-container">
+  <h1 class="header-text text-center">Chỉnh sửa bài viết</h1>
+  <div class="form-box">
+    @if(post$ | async; as post) {
+    <forum-post-form
+      [post]="post"
+      (submitPost)="submitEditPost($event)"
+    ></forum-post-form>
+    }
+  </div>
+</div>

@@ -28,3 +28,17 @@
     }
   }
 }
+
+::ng-deep {
+  .post-container {
+    .more-action {
+      .p-speeddial-button {
+        color: #3d3c3c;
+        background: transparent;
+        border: none;
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+  }
+}

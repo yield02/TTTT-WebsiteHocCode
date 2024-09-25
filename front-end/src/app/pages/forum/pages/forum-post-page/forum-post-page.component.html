@@ -1,3 +1,4 @@
+@if(post$ | async; as post) {
 <div class="post-container max-sm:px-4 flex flex-col gap-5">
   <div class="flex justify-between items-center">
     <div class="flex" id="infor">
@@ -21,112 +22,21 @@
         </div>
       </div>
     </div>
-    <div class="max-sm:hidden">
-      <a
-        pButton
-        routerLink="/forum/post/def"
-        fragment="info"
-        label="Bình luận"
-        [text]="true"
-        [raised]="true"
-        size="small"
-      >
-      </a>
+    <div class="max-sm:hidden mr-10">
+      <p-speedDial
+        class="more-action"
+        [model]="actions || []"
+        direction="down"
+        showIcon="pi pi-ellipsis-h"
+        hideIcon="pi pi-times"
+      ></p-speedDial>
     </div>
   </div>
-  <h1 class="title">Làm việc hiệu quả với Rxjs</h1>
-  <div class="content">
-    Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có
-    id giống với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều
-    hướng với ba siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ cung cấp
-    một id duy nhất cho mỗi phần và cũng giống như vậy trong thuộc tính đoạn cho
-    nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử
-    có id giống với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh
-    điều hướng với ba siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ cung
-    cấp một id duy nhất cho mỗi phần và cũng giống như vậy trong thuộc tính đoạn
-    cho nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến
-    phần tử có id giống với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo
-    thanh điều hướng với ba siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ
-    cung cấp một id duy nhất cho mỗi phần và cũng giống như vậy trong thuộc tính
-    đoạn cho nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu
-    đến phần tử có id giống với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ
-    tạo thanh điều hướng với ba siêu liên kết và một phần cho mỗi phần. Chúng ta
-    sẽ cung cấp một id duy nhất cho mỗi phần và cũng giống như vậy trong thuộc
-    tính đoạn cho nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục
-    tiêu đến phần tử có id giống với id của đoạn và cuộn đến phần tử đó. Chúng
-    ta sẽ tạo thanh điều hướng với ba siêu liên kết và một phần cho mỗi phần.
-    Chúng ta sẽ cung cấp một id duy nhất cho mỗi phần và cũng giống như vậy
-    trong thuộc tính đoạn cho nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ
-    nhắm mục tiêu đến phần tử có id giống với id của đoạn và cuộn đến phần tử
-    đó. Chúng ta sẽ tạo thanh điều hướng với ba siêu liên kết và một phần cho
-    mỗi phần. Chúng ta sẽ cung cấp một id duy nhất cho mỗi phần và cũng giống
-    như vậy trong thuộc tính đoạn cho nút. Bước 2: Thêm các tuyến phân đoạn URL
-    đoạn chỉ nhắm mục tiêu đến phần tử có id giống với id của đoạn và cuộn đến
-    phần tử đó. Chúng ta sẽ tạo thanh điều hướng với ba siêu liên kết và một
-    phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy nhất cho mỗi phần và cũng
-    giống như vậy trong thuộc tính đoạn cho nút. Bước 2: Thêm các tuyến phân
-    đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id giống với id của đoạn và
-    cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều hướng với ba siêu liên kết
-    và một phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy nhất cho mỗi phần
-    và cũng giống như vậy trong thuộc tính đoạn cho nút. Bước 2: Thêm các tuyến
-    phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id giống với id của đoạn
-    và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều hướng với ba siêu liên
-    kết và một phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy nhất cho mỗi
-    phần và cũng giống như vậy trong thuộc tính đoạn cho nút. Bước 2: Thêm các
-    tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id giống với id
-    của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều hướng với ba
-    siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy nhất
-    cho mỗi phần và cũng giống như vậy trong thuộc tính đoạn cho nút. Bước 2:
-    Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id giống
-    với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều hướng với
-    ba siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy
-    nhất cho mỗi phần và cũng giống như vậy trong thuộc tính đoạn cho nút. Bước
-    2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id
-    giống với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều
-    hướng với ba siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ cung cấp
-    một id duy nhất cho mỗi phần và cũng giống như vậy trong thuộc tính đoạn cho
-    nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử
-    có id giống với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh
-    điều hướng với ba siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ cung
-    cấp một id duy nhất cho mỗi phần và cũng giống như vậy trong thuộc tính đoạn
-    cho nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến
-    phần tử có id giống với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo
-    thanh điều hướng với ba siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ
-    cung cấp một id duy nhất cho mỗi phần và cũng giống như vậy trong thuộc tính
-    đoạn cho nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu
-    đến phần tử có id giống với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ
-    tạo thanh điều hướng với ba siêu liên kết và một phần cho mỗi phần. Chúng ta
-    sẽ cung cấp một id duy nhất cho mỗi phần và cũng giống như vậy trong thuộc
-    tính đoạn cho nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục
-    tiêu đến phần tử có id giống với id của đoạn và cuộn đến phần tử đó. Chúng
-    ta sẽ tạo thanh điều hướng với ba siêu liên kết và một phần cho mỗi phần.
-    Chúng ta sẽ cung cấp một id duy nhất cho mỗi phần và cũng giống như vậy
-    trong thuộc tính đoạn cho nút. Bước 2: Thêm các tuyến phân đoạn URL đoạn chỉ
-    nhắm mục tiêu đến phần tử có id giống với id của đoạn và cuộn đến phần tử
-    đó. Chúng ta sẽ tạo thanh điều hướng với ba siêu liên kết và một phần cho
-    mỗi phần. Chúng ta sẽ cung cấp một id duy nhất cho mỗi phần và cũng giống
-    như vậy trong thuộc tính đoạn cho nút. Bước 2: Thêm các tuyến phân đoạn URL
-    đoạn chỉ nhắm mục tiêu đến phần tử có id giống với id của đoạn và cuộn đến
-    phần tử đó. Chúng ta sẽ tạo thanh điều hướng với ba siêu liên kết và một
-    phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy nhất cho mỗi phần và cũng
-    giống như vậy trong thuộc tính đoạn cho nút. Bước 2: Thêm các tuyến phân
-    đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id giống với id của đoạn và
-    cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều hướng với ba siêu liên kết
-    và một phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy nhất cho mỗi phần
-    và cũng giống như vậy trong thuộc tính đoạn cho nút. Bước 2: Thêm các tuyến
-    phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id giống với id của đoạn
-    và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều hướng với ba siêu liên
-    kết và một phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy nhất cho mỗi
-    phần và cũng giống như vậy trong thuộc tính đoạn cho nút. Bước 2: Thêm các
-    tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id giống với id
-    của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều hướng với ba
-    siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy nhất
-    cho mỗi phần và cũng giống như vậy trong thuộc tính đoạn cho nút. Bước 2:
-    Thêm các tuyến phân đoạn URL đoạn chỉ nhắm mục tiêu đến phần tử có id giống
-    với id của đoạn và cuộn đến phần tử đó. Chúng ta sẽ tạo thanh điều hướng với
-    ba siêu liên kết và một phần cho mỗi phần. Chúng ta sẽ cung cấp một id duy
-    nhất cho mỗi phần và cũng giống như vậy trong thuộc tính đoạn cho nút.
+  <div class="flex justify-between items-center">
+    <h1 class="title">{{ post.title }}</h1>
+    <span class="text-gray-600 description italic">12/01/2022</span>
   </div>
+  <div class="content" [innerHTML]="post.content"></div>
   <div class="content-bottom flex justify-between items-center">
     <a pButton label="Bình luận" [text]="true" size="small"></a>
     <p-button [rounded]="true" [text]="true" severity="help" size="small">
@@ -140,3 +50,5 @@
     <forum-comment-list></forum-comment-list>
   </div>
 </div>
+
+}

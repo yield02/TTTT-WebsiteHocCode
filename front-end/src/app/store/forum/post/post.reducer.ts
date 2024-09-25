@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Post } from '../../../models/forum/Post';
-import { addPost } from './post.actions';
+import { addPost, removePost, updatePost } from './post.actions';
 
 
 
@@ -10,5 +10,11 @@ export const postReducer = createReducer(
     initialState,
     on(addPost, (state, { post }) => {
         return [...state, post];
+    }),
+    on(updatePost, (state, { post }) => {
+        return state.map(p => p._id === post._id ? post : p);
+    }),
+    on(removePost, (state, { post_id }) => {
+        return state.filter(p => p.post_id !== post_id);
     })
 );

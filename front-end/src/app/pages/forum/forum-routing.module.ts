@@ -5,6 +5,7 @@ import { ForumHomePageComponent } from "./pages/forum-home-page/forum-home-page.
 import { ForumTopicPageComponent } from "./pages/forum-topic-page/forum-topic-page.component";
 import { ForumPostPageComponent } from "./pages/forum-post-page/forum-post-page.component";
 import { ForumCreateTopicPageComponent } from "./pages/forum-create-topic-page/forum-create-topic-page.component";
+import { ForumEditPostPageComponent } from "./pages/forum-edit-post-page/forum-edit-post-page.component";
 
 
 
@@ -32,7 +33,16 @@ const routes: Routes = [
             },
             {
                 path: 'post/:postId',
-                component: ForumPostPageComponent,
+                children: [
+                    {
+                        path: 'edit',
+                        component: ForumEditPostPageComponent,
+                    },
+                    {
+                        path: '',
+                        component: ForumPostPageComponent,
+                    }
+                ]
             }
         ]
     }
