@@ -52,6 +52,7 @@ function isValidString(str) {
 
 exports.UpdateRequiredInformation = async (user_id, data) => {
   try {
+    console.log(data.username);
     if (!isValidString(data.username)) {
       throw new apiError(400, "Invalid username");
     }

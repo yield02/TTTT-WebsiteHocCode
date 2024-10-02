@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { EditorComponent } from '@tinymce/tinymce-angular';
+
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -9,7 +10,6 @@ import { AppState } from '../../../../store/reducer';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Hashtag } from '../../../../models/forum/Hashtag';
-import { createPost } from '../../../../store/forum/post/post.actions';
 import { Post } from '../../../../models/forum/Post';
 
 @Component({
@@ -24,6 +24,9 @@ import { Post } from '../../../../models/forum/Post';
         ReactiveFormsModule,
 
 
+    ],
+    providers: [
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
     ],
     templateUrl: './post-form.component.html',
     styleUrl: './post-form.component.scss',
@@ -44,6 +47,7 @@ export class PostFormComponent implements OnInit {
         statusbar: false,
         resize: true,
         autoresize_on_init: true,
+        content_css: 'tinymce-5',
         plugins: [
             'image',
             'advlist',

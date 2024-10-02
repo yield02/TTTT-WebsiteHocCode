@@ -15,22 +15,98 @@
     <h1 class="text-gray-500 col-span-4">Tiêu đề</h1>
     <h1 class="text-gray-500 text-end max-sm:hidden">Tác giả</h1>
     <h1 class="text-gray-500 text-end max-md:hidden">Tương tác</h1>
-    <h1 class="text-gray-500 text-end max-sm:hidden">Sắp xếp</h1>
+    <h1 class="text-gray-500 text-end max-sm:hidden" (click)="filter($event)">
+      Sắp xếp
+    </h1>
+    <p-confirmPopup #filterPopup class="filter-container">
+      <ng-template pTemplate="headless" let-header let-message>
+        <div class="flex flex-col align-items-center w-full gap-3 p-4">
+          <h1 class="filter-heading-text text-center">Bộ lọc thông minh</h1>
+          <div class="flex flex-col gap-1">
+            <label>Theo từ khoá:</label>
+            <input type="text" pInputText [(ngModel)]="filterPost.name" />
+          </div>
+          <div class="flex flex-col gap-1">
+            <label>Tác giả:</label>
+            <input type="text" pInputText [(ngModel)]="filterPost.author" />
+          </div>
+          <div class="flex flex-col gap-1">
+            <label>Theo hashtags:</label>
+            <p-multiSelect
+              [options]="(hashtags$ | async) || []"
+              optionLabel="name"
+              placeholder="hashtags"
+              [(ngModel)]="filterPost.hashtag"
+              optionValue="_id"
+            />
+          </div>
+          <div class="flex flex-col gap-1">
+            <label>Theo ngày tháng:</label>
+            <p-dropdown
+              [(ngModel)]="filterPost.time"
+              [options]="[
+                { name: 'Bất kể ngày nào', code: 'any' },
+                { name: '7 ngày', code: '7' },
+                { name: '14 ngày', code: '14' },
+                { name: '30 ngày', code: '30' },
+                { name: '60 ngày', code: '60' },
+                { name: '90 ngày', code: '90' },
+                { name: '180 ngày', code: '180' },
+                { name: '365 ngày', code: '365' }
+              ]"
+              optionLabel="name"
+              optionValue="code"
+            ></p-dropdown>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label>Thứ tự thời gian:</label>
+            <p-dropdown
+              [(ngModel)]="filterPost.sortTime"
+              [options]="[
+                { name: 'Giảm dần', code: 'desc' },
+                { name: 'Tăng dần', code: 'asc' }
+              ]"
+              optionLabel="name"
+              optionValue="code"
+            ></p-dropdown>
+          </div>
+          <div class="flex flex-row gap-1 justify-end">
+            <button
+              pButton
+              type="button"
+              severity="secondary"
+              label="Hủy"
+              [size]="'small'"
+              (click)="reject()"
+              [text]="true"
+            ></button>
+            <button
+              pButton
+              type="button"
+              label="Lọc"
+              [size]="'small'"
+              (click)="accept()"
+            ></button>
+          </div>
+        </div>
+      </ng-template>
+    </p-confirmPopup>
   </div>
 
   <div>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
-    <topic-post></topic-post>
+    @if(posts$ | async; as posts) {
+    <ng-container *ngFor="let post of posts">
+      <forum-topic-post [post]="post"></forum-topic-post>
+    </ng-container>
+
+    }
   </div>
   <div>
-    <p-paginator [first]="page.first" [rows]="page.rows" [totalRecords]="120" />
+    <p-paginator
+      [first]="page.first"
+      [rows]="page.rows"
+      [totalRecords]="page.totalRecord"
+      (onPageChange)="onPageChange($event)"
+    />
   </div>
 </div>

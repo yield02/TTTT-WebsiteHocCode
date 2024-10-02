@@ -39,7 +39,7 @@ export class ForumEditPostPageComponent {
 
 
     submitEditPost(post: Post) {
-        this._store.dispatch(editContentPost({ post }))
+        this._store.dispatch(editContentPost({ post }));
     }
 
 

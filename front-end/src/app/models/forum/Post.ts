@@ -5,8 +5,8 @@ export interface Post {
     title: string;
     content: Object;
     author?: string;
-    like: [string];
-    views: number;
+    like?: string[];
+    views?: number;
     status?: 'waiting' | 'allow' | 'banned';
     hashtags: string[];
     reason?: string;

@@ -72,3 +72,44 @@ exports.deletePost = async (post_id, user_id) => {
     throw new ApiError(500, error.message);
   }
 };
+
+exports.getPostFromTopic = async (topic_id, filter) => {
+  try {
+    console.log(filter);
+    const query = { topic: topic_id, status: "allow" };
+
+    if (filter?.name) {
+      query.title = { $regex: filter.name, $options: "i" };
+    }
+
+    if (filter?.time && filter?.time !== "any") {
+      const date = new Date();
+      date.setDate(date.getDate() - filter.time);
+      query.createdAt = { $gte: date };
+    }
+
+    if (filter?.author) {
+      query.author = filter.author;
+    }
+
+    if (filter?.hashtags) {
+      hashtags = JSON.parse(filter.hashtags);
+      if (hashtags.length > 0) {
+        query.hashtags = { $in: hashtags };
+      }
+    }
+
+    const options = {
+      sort: { createdAt: filter?.sortTime === "asc" ? 1 : -1 },
+      skip: (filter?.page - 1) * 10,
+      limit: 10,
+    };
+
+    const posts = await Post.find(query, null, options);
+    const totalPosts = await Post.countDocuments(query);
+
+    return { data: posts, totalPosts };
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};

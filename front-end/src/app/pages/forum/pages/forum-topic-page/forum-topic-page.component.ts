@@ -1,15 +1,38 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { TopicPostComponent } from '../../components/topics/topic/post/post.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ConfirmPopup, ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ConfirmationService } from 'primeng/api';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { Filter } from '../../../../models/forum/Filter';
+import { AppState } from '../../../../store/reducer';
+import { Store } from '@ngrx/store';
+import { Hashtag } from '../../../../models/forum/Hashtag';
+import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { Post } from '../../../../models/forum/Post';
+import { PostService } from '../../../../services/forum/post.service';
+import { FormsModule } from '@angular/forms';
+import { ForumPostPageComponent } from "../forum-post-page/forum-post-page.component";
+import { FetchUsers } from '../../../../store/users/users.actions';
+
+
 
 interface PageEvent {
     first: number;
     rows: number;
     page: number;
     pageCount: number;
+    totalRecord: number;
+}
+
+interface DropDownInterface {
+    name: string;
+    code: string;
 }
 
 @Component({
@@ -20,28 +43,111 @@ interface PageEvent {
         TopicPostComponent,
         PaginatorModule,
         ButtonModule,
-        RouterLink
+        RouterLink,
+        ConfirmPopupModule,
+        InputTextModule,
+        DropdownModule,
+        MultiSelectModule,
+        FormsModule,
+        ForumPostPageComponent
     ],
+    providers: [ConfirmationService],
     templateUrl: './forum-topic-page.component.html',
     styleUrl: './forum-topic-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForumTopicPageComponent {
+export class ForumTopicPageComponent implements OnInit {
 
 
     topic_id!: string;
+    @ViewChild('filterPopup') filterPopup!: ConfirmPopup;
+
+
+    filterPost: Filter = {
+        page: 1,
+        time: 'any'
+    }
+
+
 
 
     page: PageEvent = {
         first: 0,
         rows: 10,
         page: 1,
-        pageCount: 10
+        pageCount: 10,
+        totalRecord: 0
     }
 
-    constructor(private _activatedRoute: ActivatedRoute) {
+    hashtags$: Observable<Hashtag[]> = this._store.select(state => state.hashtag);
+    posts$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
+
+
+
+    constructor(private _activatedRoute: ActivatedRoute, private _confirmationService: ConfirmationService, private _router: Router, private _store: Store<AppState>, private _postService: PostService) {
         this.topic_id = this._activatedRoute.snapshot.params['topicId'];
     }
 
+    ngOnInit(): void {
+
+        this._activatedRoute.queryParamMap.pipe(switchMap(() => this._postService.getPostsWithTopicId(this.topic_id, this.filterPost))).subscribe(
+            (data) => {
+                this.posts$.next(data.data);
+
+
+                this._store.dispatch(FetchUsers({ users_id: data.data.map(post => post.author) as String[] }));
+
+                this.page = {
+                    ...this.page,
+                    pageCount: Math.ceil(data.totalPosts / this.page.rows),
+                    totalRecord: data.totalPosts
+                };
+            }
+        );
+
+        // this._postService.getPostsWithTopicId(this.topic_id, this.filterPost).subscribe(
+        //     (data) => {
+        //         console.log('call');
+        //         this.posts$.next(data.data);
+        //         this.page = {
+        //             ...this.page,
+        //             pageCount: Math.ceil(data.totalPosts / this.page.rows),
+        //             totalRecord: data.totalPosts
+        //         };
+        //     }
+        // );
+    }
+
+    accept() {
+        this.filterPopup.accept();
+    }
+
+    reject() {
+        this.filterPopup.reject();
+    }
+
+
+    filter(event: Event) {
+        this._confirmationService.confirm({
+            target: event.target as EventTarget,
+            closeOnEscape: false,
+            dismissableMask: false,
+            acceptLabel: 'Lọc',
+            rejectLabel: 'Hủy',
+            accept: () => {
+                console.log(this.filterPost);
+                this._router.navigate(['/forum/topic/' + this.topic_id], { queryParams: { ...this.filterPost } });
+            },
+            reject: () => {
+                this._router.navigate(['/forum/topic/' + this.topic_id]);
+            }
+        });
+    }
+    onPageChange(event: any) {
+        this.page = { ...this.page, ...event };
+        this.filterPost = { ...this.filterPost, page: ++event.page };
+        console.log(this.filterPost);
+        this._router.navigate(['/forum/topic/' + this.topic_id], { queryParams: { ...this.filterPost } });
+    }
 
 }

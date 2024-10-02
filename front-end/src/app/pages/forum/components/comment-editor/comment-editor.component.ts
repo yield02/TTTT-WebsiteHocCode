@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EditorComponent } from '@tinymce/tinymce-angular';
+import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { ForumModule } from '../../forum.module';
 import { ButtonModule } from 'primeng/button';
 
@@ -15,6 +15,9 @@ import { ButtonModule } from 'primeng/button';
         FormsModule,
         ButtonModule,
     ],
+    providers: [
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }
+    ],
     templateUrl: './comment-editor.component.html',
     styleUrl: './comment-editor.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +30,8 @@ export class CommentEditorComponent {
     initEditor: EditorComponent['init'] = {
         menubar: false,
         statusbar: false,
+        base_url: '/tinymce',
+        suffix: '.min',
         toolbar:
             'codesample | fontsizeinput |' +
             'bold italic|',

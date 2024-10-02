@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionCafeOutline, ionCalendarNumberOutline, ionHeartOutline } from '@ng-icons/ionicons';
@@ -9,12 +9,18 @@ import { CommentEditorComponent } from '../../components/comment-editor/comment-
 import { CommentListComponent } from '../../components/comment-list/comment-list.component';
 import { AppState } from '../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { Post } from '../../../../models/forum/Post';
 import { selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
 import { deletePost, loadPostWithId } from '../../../../store/forum/post/post.actions';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { MenuItem } from 'primeng/api';
+
+import vi from '@angular/common/locales/vi';
+import { User } from '../../../../models/User';
+import { selectUserFromId, selectUsersFromUsersId } from '../../../../store/users/users.selector';
+import { FetchUsers } from '../../../../store/users/users.actions';
+registerLocaleData(vi);
 
 @Component({
     selector: 'forum-post-page',
@@ -40,9 +46,44 @@ import { MenuItem } from 'primeng/api';
     styleUrl: './forum-post-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForumPostPageComponent {
+export class ForumPostPageComponent implements OnInit {
 
-    post$: Observable<Post | undefined>;
+    post$: BehaviorSubject<Post> = new BehaviorSubject<Post>({
+        _id: '',
+        post_id: 0,
+        topic: '',
+        title: '',
+        content: {},
+        author: '',
+        like: [],
+        views: 0,
+        status: 'waiting',
+        hashtags: [],
+        reason: '',
+        createdAt: '',
+        updatedAt: '',
+
+    });
+    user$: BehaviorSubject<User> = new BehaviorSubject<User>({
+        _id: '',
+        user_id: 0,
+        username: '',
+        email: '',
+        fullname: '',
+        role: [],
+        gender: false,
+        phone: '',
+        address: '',
+        status: {},
+        avatar: {
+            url: '',
+            contentType: '',
+            buffer: '',
+        },
+        birthday: '',
+    });
+
+
     actions: MenuItem[] = [
         {
             icon: 'pi pi-pencil',
@@ -62,22 +103,47 @@ export class ForumPostPageComponent {
             }
         },
 
-    ];;
+    ];
 
     constructor(private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private _router: Router) {
 
-        this.post$ = this._store.pipe(select(selectPostWithPostId(
-            this._activatedRoute.snapshot.params['postId'],
-        )), tap(post => {
-            if (!post) {
-                this._store.dispatch(loadPostWithId({
-                    id: this._activatedRoute.snapshot.params['postId'],
-                }));
-            }
-        }));
+    }
+    ngOnInit(): void {
 
+        this._store.pipe(
+            select(selectPostWithPostId(
+                this._activatedRoute.snapshot.params['postId'],
+            )),
+            map(post => {
+                if (!post) {
+                    this._store.dispatch(loadPostWithId({
+                        id: this._activatedRoute.snapshot.params['postId'],
+                    }));
+                }
+                else {
+                    this.post$.next(post);
+                }
+                return post?.author;
+            }),
+            switchMap((author) => {
+                if (author) {
+                    this._store.dispatch(FetchUsers({ users_id: [author] }));
+                    return this._store.pipe(select(selectUserFromId(author)));
+                }
+                return of({});
+            }),
+            tap(user => {
+                if (user) {
+                    this.user$.next(user as User);
+                }
+            })
+
+        ).subscribe();
     }
 
+    formatDateAndTime(date: String): String {
+        return formatDate(new Date(date.toString()), 'dd/MM/yyyy HH:mm', 'vi');
+    }
 
 }
 

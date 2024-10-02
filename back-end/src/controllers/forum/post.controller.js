@@ -61,3 +61,16 @@ exports.deletePost = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.getPostFromTopic = async (req, res, next) => {
+  try {
+    const posts = await postService.getPostFromTopic(
+      req.params.topic_id,
+      req.query
+    );
+
+    res.status(200).json(posts);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

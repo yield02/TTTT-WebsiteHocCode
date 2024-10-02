@@ -3,7 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input,
 import { FormsModule } from '@angular/forms';
 import { NgIcon, NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionSendOutline } from '@ng-icons/ionicons';
-import { EditorComponent } from '@tinymce/tinymce-angular';
+import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 
 @Component({
     selector: 'app-comment-editor',
@@ -15,7 +15,7 @@ import { EditorComponent } from '@tinymce/tinymce-angular';
 
         EditorComponent
     ],
-    providers: [provideIcons({ ionSendOutline })],
+    providers: [provideIcons({ ionSendOutline }), { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }],
     templateUrl: `./comment-editor.component.html`,
     styleUrl: './Comment-editor.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +28,8 @@ export class CommentEditorComponent {
 
 
     initEditor: EditorComponent['init'] = {
+        base_url: '/tinymce',
+        suffix: '.min',
         menubar: false,
         statusbar: false,
         toolbar:

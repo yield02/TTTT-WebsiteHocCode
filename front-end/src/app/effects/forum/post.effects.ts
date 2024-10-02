@@ -3,12 +3,13 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, of, switchMap } from "rxjs";
 import { addPost, createPost, deletePost, editContentPost, loadPostWithId, removePost, updatePost } from "../../store/forum/post/post.actions";
 import { PostService } from "../../services/forum/post.service";
+import { Router } from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
 
 export class PostEffects {
 
-    constructor(private actions$: Actions, private _postService: PostService) { }
+    constructor(private actions$: Actions, private _postService: PostService, private _router: Router) { }
 
     createPost$ = createEffect(() => this.actions$.pipe(
         ofType(createPost),
@@ -39,7 +40,10 @@ export class PostEffects {
         switchMap((_action) =>
             this._postService.editContentPost(_action.post)
                 .pipe(
-                    map(post => addPost({ post: post })),
+                    map(post => {
+                        this._router.navigate(['/forum/post/' + post.post_id]);
+                        return updatePost({ post: post });
+                    }),
                     catchError(error => { console.log(error); return of() })
                 )
         )

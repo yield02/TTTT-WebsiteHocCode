@@ -39,6 +39,8 @@ export class LessonFormComponent implements OnInit {
   lesson?: Lesson;
 
   content: EditorComponent['init'] = {
+    base_url: '/tinymce',
+    suffix: '.min',
     menubar: false,
     statusbar: false,
     resize: true,
