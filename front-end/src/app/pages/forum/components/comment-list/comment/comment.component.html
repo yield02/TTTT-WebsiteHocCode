@@ -1,10 +1,28 @@
-<div class="comment-container my-4 flex justify-between items-center">
+@if(author$ | async; as author) { @if(isEdit == false) {
+<div
+  class="comment-container my-4 flex justify-between items-center"
+  [id]="'c' + comment.comment_id"
+>
   <div>
     <div class="flex" id="infor">
-      <p-avatar label="P" styleClass="mr-2" size="large" shape="circle" />
+      <p-avatar
+        [image]="
+          (author?.avatar?.contentType == 'url' &&
+            author?.avatar?.url?.toString()) ||
+          (author?.avatar?.buffer &&
+            'data:' +
+              author?.avatar?.contentType +
+              ';base64,' +
+              author?.avatar?.buffer) ||
+          'assets/images/avatar-user-default.png'
+        "
+        styleClass="mr-2"
+        size="large"
+        shape="circle"
+      />
       <div class="flex flex-col gap-1">
         <h1 class="author_name hover:text-blue-700 cursor-pointer">
-          Thanh Nhường
+          {{ author?.fullname || author?.username }}
         </h1>
         <div class="flex gap-4">
           <span class="text-gray-600 description"
@@ -16,32 +34,36 @@
               class="description-icon"
               name="ionCalendarNumberOutline"
             ></ng-icon>
-            12/01/2022</span
+            {{ formatTime(comment.createdAt!) }}</span
           >
         </div>
       </div>
     </div>
-    <div class="content px-14 mt-2">
-      That cockup bleeding skive off such a fibber cup of char squiffy car boot,
-      lemon squeezy lavatory Richard jolly good tosser excuse my French, mush
-      barney.
-    </div>
+    <div class="content px-14 mt-2" [innerHTML]="comment.content"></div>
+    @if(user$ | async; as user) {
     <div class="action-btn py-2">
       <p-button
-        label="Thích"
+        [label]="'Thích (' + comment.like?.length + ')'"
         [text]="true"
         severity="success"
         size="small"
-        icon="pi pi-heart"
+        [icon]="
+          comment.like?.includes(user._id.toString())
+            ? 'pi pi-heart-fill'
+            : 'pi pi-heart'
+        "
+        (onClick)="interactWithComment()"
       ></p-button>
+
       <p-button
-        label="Trả lời"
+        [label]="'Trả lời (' + comment.replies?.length + ')'"
         [text]="true"
         severity="info"
         size="small"
         icon="pi pi-comment-edit"
       ></p-button>
     </div>
+    }
     <div class="replies">
       <ng-container>
         <!-- <forum-comment></forum-comment> -->
@@ -61,3 +83,9 @@
     </p-speedDial>
   </div>
 </div>
+} @else {
+<forum-comment-editor
+  [comment]="comment.content"
+  (submitComment)="submitEditComment($event)"
+></forum-comment-editor>
+} }

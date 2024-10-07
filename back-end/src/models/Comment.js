@@ -4,10 +4,10 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const commentSchema = new mongoose.Schema(
   {
     comment_id: Number,
-    content: { type: Object, require: true },
+    content: { type: String, require: true },
     post: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    like: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     isReply: { type: Boolean, default: false },
     status: {

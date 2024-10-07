@@ -94,12 +94,13 @@
   </div>
 
   <div>
-    @if(posts$ | async; as posts) {
+    @if(posts$ | async; as posts) { @if(posts.length > 0) {
     <ng-container *ngFor="let post of posts">
       <forum-topic-post [post]="post"></forum-topic-post>
     </ng-container>
-
-    }
+    } @else {
+    <p class="text-gray-500 text-center">Không có bài viết nào</p>
+    } }
   </div>
   <div>
     <p-paginator

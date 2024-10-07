@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { ForumModule } from '../../forum.module';
@@ -25,7 +25,9 @@ import { ButtonModule } from 'primeng/button';
 export class CommentEditorComponent {
 
 
-    comment: string = '';
+    @Output() submitComment: EventEmitter<string> = new EventEmitter();
+
+    @Input() comment: any = '';
 
     initEditor: EditorComponent['init'] = {
         menubar: false,
@@ -50,4 +52,15 @@ export class CommentEditorComponent {
             });
         }
     }
+
+    submit() {
+        if (this.comment.length > 30) {
+            this.submitComment.emit(this.comment);
+            this.comment = '';
+        }
+        else {
+            console.error('Bình luận quá ngắn');
+        }
+    }
+
 }

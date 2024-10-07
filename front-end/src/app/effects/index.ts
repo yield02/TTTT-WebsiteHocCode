@@ -2,6 +2,7 @@ import { ChapterEffects } from "./chapter.effects"
 import { CoursesManagerEffects } from "./course-manager.effects";
 import { CourseEffects } from "./course.effect";
 import { DiscussEffects } from "./discuss.effects";
+import { CommentEffects } from "./forum/comment.effects";
 import { HashtagEffects } from "./forum/hashtag.effects";
 import { PostEffects } from "./forum/post.effects";
 import { TopicEffects } from "./forum/topic.effects";
@@ -27,6 +28,7 @@ const effects: Array<any> = [
     TopicEffects,
     HashtagEffects,
     PostEffects,
+    CommentEffects,
 ];
 
 export default effects;

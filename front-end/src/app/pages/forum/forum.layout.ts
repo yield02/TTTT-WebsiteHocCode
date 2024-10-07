@@ -1,9 +1,9 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   OnInit
 } from '@angular/core';
-import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
@@ -16,6 +16,9 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store/reducer';
 import { loadTopic } from '../../store/forum/topic/topic.actions';
 import { loadHashtag } from '../../store/forum/hashtag/hashtag.actions';
+import { ActivatedRoute, Route, Router } from '@angular/router';
+import { tap } from 'rxjs';
+import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-forum',
@@ -29,6 +32,7 @@ import { loadHashtag } from '../../store/forum/hashtag/hashtag.actions';
     HeaderComponent,
     SidebarComponent,
     SearchComponent,
+    BreadcrumbComponent
   ],
   providers: [provideIcons({ ionHomeOutline, heroClipboardDocumentList, ionDocumentTextOutline })],
   styleUrl: './forum.layout.scss',
@@ -37,35 +41,25 @@ import { loadHashtag } from '../../store/forum/hashtag/hashtag.actions';
 export class ForumComponent implements OnInit {
 
   sidebar: boolean = false;
-  itemsBreadcrumb: MenuItem[] = [];
 
 
-  constructor(private _store: Store<AppState>) {
+  constructor(private _store: Store<AppState>, private _router: Router) {
 
   }
 
   ngOnInit(): void {
-    this.itemsBreadcrumb = [
-      {
-        icon: 'ionHomeOutline',
-        route: '/forum'
-      },
-      {
-        label: 'Topic',
-        icon: 'heroClipboardDocumentList',
-        route: '/forum/topic/abc'
-      },
-      {
-        label: 'Post',
-        icon: 'ionDocumentTextOutline',
-        route: '/forum/post/abc'
-      },
 
-    ];
+
+
+
+
+
 
     this._store.dispatch(loadTopic());
     this._store.dispatch(loadHashtag());
   }
+
+
 
 
   toggleSideBar() {

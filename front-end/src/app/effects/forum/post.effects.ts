@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, of, switchMap } from "rxjs";
-import { addPost, createPost, deletePost, editContentPost, loadPostWithId, removePost, updatePost } from "../../store/forum/post/post.actions";
+import { addPost, createPost, deletePost, editContentPost, interactWithPost, loadPostWithId, removePost, updatePost } from "../../store/forum/post/post.actions";
 import { PostService } from "../../services/forum/post.service";
 import { Router } from "@angular/router";
 
@@ -59,5 +59,14 @@ export class PostEffects {
                 )
         )
     ));
+
+    interactPost$ = createEffect(() => this.actions$.pipe(
+        ofType(interactWithPost),
+        switchMap((_action) => this._postService.interactWithPost(_action.post)
+            .pipe(
+                map(post => updatePost({ post: post })),
+                catchError(error => { console.log(error); return of() })
+            ))
+    ))
 
 }

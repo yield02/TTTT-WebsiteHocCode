@@ -12,14 +12,16 @@ import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { Post } from '../../../../models/forum/Post';
 import { selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
-import { deletePost, loadPostWithId } from '../../../../store/forum/post/post.actions';
+import { deletePost, interactWithPost, loadPostWithId } from '../../../../store/forum/post/post.actions';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { MenuItem } from 'primeng/api';
 
 import vi from '@angular/common/locales/vi';
-import { User } from '../../../../models/User';
+import { AuthUser, User } from '../../../../models/User';
 import { selectUserFromId, selectUsersFromUsersId } from '../../../../store/users/users.selector';
 import { FetchUsers } from '../../../../store/users/users.actions';
+import { heroHeartSolid } from '@ng-icons/heroicons/solid';
+import { createComment } from '../../../../store/forum/comment/comment.actions';
 registerLocaleData(vi);
 
 @Component({
@@ -39,6 +41,7 @@ registerLocaleData(vi);
     ],
     providers: [provideIcons({
         ionCalendarNumberOutline,
+        heroHeartSolid,
         ionCafeOutline,
         ionHeartOutline
     })],
@@ -47,6 +50,9 @@ registerLocaleData(vi);
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForumPostPageComponent implements OnInit {
+
+
+    auth$: Observable<AuthUser> = this._store.select(state => state.user);
 
     post$: BehaviorSubject<Post> = new BehaviorSubject<Post>({
         _id: '',
@@ -110,6 +116,8 @@ export class ForumPostPageComponent implements OnInit {
     }
     ngOnInit(): void {
 
+
+
         this._store.pipe(
             select(selectPostWithPostId(
                 this._activatedRoute.snapshot.params['postId'],
@@ -143,6 +151,20 @@ export class ForumPostPageComponent implements OnInit {
 
     formatDateAndTime(date: String): String {
         return formatDate(new Date(date.toString()), 'dd/MM/yyyy HH:mm', 'vi');
+    }
+
+
+    interactWithPost(post: Post) {
+        this._store.dispatch(interactWithPost({ post: post }));
+    }
+
+    submitComment(comment: string, post_id: string) {
+        this._store.dispatch(createComment({
+            comment: {
+                content: comment,
+                post: post_id,
+            }
+        }))
     }
 
 }

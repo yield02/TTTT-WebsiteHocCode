@@ -75,7 +75,6 @@ exports.deletePost = async (post_id, user_id) => {
 
 exports.getPostFromTopic = async (topic_id, filter) => {
   try {
-    console.log(filter);
     const query = { topic: topic_id, status: "allow" };
 
     if (filter?.name) {
@@ -100,7 +99,10 @@ exports.getPostFromTopic = async (topic_id, filter) => {
     }
 
     const options = {
-      sort: { createdAt: filter?.sortTime === "asc" ? 1 : -1 },
+      sort: {
+        like: "desc",
+        createdAt: filter?.sortTime === "asc" ? 1 : -1,
+      },
       skip: (filter?.page - 1) * 10,
       limit: 10,
     };
@@ -109,6 +111,25 @@ exports.getPostFromTopic = async (topic_id, filter) => {
     const totalPosts = await Post.countDocuments(query);
 
     return { data: posts, totalPosts };
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
+exports.interactWithPost = async (post_id, user_id) => {
+  try {
+    const post = await Post.findOne({ post_id: post_id });
+    if (!post) {
+      throw new ApiError(404, "Post not found");
+    }
+    const userIndex = post.like.indexOf(user_id);
+    if (userIndex === -1) {
+      post.like.push(user_id);
+    } else {
+      post.like.splice(userIndex, 1);
+    }
+    await post.save();
+    return post;
   } catch (error) {
     throw new ApiError(500, error.message);
   }

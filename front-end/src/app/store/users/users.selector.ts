@@ -15,6 +15,19 @@ export const selectCoursesManger = (state: AppState) => state.myCourseManager;
 
 export const selectUserFromId = (user_id: String) => createSelector(selectUsers, (users: User[]) => {
     return users.find((user: User) => user._id == user_id);
+});
+
+export const selectUserFetch = (users_id: string[]) => createSelector(selectUsers, (users: User[]) => {
+
+    let returnUser: string[] = [];
+
+    users_id.forEach(user_id => {
+        if (!users.find(user => user._id == user_id)) {
+            returnUser.push(user_id);
+        }
+    });
+
+    return returnUser;
 })
 
 export const selectUsersEnrollFetchFromCourseId = (course_id: String) => createSelector(

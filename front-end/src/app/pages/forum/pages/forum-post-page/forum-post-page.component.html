@@ -40,14 +40,37 @@
     }}</span>
   </div>
   <div class="content" [innerHTML]="post.content"></div>
+  @if(auth$ | async; as authUser) {
   <div class="content-bottom flex justify-between items-center">
     <a pButton label="Bình luận" [text]="true" size="small"></a>
-    <p-button [rounded]="true" [text]="true" severity="help" size="small">
-      <ng-icon class="icon" name="ionHeartOutline"></ng-icon>
-    </p-button>
+    <div class="flex justify-center items-center">
+      <p-button
+        (onClick)="interactWithPost(post)"
+        class="like-btn"
+        [rounded]="true"
+        [text]="true"
+        severity="help"
+        size="small"
+      >
+        <ng-icon
+          class="icon"
+          [name]="
+            post.like &&
+            authUser?._id &&
+            post.like.includes(authUser._id.toString())
+              ? 'heroHeartSolid'
+              : 'ionHeartOutline'
+          "
+        ></ng-icon>
+      </p-button>
+      <span class="like-number">{{ post.like?.length }}</span>
+    </div>
   </div>
+  }
   <div class="commentEditor">
-    <forum-comment-editor></forum-comment-editor>
+    <forum-comment-editor
+      (submitComment)="submitComment($event, post._id!)"
+    ></forum-comment-editor>
   </div>
   <div class="commentList">
     <forum-comment-list></forum-comment-list>

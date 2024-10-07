@@ -1,9 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { PaginatorModule } from 'primeng/paginator';
 import { CommentComponent } from './comment/comment.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, of, Subscription, switchMap, tap } from 'rxjs';
+import { CommentService } from '../../../../services/forum/comment.service';
+import { Comment } from '../../../../models/forum/Comment';
+import { AppState } from '../../../../store/reducer';
+import { select, Store } from '@ngrx/store';
+import { FetchUsers } from '../../../../store/users/users.actions';
+import { selectUserFetch } from '../../../../store/users/users.selector';
+import { selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
+import { getCommentsByPostId } from '../../../../store/forum/comment/comment.actions';
+import { selectCommentsWithPostId } from '../../../../store/forum/comment/comment.selectors';
 
 
 interface PageEvent {
@@ -11,6 +22,7 @@ interface PageEvent {
     rows: number;
     page: number;
     pageCount: number;
+    total: number;
 }
 
 @Component({
@@ -28,10 +40,20 @@ interface PageEvent {
     styleUrl: './comment-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentListComponent {
+export class CommentListComponent implements OnInit, OnDestroy {
+
+    private subs: Subscription[] = [];
+
+    comments$: BehaviorSubject<Comment[]> = new BehaviorSubject<Comment[]>([]);
+    fetchedComment: boolean = false;
 
 
-    filter: {
+    filter: { page: number, sortTime: 'asc' | 'desc' } = {
+        page: 1,
+        sortTime: 'desc'
+    }
+
+    filterChoice: {
         name: string;
         code: string;
     }[] | undefined;
@@ -40,11 +62,12 @@ export class CommentListComponent {
         first: 0,
         rows: 10,
         page: 1,
-        pageCount: 10
+        pageCount: 10,
+        total: 0
     };
 
-    constructor() {
-        this.filter = [
+    constructor(private _activatedRoute: ActivatedRoute, private _commentService: CommentService, private _store: Store<AppState>, private ref: ChangeDetectorRef) {
+        this.filterChoice = [
             {
                 name: 'mới nhất',
                 code: 'desc'
@@ -54,6 +77,57 @@ export class CommentListComponent {
                 code: 'asc'
             }
         ];
+
+        this._activatedRoute.snapshot.params['postId'];
     }
+
+
+    ngOnInit(): void {
+        this.fetchComment();
+    }
+
+    fetchComment() {
+
+
+
+        this._store.pipe(select(selectCommentsWithPostId(this._activatedRoute.snapshot.params['postId'], this.filter))).pipe(
+            switchMap((data: { comments: Comment[], totalComments: number }) => {
+                if (data.comments.length <= 0 && !this.fetchedComment) {
+                    this._store.dispatch(getCommentsByPostId({ post_id: this._activatedRoute.snapshot.params['postId'] }));
+                    this.fetchedComment = true;
+                    return of([]);
+                }
+                this.paginator.total = data.totalComments;
+                this.comments$.next(data.comments);
+                this.ref.detectChanges();
+
+                let users_id = data.comments.map(item => item.author);
+                return this._store.pipe(select(selectUserFetch(users_id as string[])))
+            }), tap(users_id => {
+                if (users_id.length > 0) {
+                    this._store.dispatch(FetchUsers({ users_id: users_id as String[] }))
+                }
+            })
+
+        ).subscribe();
+
+    }
+
+    filterComment(event: any) {
+        this.filter.sortTime = event.value;
+        this.fetchComment();
+    }
+
+    changePage(event: any) {
+        this.filter.page = ++event.page;
+        this.fetchComment();
+    }
+
+
+    ngOnDestroy(): void {
+        this.subs.forEach(sub => sub.unsubscribe());
+    }
+
+
 
 }

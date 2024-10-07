@@ -26,6 +26,13 @@
       font-size: 20px;
     }
   }
+  .like-number {
+    color: #a855f7;
+    font-weight: 500;
+    font-size: 14px;
+    min-width: 34px;
+    text-align: start;
+  }
 }
 
 ::ng-deep {
@@ -37,6 +44,11 @@
         border: none;
         width: 2rem;
         height: 2rem;
+      }
+    }
+    .like-btn {
+      .p-button {
+        padding: 8px;
       }
     }
   }

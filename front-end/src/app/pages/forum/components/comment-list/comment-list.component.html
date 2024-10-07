@@ -3,30 +3,29 @@
   <div class="filter px-2 flex justify-between items-center">
     <p-dropdown
       class="dropdown-filter"
-      [options]="filter"
+      [options]="filterChoice"
       optionLabel="name"
+      optionValue="code"
+      ([ngModel])="(filter.sortTime)"
+      (onChange)="filterComment($event)"
     ></p-dropdown>
     <div class="text-slate-600">2/3</div>
   </div>
   <div class="comment-list-box">
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
-    <forum-comment></forum-comment>
+    @if(comments$ | async; as comments) {
+    <ng-container *ngFor="let comment of comments">
+      <forum-comment [comment]="comment"></forum-comment>
+    </ng-container>
+
+    }
   </div>
   <div class="">
     <p-paginator
       [first]="paginator.first"
       [rows]="paginator.rows"
-      [totalRecords]="120"
+      [totalRecords]="paginator.total"
       [showFirstLastIcon]="false"
+      (onPageChange)="changePage($event)"
     ></p-paginator>
   </div>
 </div>

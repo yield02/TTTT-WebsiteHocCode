@@ -1,6 +1,7 @@
 .comment-container {
   border-bottom: 1px solid #eee;
-  .content {
+  .content * {
+    all: revert;
   }
 }
 

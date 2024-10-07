@@ -26,6 +26,8 @@ import { Hashtag } from '../models/forum/Hashtag';
 import { hashtagReducer } from './forum/hashtag/hashtag.reducer';
 import { Post } from '../models/forum/Post';
 import { postReducer } from './forum/post/post.reducer';
+import { Comment } from '../models/forum/Comment';
+import { commentReducer } from './forum/comment/comment.reducer';
 
 export interface AppState {
     user: AuthUser,
@@ -41,7 +43,8 @@ export interface AppState {
     learning: { [key: string]: LearningInterFace },
     topic: Topic[],
     hashtag: Hashtag[],
-    post: Post[]
+    post: Post[],
+    comment: Comment[],
 }
 
 
@@ -60,6 +63,7 @@ const reducers: ActionReducerMap<AppState> = {
     topic: topicReducer,
     hashtag: hashtagReducer,
     post: postReducer,
+    comment: commentReducer,
 }
 
 export default reducers;

@@ -54,4 +54,10 @@ export class PostService {
   }
 
 
+  interactWithPost(post: Post): Observable<Post> {
+    return this.http.get<Post>(`${environment.apiUrl}post/interact/${post.post_id}`, { withCredentials: true })
+  };
 }
+
+
+
