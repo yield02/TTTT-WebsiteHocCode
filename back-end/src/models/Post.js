@@ -30,6 +30,14 @@ const postSchema = new mongoose.Schema(
       default: "waiting",
     },
     reason: { type: String, required: false },
+    manager: {
+      type: Map,
+      of: Boolean,
+      default: {
+        block_comment: false,
+        hidden: false,
+      },
+    },
   },
   {
     timestamps: true,

@@ -12,4 +12,8 @@ export interface Post {
     reason?: string;
     createdAt: string;
     updatedAt: string;
+    manager?: {
+        hidden: boolean;
+        block_comment: boolean;
+    }
 }

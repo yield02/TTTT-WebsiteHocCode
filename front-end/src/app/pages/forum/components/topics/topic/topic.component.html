@@ -19,10 +19,17 @@
   <div class="flex justify-center items-center max-md:hidden">
     {{ topic.totalPost }}
   </div>
-  <div class="flex flex-col justify-center items-center max-md:hidden">
-    <span class="time-line">2 năm, 2 tháng trước</span>
+  <div
+    class="latest-post flex flex-col justify-center items-start max-md:hidden"
+  >
+    @if(topic?.latestPost) {
+    <a
+      [routerLink]="'/forum/post/' + topic.latestPost?.post_id"
+      class="time-line underline text-blue-400"
+      >{{ topic.latestPost?.title }}</a
+    >
     <div class="flex justify-center items-center gap-2">
-      <span class="time-line">Thanh Nhường</span
+      <span class="time-line">{{ topic.latestPost?.author?.username }}</span
       ><p-avatar
         label="U"
         styleClass="mr-2"
@@ -30,5 +37,6 @@
         shape="circle"
       ></p-avatar>
     </div>
+    }
   </div>
 </div>

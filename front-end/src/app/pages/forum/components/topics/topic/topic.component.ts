@@ -16,6 +16,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
         AvatarModule,
         RouterLink,
         MultiSelectModule,
+        RouterLink
     ],
     templateUrl: './topic.component.html',
     styleUrl: './topic.component.scss',

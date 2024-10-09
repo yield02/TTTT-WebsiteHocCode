@@ -59,7 +59,17 @@
   .description {
     font-size: 12px;
   }
-  .time-line {
-    font-size: 12px;
+  .latest-post {
+    min-width: 120px;
+    .time-line {
+      font-size: 12px;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; /* number of lines to show */
+      line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
   }
 }

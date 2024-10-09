@@ -9,6 +9,14 @@ exports.createComment = async (data, author_id) => {
       throw new ApiError(400, "Invalid comment data");
     }
 
+    const post = await Post.findById(data.post);
+    if (!post) {
+      throw new ApiError(404, "Post not found");
+    }
+    if (post._doc.manager.get("block_comment")) {
+      throw new ApiError(403, "Commenting is blocked by the manager");
+    }
+
     const comment = new Comment({
       content: data.content,
       post: data.post,
@@ -52,8 +60,6 @@ exports.getCommentsByPostId = async (post_id) => {
 
 exports.deleteComment = async (comment_id, reply_id, author_id) => {
   try {
-    console.log(comment_id, reply_id);
-
     const comment = await Comment.findOneAndDelete(
       {
         _id: comment_id,

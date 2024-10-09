@@ -64,6 +64,11 @@ const userSchema = new mongoose.Schema(
       default: { status: "allow" },
     } /* allow, banned */,
     role: {
+      type: String,
+      enum: ["member", "admin"],
+      default: "member",
+    },
+    achievements: {
       type: [
         {
           _id: false,

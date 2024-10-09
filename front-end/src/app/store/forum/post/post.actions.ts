@@ -7,6 +7,9 @@ export const createPost = createAction('[Forum Post] Create Post', props<{ post:
 export const editContentPost = createAction('[Forum Post] Edit Content Post', props<{ post: Post }>());
 export const deletePost = createAction('[Forum Post] Delete Post', props<{ post_id: number }>());
 export const interactWithPost = createAction('[Forum Post] Interact With Post', props<{ post: Post }>());
+export const toggleBlockComment = createAction('[Forum Post] Toggle Block Comment', props<{ post_id: string }>());
+export const toggleHiddenPost = createAction('[Forum Post] Toggle Hidden Post', props<{ post_id: string }>());
+
 
 
 export const addPost = createAction('[Forum Post] Add Post', props<{ post: Post }>());

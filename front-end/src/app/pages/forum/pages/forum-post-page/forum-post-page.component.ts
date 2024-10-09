@@ -9,10 +9,10 @@ import { CommentEditorComponent } from '../../components/comment-editor/comment-
 import { CommentListComponent } from '../../components/comment-list/comment-list.component';
 import { AppState } from '../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { Post } from '../../../../models/forum/Post';
 import { selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
-import { deletePost, interactWithPost, loadPostWithId } from '../../../../store/forum/post/post.actions';
+import { deletePost, interactWithPost, loadPostWithId, toggleBlockComment, toggleHiddenPost } from '../../../../store/forum/post/post.actions';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { MenuItem } from 'primeng/api';
 
@@ -23,6 +23,7 @@ import { heroHeartSolid } from '@ng-icons/heroicons/solid';
 import { createComment } from '../../../../store/forum/comment/comment.actions';
 
 import vi from '@angular/common/locales/vi';
+import { state } from '@angular/animations';
 registerLocaleData(vi);
 
 @Component({
@@ -92,19 +93,11 @@ export class ForumPostPageComponent implements OnInit {
 
 
     actions: MenuItem[] = [
+
         {
-            icon: 'pi pi-pencil',
-            command: () => {
-                this._router.navigate(['/forum', 'post', this._activatedRoute.snapshot.params['postId'], 'edit'])
-            }
-        },
-        {
-            icon: 'pi pi-trash',
-            command: () => {
-                this._store.dispatch(deletePost({ post_id: this._activatedRoute.snapshot.params['postId'] }))
-            }
-        },
-        {
+            tooltipOptions: {
+                tooltipLabel: 'Báo cáo bài viết'
+            },
             icon: 'pi pi-flag',
             command: () => {
             }
@@ -148,6 +141,94 @@ export class ForumPostPageComponent implements OnInit {
             })
 
         ).subscribe();
+
+
+        // check user and post to add more action for post
+        combineLatest({
+            user: this._store.select(state => state.user),
+            post: this._store.pipe(select(selectPostWithPostId(this._activatedRoute.snapshot.params['postId'])))
+        }
+        ).subscribe(data => {
+
+            if (data.user._id == data.post?.author) {
+                this.actions = [
+                    {
+                        tooltipOptions: {
+                            tooltipLabel: 'Báo cáo bài viết'
+                        },
+                        icon: 'pi pi-flag',
+                        command: () => {
+                        }
+                    },
+                    {
+                        tooltipOptions: {
+                            tooltipLabel: 'Chỉnh sửa bài viết'
+                        },
+                        icon: 'pi pi-pencil',
+                        command: () => {
+                            this._router.navigate(['/forum', 'post', this._activatedRoute.snapshot.params['postId'], 'edit'])
+                        }
+                    }, {
+                        tooltipOptions: {
+                            tooltipLabel: 'Xóa bài viết'
+                        },
+                        icon: 'pi pi-trash',
+                        command: () => {
+                            this._store.dispatch(deletePost({ post_id: this._activatedRoute.snapshot.params['postId'] }))
+                        }
+                    },
+                ]
+                //check block comment
+                if (data.post.manager?.block_comment) {
+                    // this.actions = this.actions.filter(action => action.icon != 'pi pi-lock');
+                    this.actions.push({
+                        tooltipOptions: {
+                            tooltipLabel: 'Mở khóa bình luận'
+                        },
+                        icon: 'pi pi-comments',
+                        command: () => {
+                            this._store.dispatch(toggleBlockComment({ post_id: this._activatedRoute.snapshot.params['postId'] }));
+                        }
+                    });
+                }
+                else {
+                    this.actions.push({
+                        tooltipOptions: {
+                            tooltipLabel: 'Khóa bình luận'
+                        },
+                        icon: 'pi pi-lock',
+                        command: () => {
+                            this._store.dispatch(toggleBlockComment({ post_id: this._activatedRoute.snapshot.params['postId'] }));
+                        }
+                    });
+                }
+
+                //check hidden post
+                if (data.post.manager?.hidden) {
+                    this.actions.push({
+                        tooltipOptions: {
+                            tooltipLabel: 'Hiển thị bài viết'
+                        },
+                        icon: 'pi pi-eye',
+                        command: () => {
+                            this._store.dispatch(toggleHiddenPost({ post_id: this._activatedRoute.snapshot.params['postId'] }));
+                        }
+                    });
+                }
+                else {
+                    this.actions.push({
+                        tooltipOptions: {
+                            tooltipLabel: 'Ẩn bài viết'
+                        },
+                        icon: 'pi pi-eye-slash',
+                        command: () => {
+                            this._store.dispatch(toggleHiddenPost({ post_id: this._activatedRoute.snapshot.params['postId'] }));
+                        }
+                    });
+                }
+            }
+
+        })
     }
 
 

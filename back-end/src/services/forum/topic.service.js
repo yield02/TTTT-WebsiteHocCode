@@ -20,8 +20,27 @@ exports.getAllTopic = async () => {
     const topics = await Topic.find({});
     const result = await Promise.all(
       topics.map(async (topic) => {
-        const totalPost = await Post.countDocuments({ topic: topic._id });
-        return { ...topic._doc, totalPost };
+        const totalPost = await Post.countDocuments({
+          topic: topic._id,
+          status: "allow",
+          "manager.hidden": false,
+        });
+        const latestPost = await Post.findOne(
+          {
+            topic: topic._id,
+            status: "allow",
+            "manager.hidden": false,
+          },
+          "title post_id"
+        )
+          .sort({
+            createdAt: -1,
+          })
+          .populate({
+            path: "author",
+            select: "username avatar user_id fullname",
+          });
+        return { ...topic._doc, totalPost, latestPost };
       })
     );
     return result;

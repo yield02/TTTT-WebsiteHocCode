@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, of, switchMap } from "rxjs";
-import { addPost, createPost, deletePost, editContentPost, interactWithPost, loadPostWithId, removePost, updatePost } from "../../store/forum/post/post.actions";
+import { addPost, createPost, deletePost, editContentPost, interactWithPost, loadPostWithId, removePost, toggleBlockComment, toggleHiddenPost, updatePost } from "../../store/forum/post/post.actions";
 import { PostService } from "../../services/forum/post.service";
 import { Router } from "@angular/router";
 
@@ -67,6 +67,24 @@ export class PostEffects {
                 map(post => updatePost({ post: post })),
                 catchError(error => { console.log(error); return of() })
             ))
+    ));
+
+    toggleBlockComment$ = createEffect(() => this.actions$.pipe(
+        ofType(toggleBlockComment),
+        switchMap((_action) =>
+            this._postService.toggleBlockComment(_action.post_id)
+                .pipe(
+                    map((post) => updatePost({ post })),
+                    catchError(error => { console.log(error); return of() })))
+    ));
+
+    toggleHiddenPost$ = createEffect(() => this.actions$.pipe(
+        ofType(toggleHiddenPost),
+        switchMap((_action) =>
+            this._postService.toggleHiddenPost(_action.post_id)
+                .pipe(
+                    map((post) => updatePost({ post })),
+                    catchError(error => { console.log(error); return of() })))
     ))
 
 }

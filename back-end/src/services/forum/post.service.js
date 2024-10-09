@@ -21,11 +21,15 @@ exports.getPostWithId = async (post_id, user_id) => {
     const post = await Post.findOne({
       post_id: post_id,
     });
-    if (!post) {
+    if (!post || (post._doc.manager.get("hidden") && post.author != user_id)) {
       throw new ApiError(404, "Post not found");
     }
     // condition to select with admin permissions
-    if (post.status == "allow" || post.author == user_id) {
+    if (
+      post.status == "allow" ||
+      post.author == user_id ||
+      user_id == "admin"
+    ) {
       return post;
     }
 
@@ -75,7 +79,7 @@ exports.deletePost = async (post_id, user_id) => {
 
 exports.getPostFromTopic = async (topic_id, filter) => {
   try {
-    const query = { topic: topic_id, status: "allow" };
+    const query = { topic: topic_id, status: "allow", "manager.hidden": false };
 
     if (filter?.name) {
       query.title = { $regex: filter.name, $options: "i" };
@@ -129,6 +133,50 @@ exports.interactWithPost = async (post_id, user_id) => {
       post.like.splice(userIndex, 1);
     }
     await post.save();
+    return post;
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
+exports.toggleBlockComment = async (post_id, author_id) => {
+  try {
+    const post = await Post.findOne({ post_id: post_id });
+    if (!post) {
+      throw new ApiError(404, "Post not found");
+    }
+
+    if (post.author != author_id && author_id != "admin") {
+      throw new ApiError(403, "Unauthorized");
+    }
+
+    post._doc.manager.set(
+      "block_comment",
+      !post._doc.manager.get("block_comment")
+    );
+    await post.save();
+
+    return post;
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
+exports.toggleHiddenPost = async (post_id, author_id) => {
+  try {
+    const post = await Post.findOne({ post_id: post_id });
+    if (!post) {
+      throw new ApiError(404, "Post not found");
+    }
+
+    if (post.author != author_id && author_id != "admin") {
+      throw new ApiError(403, "Unauthorized");
+    }
+
+    post._doc.manager.set("hidden", !post._doc.manager.get("hidden"));
+
+    await post.save();
+
     return post;
   } catch (error) {
     throw new ApiError(500, error.message);

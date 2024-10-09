@@ -55,7 +55,7 @@
   <div class="content" [innerHTML]="post.content"></div>
   @if(auth$ | async; as authUser) {
   <div class="content-bottom flex justify-between items-center">
-    <a pButton label="Bình luận" [text]="true" size="small"></a>
+    <!-- <a pButton label="Bình luận" [text]="true" size="small"></a> -->
     <div class="flex justify-center items-center">
       <p-button
         (onClick)="interactWithPost(post)"
@@ -81,9 +81,16 @@
   </div>
   }
   <div class="commentEditor">
+    @if(!post.manager?.block_comment) {
     <forum-comment-editor
       (submitComment)="submitComment($event, post._id!)"
     ></forum-comment-editor>
+    } @else {
+    <span class="text-purple-400"
+      >Bài viết đã bị khóa bình luận. Bạn không thể bình luận trong bài viết
+      này!!!</span
+    >
+    }
   </div>
   <div class="commentList">
     <forum-comment-list></forum-comment-list>

@@ -57,6 +57,15 @@ export class PostService {
   interactWithPost(post: Post): Observable<Post> {
     return this.http.get<Post>(`${environment.apiUrl}post/interact/${post.post_id}`, { withCredentials: true })
   };
+
+  toggleBlockComment(post_id: string): Observable<Post> {
+    return this.http.patch<Post>(`${environment.apiUrl}post/manager/block_comment/${post_id}`, {}, { withCredentials: true });
+  }
+
+  toggleHiddenPost(post_id: string): Observable<Post> {
+    return this.http.patch<Post>(`${environment.apiUrl}post/manager/hidden/${post_id}`, {}, { withCredentials: true });
+  }
+
 }
 
 
