@@ -49,6 +49,9 @@ export class PostFormComponent implements OnInit {
         autoresize_on_init: true,
         content_css: 'tinymce-5',
         plugins: [
+            'table',
+            'preview',
+            'emoticons',
             'image',
             'advlist',
             'autolink',
@@ -69,11 +72,12 @@ export class PostFormComponent implements OnInit {
             'wordcount',
             'autoresize',
         ],
+        table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
         toolbar:
-            'codesample | undo redo | fontsizeinput | fontfamily |' +
+            'emoticons | codesample | undo redo | fontsizeinput | fontfamily |' +
             'bold italic forecolor backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' + '| image |' +
-            'removeformat | help',
+            'alignright alignjustify | bullist numlist outdent indent | ' + '| link | image |' +
+            'removeformat | preview | table | help',
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
         font_size_input_default_unit: 'px',
     }

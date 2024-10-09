@@ -72,7 +72,7 @@ exports.getUsersInCourseWithUserName = async (
   }).populate({
     path: typeList,
     model: "User",
-    select: "username email.data fullname phone.data",
+    select: "username email.data fullname phone.data createdAt",
     match: { username: new RegExp(username, "i") },
   });
 
@@ -91,6 +91,7 @@ exports.getUsersFromUserId = async (usersId) => {
       "avatar",
       "fullname",
       "phone",
+      "createdAt",
     ]);
     return users;
   } catch (error) {

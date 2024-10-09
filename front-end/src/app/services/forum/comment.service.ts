@@ -40,4 +40,14 @@ export class CommentService {
     });
   }
 
+  getRepliesWithRepliesId(replies_id: string[]): Observable<Comment[]> {
+    const queryParams = new URLSearchParams();
+    queryParams.append('replies_id', JSON.stringify(replies_id));
+    return this._http.get<Comment[]>(`${environment.apiUrl}comment/replies?${queryParams.toString()}`);
+  }
+
+
+  getRepliesWithCommentId(comment_id: string): Observable<Comment[]> {
+    return this._http.get<Comment[]>(`${environment.apiUrl}comment/replies/${comment_id}`);
+  }
 }

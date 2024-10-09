@@ -102,7 +102,6 @@ exports.updateContent = async (data, author_id) => {
 };
 
 exports.editComment = async (data, author_id) => {
-  console.log(data);
   try {
     if (!data.content) {
       throw new ApiError(400, "Invalid comment data");
@@ -137,6 +136,28 @@ exports.interactWithComment = async (comment_id, user_id) => {
     }
     await comment.save();
     return comment;
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
+exports.getRepliesWithCommentId = async (comment_id) => {
+  try {
+    const comment = await Comment.find({
+      _id: comment_id,
+    }).populate("replies");
+    return comment.replies;
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
+exports.getRepliesWithRepliesId = async (replies_id) => {
+  try {
+    const replies = await Comment.find({
+      _id: { $in: replies_id },
+    });
+    return replies;
   } catch (error) {
     throw new ApiError(500, error.message);
   }

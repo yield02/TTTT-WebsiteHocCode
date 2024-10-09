@@ -30,7 +30,7 @@ import { Topic } from '../../models/forum/Topic';
     styleUrl: './breadcrumb.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BreadcrumbComponent implements OnInit, AfterViewChecked {
+export class BreadcrumbComponent implements OnInit {
     itemsBreadcrumb: MenuItem[] = [];
 
     itemsBreadcrumb$: BehaviorSubject<MenuItem[]> = new BehaviorSubject<MenuItem[]>([{
@@ -40,6 +40,10 @@ export class BreadcrumbComponent implements OnInit, AfterViewChecked {
 
 
     constructor(private _activatedRouter: ActivatedRoute, private _router: Router, private ref: ChangeDetectorRef, private _store: Store<AppState>) {
+
+
+    }
+    ngOnInit(): void {
         this._router.events.pipe(
             map(
                 val => {
@@ -63,11 +67,8 @@ export class BreadcrumbComponent implements OnInit, AfterViewChecked {
                             route: '/forum'
                         }
                     ];
-                    this.ref.detectChanges();
 
                 }
-
-
                 if (val.length > 0 && val[2] == 'topic') {
                     return this._store.pipe(select(selectTopic(val[3])));
                 }
@@ -85,7 +86,6 @@ export class BreadcrumbComponent implements OnInit, AfterViewChecked {
                         icon: 'ionDocumentTextOutline',
                         route: '/forum/post/' + val.post_id
                     }
-
                     return this._store.pipe(select(selectTopic(val.topic!)));
                 }
 
@@ -114,16 +114,11 @@ export class BreadcrumbComponent implements OnInit, AfterViewChecked {
         ).subscribe((val) => {
             if (this.itemsBreadcrumb.length >= 1) {
                 this.itemsBreadcrumb$.next(this.itemsBreadcrumb);
+                this.ref.detectChanges();
             }
         });
-
-    }
-    ngOnInit(): void {
     }
 
-    ngAfterViewChecked(): void {
-
-    }
 
 
 

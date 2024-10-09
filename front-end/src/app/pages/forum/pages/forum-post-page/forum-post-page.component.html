@@ -3,7 +3,21 @@
   <div class="flex justify-between items-center">
     @if(user$ | async; as user ) {
     <div class="flex" id="infor">
-      <p-avatar label="P" styleClass="mr-2" size="large" shape="circle" />
+      <p-avatar
+        [image]="
+          (user?.avatar?.contentType == 'url' &&
+            user?.avatar?.url?.toString()) ||
+          (user?.avatar?.buffer &&
+            'data:' +
+              user?.avatar?.contentType +
+              ';base64,' +
+              user?.avatar?.buffer) ||
+          'assets/images/avatar-user-default.png'
+        "
+        styleClass="mr-2"
+        size="large"
+        shape="circle"
+      />
       <div class="flex flex-col gap-1">
         <h1 class="author_name hover:text-blue-700 cursor-pointer">
           {{ user.fullname || user.username }}
@@ -14,10 +28,9 @@
             Converstation Starter</span
           >
           <span class="text-gray-600 description"
-            ><ng-icon
-              class="description-icon"
-              name="ionCalendarNumberOutline"
-            ></ng-icon>
+            ><ng-icon class="description-icon" name="ionCalendarNumberOutline">
+            </ng-icon>
+            {{ formatUserTime(post.createdAt) }}
           </span>
         </div>
       </div>
@@ -35,9 +48,9 @@
   </div>
   <div class="flex justify-between items-center">
     <h1 class="title">{{ post.title }}</h1>
-    <span class="text-gray-600 description italic">{{
-      formatDateAndTime(post.createdAt)
-    }}</span>
+    <span class="text-gray-600 description italic">
+      {{ formatTime(post.createdAt) }}
+    </span>
   </div>
   <div class="content" [innerHTML]="post.content"></div>
   @if(auth$ | async; as authUser) {

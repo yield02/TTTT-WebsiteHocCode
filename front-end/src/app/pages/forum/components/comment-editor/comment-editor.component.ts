@@ -28,6 +28,8 @@ export class CommentEditorComponent {
     @Output() submitComment: EventEmitter<string> = new EventEmitter();
 
     @Input() comment: any = '';
+    @Input() submitTextBtn = 'Đăng bình luận';
+
 
     initEditor: EditorComponent['init'] = {
         menubar: false,

@@ -15,6 +15,8 @@ export interface User {
         buffer?: String,
     },
     birthday?: String,
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 export interface AuthUser {
@@ -42,6 +44,8 @@ export interface AuthUser {
         buffer?: String,
     },
     birthday?: String,
+    createdAt?: string,
+    updatedAt?: string,
 }
 
 

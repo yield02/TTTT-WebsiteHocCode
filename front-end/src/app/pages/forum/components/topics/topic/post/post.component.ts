@@ -2,11 +2,16 @@ import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { ionTimeOutline } from '@ng-icons/ionicons';
+import { ionEyeOutline, ionHeartOutline, ionTimeOutline } from '@ng-icons/ionicons';
 import { AvatarModule } from 'primeng/avatar';
 import { Post } from '../../../../../../models/forum/Post';
 
 import vi from '@angular/common/locales/vi';
+import { AppState } from '../../../../../../store/reducer';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { User } from '../../../../../../models/User';
+import { selectUserFromId } from '../../../../../../store/users/users.selector';
 registerLocaleData(vi);
 
 @Component({
@@ -16,10 +21,13 @@ registerLocaleData(vi);
         CommonModule,
         NgIconComponent,
         AvatarModule,
-        RouterLink
+        RouterLink,
+        NgIconComponent
     ],
     providers: [provideIcons({
-        ionTimeOutline
+        ionTimeOutline,
+        ionHeartOutline,
+        ionEyeOutline
     })],
     templateUrl: './post.component.html',
     styleUrl: './post.component.scss',
@@ -28,10 +36,16 @@ registerLocaleData(vi);
 export class TopicPostComponent implements OnInit {
     @Input() post!: Post;
 
-    constructor() {
+
+    user$!: Observable<User | undefined>;
+
+    constructor(private _store: Store<AppState>) {
+
     }
 
     ngOnInit(): void {
+
+        this.user$ = this._store.pipe(select(selectUserFromId(this.post.author!)));
     }
 
     formatDateAndTime(date: String): String {

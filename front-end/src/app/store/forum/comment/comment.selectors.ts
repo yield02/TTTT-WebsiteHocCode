@@ -6,6 +6,7 @@ import { Comment } from "../../../models/forum/Comment";
 
 
 export const selectComments = (state: AppState) => state.comment.filter(comment => comment.isReply === false);
+export const selectReplies = (state: AppState) => state.comment.filter(comment => comment.isReply === true);
 export const selectPosts = (state: AppState) => state.post;
 
 export const selectCommentsWithPostId = (post_id: number, filter: { page: number, sortTime: 'desc' | 'asc' }) => createSelector(
@@ -33,6 +34,22 @@ export const selectCommentsWithPostId = (post_id: number, filter: { page: number
             totalComments: filteredComments.length
         };
     });
+
+export const selectCommentsWithCommentsId = (comments_id: string[]) => createSelector(
+    selectReplies,
+    (comments: Comment[]): Comment[] => {
+
+        let result = comments.filter(comment => comments_id.includes(comment._id!));
+        result = result.sort((a, b) => {
+            const likeDifference = (b.like?.length || 0) - (a.like?.length || 0);
+            if (likeDifference !== 0) {
+                return likeDifference;
+            }
+            return new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime();
+        });
+        return result;
+    }
+);
 
 
 // if (filter.sortTime === 'desc') {

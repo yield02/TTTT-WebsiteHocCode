@@ -1,91 +1,117 @@
-@if(author$ | async; as author) { @if(isEdit == false) {
-<div
-  class="comment-container my-4 flex justify-between items-center"
-  [id]="'c' + comment.comment_id"
->
-  <div>
-    <div class="flex" id="infor">
-      <p-avatar
-        [image]="
-          (author?.avatar?.contentType == 'url' &&
-            author?.avatar?.url?.toString()) ||
-          (author?.avatar?.buffer &&
-            'data:' +
-              author?.avatar?.contentType +
-              ';base64,' +
-              author?.avatar?.buffer) ||
-          'assets/images/avatar-user-default.png'
-        "
-        styleClass="mr-2"
-        size="large"
-        shape="circle"
-      />
-      <div class="flex flex-col gap-1">
-        <h1 class="author_name hover:text-blue-700 cursor-pointer">
-          {{ author?.fullname || author?.username }}
-        </h1>
-        <div class="flex gap-4">
-          <span class="text-gray-600 description"
-            ><ng-icon class="description-icon" name="ionCafeOutline"></ng-icon>
-            Converstation Starter</span
-          >
-          <span class="text-gray-600 description"
-            ><ng-icon
-              class="description-icon"
-              name="ionCalendarNumberOutline"
-            ></ng-icon>
-            {{ formatTime(comment.createdAt!) }}</span
-          >
+<div class="comment-box">
+  @if(author$ | async; as author) { @if(isEdit == false) {
+  <div
+    class="comment-container flex justify-between items-center"
+    [id]="'c' + comment.comment_id"
+  >
+    <div class="flex-1">
+      <div class="flex" id="infor">
+        <p-avatar
+          [image]="
+            (author?.avatar?.contentType == 'url' &&
+              author?.avatar?.url?.toString()) ||
+            (author?.avatar?.buffer &&
+              'data:' +
+                author?.avatar?.contentType +
+                ';base64,' +
+                author?.avatar?.buffer) ||
+            'assets/images/avatar-user-default.png'
+          "
+          styleClass="mr-2"
+          size="large"
+          shape="circle"
+        />
+        <div class="flex flex-col gap-1">
+          <h1 class="author_name hover:text-blue-700 cursor-pointer">
+            {{ author?.fullname || author?.username }}
+          </h1>
+          <div class="flex gap-4">
+            <span class="text-gray-600 description"
+              ><ng-icon
+                class="description-icon"
+                name="ionCafeOutline"
+              ></ng-icon>
+              Converstation Starter</span
+            >
+            <span class="text-gray-600 description"
+              ><ng-icon
+                class="description-icon"
+                name="ionCalendarNumberOutline"
+              ></ng-icon>
+              {{ formatTime(comment.createdAt!) }}</span
+            >
+          </div>
         </div>
       </div>
-    </div>
-    <div class="content px-14 mt-2" [innerHTML]="comment.content"></div>
-    @if(user$ | async; as user) {
-    <div class="action-btn py-2">
-      <p-button
-        [label]="'Thích (' + comment.like?.length + ')'"
-        [text]="true"
-        severity="success"
-        size="small"
-        [icon]="
-          comment.like?.includes(user._id.toString())
-            ? 'pi pi-heart-fill'
-            : 'pi pi-heart'
-        "
-        (onClick)="interactWithComment()"
-      ></p-button>
+      <div class="content px-14 mt-2" [innerHTML]="comment.content"></div>
+      @if(user$ | async; as user) {
+      <div class="action-btn">
+        <p-button
+          [label]="'Thích (' + comment.like?.length + ')'"
+          [text]="true"
+          severity="success"
+          size="small"
+          [icon]="
+            comment.like?.includes(user._id.toString())
+              ? 'pi pi-heart-fill'
+              : 'pi pi-heart'
+          "
+          (onClick)="interactWithComment()"
+        ></p-button>
 
-      <p-button
-        [label]="'Trả lời (' + comment.replies?.length + ')'"
-        [text]="true"
-        severity="info"
-        size="small"
-        icon="pi pi-comment-edit"
-      ></p-button>
+        @if(!isReply) {
+        <p-button
+          [label]="'Trả lời (' + comment.replies?.length + ')'"
+          [text]="true"
+          severity="info"
+          size="small"
+          icon="pi pi-comment-edit"
+          (onClick)="toggleReply()"
+        ></p-button>
+        }
+      </div>
+      }
+      <div class="replies-load-btn text-center"></div>
     </div>
+    <div class="flex justify-center items-center h-full">
+      <p-speedDial
+        className="more-action relative"
+        [model]="moreActions"
+        type="circle"
+        [radius]="40"
+        hideIcon="pi pi-times"
+        showIcon="pi pi-ellipsis-h"
+        buttonClassName="p-button-outlined"
+      >
+      </p-speedDial>
+    </div>
+  </div>
+  <div class="replies-container pl-32">
+    @if(isReplying) {
+    <forum-comment-editor
+      (submitComment)="createReplyComment($event)"
+    ></forum-comment-editor>
+    } @if(replies$ | async; as replies) {
+    <forum-comment
+      *ngFor="let reply of replies.slice(0, loadReply)"
+      [comment]="reply"
+      [isReply]="true"
+    ></forum-comment>
     }
-    <div class="replies">
-      <ng-container>
-        <!-- <forum-comment></forum-comment> -->
-      </ng-container>
+    <div class="text-center">
+      @if(comment.replies && comment?.replies!.length > 0 && loadReply <
+      comment.replies!.length) {
+      <button class="text-blue-500 underline" (click)="loadReplies()">
+        Hiển thị trả lời
+      </button>
+      }
     </div>
   </div>
-  <div class="flex justify-center items-center h-full">
-    <p-speedDial
-      className="more-action relative"
-      [model]="moreActions"
-      type="circle"
-      [radius]="40"
-      hideIcon="pi pi-times"
-      showIcon="pi pi-ellipsis-h"
-      buttonClassName="p-button-outlined"
-    >
-    </p-speedDial>
-  </div>
+  } @else {
+  <forum-comment-editor
+    [comment]="comment.content"
+    (submitComment)="submitEditComment($event)"
+    submitTextBtn="Cập nhật"
+  ></forum-comment-editor>
+  } }
 </div>
-} @else {
-<forum-comment-editor
-  [comment]="comment.content"
-  (submitComment)="submitEditComment($event)"
-></forum-comment-editor>
-} }

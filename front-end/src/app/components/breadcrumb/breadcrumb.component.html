@@ -4,9 +4,11 @@
       <ng-container *ngIf="item.route; else elseBlock">
         <a [routerLink]="item.route" class="p-menuitem-link">
           <ng-container *ngIf="item?.icon">
-            <ng-icon [name]="item?.icon"></ng-icon>
+            <ng-icon class="mr-2 max-sm:text-4xl" [name]="item?.icon"></ng-icon>
           </ng-container>
-          <span class="text-primary font-semibold">{{ item.label }}</span>
+          <span class="name text-primary font-semibold max-sm:hidden">{{
+            item.label
+          }}</span>
         </a>
       </ng-container>
       <ng-template #elseBlock>

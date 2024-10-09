@@ -6,6 +6,9 @@ export const getCommentsByPostId = createAction('[Forum Comment] Get Comments', 
 export const deleteComment = createAction('[Forum Comment] Delete Comment', props<{ comment_id: string, reply_id?: string }>());
 export const updateContentComment = createAction('[Forum Comment] Update Content Comment', props<{ comment: Comment }>());
 export const interactWithComment = createAction('[Forum Comment] Interact With Comment', props<{ comment_id: string }>());
+export const getRepliesWithRepliesId = createAction('[Forum Comment] Get Replies With Replies Id', props<{ replies_id: string[] }>());
+
+
 
 
 export const deleteCommentSuccess = createAction('[Forum Comment] Delete Comment Success', props<{ comment_id: string, reply_id?: string }>());

@@ -64,3 +64,26 @@ exports.interactWithComment = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.getRepliesWithCommentId = async (req, res, next) => {
+  try {
+    console.log("vo comment");
+    const replies = await CommentService.getRepliesWithCommentId(
+      req.params.comment_id
+    );
+    res.status(200).json(replies || []);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.getRepliesWithRepliesId = async (req, res, next) => {
+  try {
+    const replies = await CommentService.getRepliesWithRepliesId(
+      JSON.parse(req.query.replies_id)
+    );
+    res.status(200).json(replies || []);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

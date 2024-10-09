@@ -15,9 +15,13 @@
     <h1 class="text-gray-500 col-span-4">Tiêu đề</h1>
     <h1 class="text-gray-500 text-end max-sm:hidden">Tác giả</h1>
     <h1 class="text-gray-500 text-end max-md:hidden">Tương tác</h1>
-    <h1 class="text-gray-500 text-end max-sm:hidden" (click)="filter($event)">
-      Sắp xếp
-    </h1>
+    <div
+      class="text-gray-500 max-sm:hidden cursor-pointer flex items-center justify-end"
+      (click)="filter($event)"
+    >
+      <span>Sắp xếp</span>
+      <ng-icon class="ml-2 text-2xl" name="heroChevronDownSolid"></ng-icon>
+    </div>
     <p-confirmPopup #filterPopup class="filter-container">
       <ng-template pTemplate="headless" let-header let-message>
         <div class="flex flex-col align-items-center w-full gap-3 p-4">

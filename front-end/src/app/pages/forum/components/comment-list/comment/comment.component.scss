@@ -1,5 +1,4 @@
 .comment-container {
-  border-bottom: 1px solid #eee;
   .content * {
     all: revert;
   }
@@ -15,4 +14,9 @@
       }
     }
   }
+}
+
+.comment-box {
+  padding-top: 12px;
+  border-top: 1px solid #eee;
 }

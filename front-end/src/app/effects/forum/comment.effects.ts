@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, of, switchMap } from "rxjs";
 import { HashtagService } from "../../services/forum/hashtag.service";
 import { addHashtags, loadHashtag } from "../../store/forum/hashtag/hashtag.actions";
-import { addComment, addComments, createComment, deleteComment, deleteCommentSuccess, getCommentsByPostId, interactWithComment, interactWithCommentSuccess, updateContentComment, updateContentCommentSuccess } from "../../store/forum/comment/comment.actions";
+import { addComment, addComments, createComment, deleteComment, deleteCommentSuccess, getCommentsByPostId, getRepliesWithRepliesId, interactWithComment, interactWithCommentSuccess, updateContentComment, updateContentCommentSuccess } from "../../store/forum/comment/comment.actions";
 import { CommentService } from "../../services/forum/comment.service";
 
 @Injectable({ providedIn: 'root' })
@@ -57,5 +57,14 @@ export class CommentEffects {
             ))
     ))
 
+
+    getRepliesWithRepliesId$ = createEffect(() => this.actions$.pipe(
+        ofType(getRepliesWithRepliesId),
+        switchMap((_action) =>
+            this._commentService.getRepliesWithRepliesId(_action.replies_id).pipe(
+                map(data => addComments({ comments: data })),
+                catchError(error => { console.log(error); return of() })
+            ))
+    ));
 
 }

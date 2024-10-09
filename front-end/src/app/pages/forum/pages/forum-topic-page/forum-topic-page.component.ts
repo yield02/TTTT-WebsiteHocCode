@@ -19,6 +19,8 @@ import { PostService } from '../../../../services/forum/post.service';
 import { FormsModule } from '@angular/forms';
 import { ForumPostPageComponent } from "../forum-post-page/forum-post-page.component";
 import { FetchUsers } from '../../../../store/users/users.actions';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroChevronDownSolid } from '@ng-icons/heroicons/solid';
 
 
 
@@ -49,9 +51,10 @@ interface DropDownInterface {
         DropdownModule,
         MultiSelectModule,
         FormsModule,
-        ForumPostPageComponent
+        ForumPostPageComponent,
+        NgIconComponent,
     ],
-    providers: [ConfirmationService],
+    providers: [ConfirmationService, provideIcons({ heroChevronDownSolid })],
     templateUrl: './forum-topic-page.component.html',
     styleUrl: './forum-topic-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -104,18 +107,6 @@ export class ForumTopicPageComponent implements OnInit {
                 };
             }
         );
-
-        // this._postService.getPostsWithTopicId(this.topic_id, this.filterPost).subscribe(
-        //     (data) => {
-        //         console.log('call');
-        //         this.posts$.next(data.data);
-        //         this.page = {
-        //             ...this.page,
-        //             pageCount: Math.ceil(data.totalPosts / this.page.rows),
-        //             totalRecord: data.totalPosts
-        //         };
-        //     }
-        // );
     }
 
     accept() {

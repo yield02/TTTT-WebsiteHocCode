@@ -16,12 +16,13 @@ import { deletePost, interactWithPost, loadPostWithId } from '../../../../store/
 import { SpeedDialModule } from 'primeng/speeddial';
 import { MenuItem } from 'primeng/api';
 
-import vi from '@angular/common/locales/vi';
 import { AuthUser, User } from '../../../../models/User';
 import { selectUserFromId, selectUsersFromUsersId } from '../../../../store/users/users.selector';
 import { FetchUsers } from '../../../../store/users/users.actions';
 import { heroHeartSolid } from '@ng-icons/heroicons/solid';
 import { createComment } from '../../../../store/forum/comment/comment.actions';
+
+import vi from '@angular/common/locales/vi';
 registerLocaleData(vi);
 
 @Component({
@@ -149,8 +150,23 @@ export class ForumPostPageComponent implements OnInit {
         ).subscribe();
     }
 
-    formatDateAndTime(date: String): String {
-        return formatDate(new Date(date.toString()), 'dd/MM/yyyy HH:mm', 'vi');
+
+    formatUserTime(date: string): string {
+        const parsedDate = new Date(date);
+        if (isNaN(parsedDate.getTime())) {
+            // console.error(`Invalid Date: ${date}`);
+            return 'Invalid Date';
+        }
+        return formatDate(parsedDate, 'dd/MM/yyyy', 'vi');
+    }
+
+    formatTime(date: string): String {
+        const parsedDate = new Date(date);
+        if (isNaN(parsedDate.getTime())) {
+            // console.error(`Invalid Date: ${date}`);
+            return 'Invalid Date';
+        }
+        return formatDate(parsedDate, 'dd/MM/yyyy HH:mm', 'vi');
     }
 
 

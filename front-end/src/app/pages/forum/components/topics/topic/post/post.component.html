@@ -11,8 +11,29 @@
     </div>
   </div>
   <div class="flex justify-end items-center max-sm:hidden">
-    <p-avatar label="P" styleClass="mr-2" size="large" shape="circle" />
+    @if(user$ | async; as user) {
+    <p-avatar
+      [image]="
+        (user?.avatar?.contentType == 'url' && user?.avatar?.url?.toString()) ||
+        (user?.avatar?.buffer &&
+          'data:' +
+            user?.avatar?.contentType +
+            ';base64,' +
+            user?.avatar?.buffer) ||
+        'assets/images/avatar-user-default.png'
+      "
+      styleClass="mr-2"
+      size="large"
+      shape="circle"
+    />
+    }
   </div>
-  <div class="flex justify-end items-center max-md:hidden">Tương tác</div>
-  <div class="flex justify-end items-center max-sm:hidden">Sắp xếp</div>
+  <div class="flex justify-end items-center max-md:hidden gap-2 text-gray-500">
+    <ng-icon class="text-2xl" name="ionHeartOutline"></ng-icon>
+    <span>{{ post.like?.length }}</span>
+  </div>
+  <div class="flex justify-end items-center max-sm:hidden gap-2 text-gray-500">
+    <ng-icon class="text-2xl" name="ionEyeOutline"></ng-icon>
+    <span>{{ post.views }}</span>
+  </div>
 </div>

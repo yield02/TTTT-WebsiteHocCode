@@ -15,8 +15,9 @@ import { combineLatest, Observable, tap } from 'rxjs';
 import { AuthUser, User } from '../../../../../models/User';
 import { selectUserFromId } from '../../../../../store/users/users.selector';
 import { state } from '@angular/animations';
-import { deleteComment, interactWithComment, updateContentComment } from '../../../../../store/forum/comment/comment.actions';
+import { createComment, deleteComment, getRepliesWithRepliesId, interactWithComment, updateContentComment } from '../../../../../store/forum/comment/comment.actions';
 import { CommentEditorComponent } from '../../comment-editor/comment-editor.component';
+import { selectCommentsWithCommentsId } from '../../../../../store/forum/comment/comment.selectors';
 registerLocaleData(vi);
 
 
@@ -42,10 +43,14 @@ registerLocaleData(vi);
 export class CommentComponent implements OnInit {
 
     @Input() comment!: Comment;
+    @Input() isReply: boolean = false;
 
+    isReplying: boolean = false;
+    loadReply: number = 0;
 
     author$!: Observable<User | undefined>;
     user$: Observable<AuthUser | undefined> = this._store.select(state => state.user);
+    replies$?: Observable<Comment[]>;
 
     isEdit: boolean = false;
 
@@ -81,6 +86,8 @@ export class CommentComponent implements OnInit {
                     })
             }
         });
+
+        this.replies$ = this._store.pipe(select(selectCommentsWithCommentsId(this.comment.replies || [])));
     }
 
     interactWithComment() {
@@ -95,6 +102,28 @@ export class CommentComponent implements OnInit {
         this.isEdit = !this.isEdit;
     }
 
+    toggleReply() {
+        this.isReplying = !this.isReplying;
+    }
+
+    loadReplies() {
+        if (this.loadReply === 0) {
+            this._store.dispatch(getRepliesWithRepliesId({ replies_id: this.comment.replies || [] }))
+        }
+        this.loadReply += 5;
+    }
+
+    createReplyComment(content: string) {
+        this._store.dispatch(createComment({
+            comment: {
+                content: content,
+                post: this.comment.post,
+                isReply: true,
+            },
+            reply_id: this.comment._id!
+        }));
+    }
+
     submitEditComment(content: string) {
         if (content != this.comment.content) {
             this._store.dispatch(updateContentComment({
@@ -107,5 +136,7 @@ export class CommentComponent implements OnInit {
 
         this.isEdit = false;
     }
+
+
 
 } 
