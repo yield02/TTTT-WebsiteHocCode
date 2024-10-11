@@ -9,10 +9,14 @@
     (focus)="onFocus()"
     #searchInput
   />
+  @if(searchControl.value.length > 0) {
   <div class="searchResult" #searchResult>
-    <h1>Text</h1>
     <ng-template [ngIf]="searchControl.value">
       Kết quả tìm kiếm cho: {{ searchControl.value }}
     </ng-template>
+    <div class="search-result-container flex flex-col mt-2">
+      <ng-content></ng-content>
+    </div>
   </div>
+  }
 </div>

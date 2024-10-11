@@ -1,6 +1,6 @@
 import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionCafeOutline, ionCalendarNumberOutline, ionHeartOutline } from '@ng-icons/ionicons';
 import { AvatarModule } from 'primeng/avatar';
@@ -62,7 +62,7 @@ export class ForumPostPageComponent implements OnInit {
         topic: '',
         title: '',
         content: {},
-        author: '',
+        author_id: '',
         like: [],
         views: 0,
         status: 'waiting',
@@ -110,37 +110,67 @@ export class ForumPostPageComponent implements OnInit {
     }
     ngOnInit(): void {
 
+        this._activatedRoute.params.pipe(switchMap((params: any) => {
+            return this._store.pipe(
+                select(selectPostWithPostId(
+                    params['postId'],
+                )),
+                map(post => {
+                    if (!post) {
+                        this._store.dispatch(loadPostWithId({
+                            id: params['postId'],
+                        }));
+                    }
+                    else {
+                        this.post$.next(post);
+                    }
+                    return post?.author_id;
+                }),
+                switchMap((author) => {
+                    if (author) {
+                        this._store.dispatch(FetchUsers({ users_id: [author] }));
+                        return this._store.pipe(select(selectUserFromId(author)));
+                    }
+                    return of({});
+                }),
+                tap(user => {
+                    if (user) {
+                        this.user$.next(user as User);
+                    }
+                }));
+        })).subscribe(params => {
+        })
 
 
-        this._store.pipe(
-            select(selectPostWithPostId(
-                this._activatedRoute.snapshot.params['postId'],
-            )),
-            map(post => {
-                if (!post) {
-                    this._store.dispatch(loadPostWithId({
-                        id: this._activatedRoute.snapshot.params['postId'],
-                    }));
-                }
-                else {
-                    this.post$.next(post);
-                }
-                return post?.author;
-            }),
-            switchMap((author) => {
-                if (author) {
-                    this._store.dispatch(FetchUsers({ users_id: [author] }));
-                    return this._store.pipe(select(selectUserFromId(author)));
-                }
-                return of({});
-            }),
-            tap(user => {
-                if (user) {
-                    this.user$.next(user as User);
-                }
-            })
+        // this._store.pipe(
+        //     select(selectPostWithPostId(
+        //         this._activatedRoute.snapshot.params['postId'],
+        //     )),
+        //     map(post => {
+        //         if (!post) {
+        //             this._store.dispatch(loadPostWithId({
+        //                 id: this._activatedRoute.snapshot.params['postId'],
+        //             }));
+        //         }
+        //         else {
+        //             this.post$.next(post);
+        //         }
+        //         return post?.author;
+        //     }),
+        //     switchMap((author) => {
+        //         if (author) {
+        //             this._store.dispatch(FetchUsers({ users_id: [author] }));
+        //             return this._store.pipe(select(selectUserFromId(author)));
+        //         }
+        //         return of({});
+        //     }),
+        //     tap(user => {
+        //         if (user) {
+        //             this.user$.next(user as User);
+        //         }
+        //     })
 
-        ).subscribe();
+        // ).subscribe();
 
 
         // check user and post to add more action for post
@@ -150,7 +180,7 @@ export class ForumPostPageComponent implements OnInit {
         }
         ).subscribe(data => {
 
-            if (data.user._id == data.post?.author) {
+            if (data.user._id == data.post?.author_id) {
                 this.actions = [
                     {
                         tooltipOptions: {

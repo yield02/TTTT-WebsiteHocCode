@@ -21,7 +21,7 @@ exports.create = async (data, file) => {
       course_name: data.course_name,
       description: data.description,
       subject_id: data.subject_id,
-      author_id: data.author,
+      author_id: data.author_id,
       image: finalImage,
     });
     return newCourse
@@ -293,6 +293,24 @@ exports.deleteEnrollFromUser = async (course_id, user_id) => {
     });
     // Thông báo cho người dùng khi hủy đăng ký.
     return course;
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
+exports.searchCourseWithCourseName = async (course_name) => {
+  try {
+    const courses = await Course.find(
+      {
+        course_name: { $regex: course_name, $options: "i" },
+        "status.state": "active",
+      },
+      "course_name image createdAt course_id"
+    ).populate({
+      path: "author_id",
+      select: "username fullname user_id",
+    });
+    return courses;
   } catch (error) {
     throw new apiError(500, error.message);
   }

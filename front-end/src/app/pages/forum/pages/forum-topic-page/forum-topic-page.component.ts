@@ -98,7 +98,7 @@ export class ForumTopicPageComponent implements OnInit {
                 this.posts$.next(data.data);
 
 
-                this._store.dispatch(FetchUsers({ users_id: data.data.map(post => post.author) as String[] }));
+                this._store.dispatch(FetchUsers({ users_id: data.data.map(post => post.author_id) as String[] }));
 
                 this.page = {
                     ...this.page,

@@ -1,5 +1,11 @@
 <app-header [toggleSideBar]="toggleSideBar.bind(this)">
-  <app-search #search></app-search>
+  <app-search (search)="searchPost($event)" #search>
+    @if(postSearch$ | async; as posts) {
+    <ng-container *ngFor="let post of posts">
+      <forum-search-post-item [post]="post"></forum-search-post-item>
+    </ng-container>
+    }
+  </app-search>
 </app-header>
 <app-sidebar [sidebarVisible]="sidebar">
   <div class="container mt-10">

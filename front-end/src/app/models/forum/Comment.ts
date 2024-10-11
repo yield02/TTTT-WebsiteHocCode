@@ -3,7 +3,7 @@ export interface Comment {
     comment_id?: number;
     content: string;
     post?: string;
-    author?: string;
+    author_id?: string;
     like?: string[];
     replies?: string[];
     isReply?: boolean;

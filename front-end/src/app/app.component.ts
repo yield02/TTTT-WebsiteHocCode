@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, isDevMode } from '@angular/core';
-
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -11,9 +11,13 @@ import { ChangeDetectionStrategy, Component, OnInit, isDevMode } from '@angular/
 export class AppComponent implements OnInit {
   title = 'Học Lập Trình Trực Tuyến';
 
+  constructor(private messageService: MessageService) {
+
+  }
 
   ngOnInit() {
     if (isDevMode()) {
+
       console.log('Dev mode');
     }
     else {

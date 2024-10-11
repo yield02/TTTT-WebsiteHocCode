@@ -6,7 +6,7 @@ const commentSchema = new mongoose.Schema(
     comment_id: Number,
     content: { type: String, require: true },
     post: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    author_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     like: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     isReply: { type: Boolean, default: false },

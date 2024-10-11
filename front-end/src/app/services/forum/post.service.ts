@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Post } from '../../models/forum/Post';
+import { Post, PostSearch } from '../../models/forum/Post';
 import { environment } from '../../../environments/environment';
 import { Filter } from '../../models/forum/Filter';
 
@@ -64,6 +64,12 @@ export class PostService {
 
   toggleHiddenPost(post_id: string): Observable<Post> {
     return this.http.patch<Post>(`${environment.apiUrl}post/manager/hidden/${post_id}`, {}, { withCredentials: true });
+  }
+
+  searchPostWithTitle(title: string): Observable<PostSearch[]> {
+    const queryParams = new URLSearchParams();
+    queryParams.append('title', title);
+    return this.http.get<PostSearch[]>(`${environment.apiUrl}post/search/?${queryParams.toString()}`);
   }
 
 }

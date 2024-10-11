@@ -96,6 +96,7 @@
       *ngFor="let reply of replies.slice(0, loadReply)"
       [comment]="reply"
       [isReply]="true"
+      [parentComment]="comment"
     ></forum-comment>
     }
     <div class="text-center">

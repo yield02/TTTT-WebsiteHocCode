@@ -8,7 +8,7 @@ exports.createPost = async (body, author_id) => {
       content: body.content,
       topic: body.topic,
       hashtags: body.hashtags,
-      author: author_id,
+      author_id: author_id,
     });
     return await post.save();
   } catch (error) {
@@ -21,13 +21,16 @@ exports.getPostWithId = async (post_id, user_id) => {
     const post = await Post.findOne({
       post_id: post_id,
     });
-    if (!post || (post._doc.manager.get("hidden") && post.author != user_id)) {
+    if (
+      !post ||
+      (post._doc.manager.get("hidden") && post.author_id != user_id)
+    ) {
       throw new ApiError(404, "Post not found");
     }
     // condition to select with admin permissions
     if (
       post.status == "allow" ||
-      post.author == user_id ||
+      post.author_id == user_id ||
       user_id == "admin"
     ) {
       return post;
@@ -46,7 +49,7 @@ exports.editContent = async (post_id, data, user_id) => {
     }
 
     const post = await Post.findOneAndUpdate(
-      { post_id: post_id, author: user_id },
+      { post_id: post_id, author_id: user_id },
       {
         content: data.content,
         title: data.title,
@@ -66,7 +69,7 @@ exports.deletePost = async (post_id, user_id) => {
   try {
     const post = await Post.findOneAndDelete({
       post_id: post_id,
-      author: user_id,
+      author_id: user_id,
     });
     if (!post) {
       throw new ApiError(404, "Post not found");
@@ -92,7 +95,7 @@ exports.getPostFromTopic = async (topic_id, filter) => {
     }
 
     if (filter?.author) {
-      query.author = filter.author;
+      query.author_id = filter.author;
     }
 
     if (filter?.hashtags) {
@@ -146,7 +149,7 @@ exports.toggleBlockComment = async (post_id, author_id) => {
       throw new ApiError(404, "Post not found");
     }
 
-    if (post.author != author_id && author_id != "admin") {
+    if (post.author_id != author_id && author_id != "admin") {
       throw new ApiError(403, "Unauthorized");
     }
 
@@ -169,7 +172,7 @@ exports.toggleHiddenPost = async (post_id, author_id) => {
       throw new ApiError(404, "Post not found");
     }
 
-    if (post.author != author_id && author_id != "admin") {
+    if (post.author_id != author_id && author_id != "admin") {
       throw new ApiError(403, "Unauthorized");
     }
 
@@ -178,6 +181,22 @@ exports.toggleHiddenPost = async (post_id, author_id) => {
     await post.save();
 
     return post;
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
+exports.searchPostsWithTitle = async (title) => {
+  try {
+    const posts = await Post.find({
+      title: { $regex: title, $options: "i" },
+      status: "allow",
+      "manager.hidden": false,
+    }).populate({
+      path: "author_id",
+      select: "username fullname",
+    });
+    return posts;
   } catch (error) {
     throw new ApiError(500, error.message);
   }

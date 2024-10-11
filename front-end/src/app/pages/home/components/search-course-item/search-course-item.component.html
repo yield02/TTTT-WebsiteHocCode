@@ -1,0 +1,32 @@
+<div class="search-course-container flex justify-start items-center gap-2">
+  <img
+    class="search-course-image"
+    [src]="
+      (course?.image &&
+        'data:' +
+          course?.image?.contentType +
+          ';base64,' +
+          course?.image?.buffer) ||
+      ''
+    "
+  />
+  <div class="">
+    <a [routerLink]="['/home', 'course', course._id]">
+      <h4 class="title">
+        <p>{{ course?.course_name }}</p>
+      </h4>
+    </a>
+    <div
+      class="description flex flex-row items-center gap-1 text-sm italic text-gray-400 overflow-hidden"
+    >
+      <ng-icon name="ionTimeOutline"></ng-icon>
+      <span class="description-text">{{
+        course?.createdAt ? formatTime(course.createdAt!.toString()) : ""
+      }}</span>
+      -
+      <span class="description-text">{{
+        course.author_id?.fullname || course.author_id?.username
+      }}</span>
+    </div>
+  </div>
+</div>

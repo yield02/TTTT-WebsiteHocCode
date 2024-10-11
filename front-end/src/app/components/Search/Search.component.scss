@@ -1,7 +1,7 @@
 .search-container {
   position: relative;
   height: 40px;
-  width: 420px;
+  min-width: 420px;
   border: 2px solid #cccc;
   padding: 0 8px 0 8px;
   border-radius: 24px;
@@ -40,4 +40,8 @@
   border-radius: 4px;
   padding: 12px 24px;
   text-overflow: ellipsis;
+  overflow-y: scroll;
+
+  .search-result-container {
+  }
 }

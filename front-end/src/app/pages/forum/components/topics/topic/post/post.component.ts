@@ -6,12 +6,12 @@ import { ionEyeOutline, ionHeartOutline, ionTimeOutline } from '@ng-icons/ionico
 import { AvatarModule } from 'primeng/avatar';
 import { Post } from '../../../../../../models/forum/Post';
 
-import vi from '@angular/common/locales/vi';
 import { AppState } from '../../../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { User } from '../../../../../../models/User';
 import { selectUserFromId } from '../../../../../../store/users/users.selector';
+import vi from '@angular/common/locales/vi';
 registerLocaleData(vi);
 
 @Component({
@@ -45,7 +45,7 @@ export class TopicPostComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.user$ = this._store.pipe(select(selectUserFromId(this.post.author!)));
+        this.user$ = this._store.pipe(select(selectUserFromId(this.post.author_id!)));
     }
 
     formatDateAndTime(date: String): String {

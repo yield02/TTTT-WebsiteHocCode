@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Course } from '../models/Course';
+import { Course, CourseSearch } from '../models/Course';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -36,6 +36,10 @@ export class CourseService {
     return this.http.get<Course[]>(`${environment.apiUrl}course/courses/${courseIds}`, {
       withCredentials: true,
     });
+  }
+
+  searchCourseWithCourseName(courseName: String): Observable<CourseSearch[]> {
+    return this.http.get<CourseSearch[]>(`${environment.apiUrl}course/search?course_name=${courseName}`);
   }
 
 }

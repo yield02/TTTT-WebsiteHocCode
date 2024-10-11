@@ -37,7 +37,7 @@ exports.getAllTopic = async () => {
             createdAt: -1,
           })
           .populate({
-            path: "author",
+            path: "author_id",
             select: "username avatar user_id fullname",
           });
         return { ...topic._doc, totalPost, latestPost };

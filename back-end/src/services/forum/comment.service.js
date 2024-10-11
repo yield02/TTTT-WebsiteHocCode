@@ -20,7 +20,7 @@ exports.createComment = async (data, author_id) => {
     const comment = new Comment({
       content: data.content,
       post: data.post,
-      author: author_id,
+      author_id: author_id,
       isReply: data?.reply_id ? true : false,
     });
     await comment.save();
@@ -44,7 +44,6 @@ exports.createComment = async (data, author_id) => {
 exports.getCommentsByPostId = async (post_id) => {
   try {
     const post = await Post.findOne({ post_id: post_id });
-    console.log(post._id);
     if (!post) {
       throw new ApiError(404, "Post not found");
     }
@@ -64,7 +63,7 @@ exports.deleteComment = async (comment_id, reply_id, author_id) => {
       {
         _id: comment_id,
         status: "allow",
-        author: author_id,
+        author_id: author_id,
       },
       {}
     );
@@ -95,7 +94,7 @@ exports.updateContent = async (data, author_id) => {
     const comment = await Comment.findOneAndUpdate(
       {
         _id: data.comment_id,
-        author: author_id,
+        author_id: author_id,
       },
       { content: data.content },
       { new: true }
@@ -116,7 +115,7 @@ exports.editComment = async (data, author_id) => {
     const comment = await Comment.findOneAndUpdate(
       {
         _id: data._id,
-        author: author_id,
+        author_id: author_id,
         status: "allow",
       },
       { content: data.content },

@@ -1,0 +1,61 @@
+.search-course-container {
+  border-bottom: 1px solid #e3e3e3;
+  padding: 8px 0;
+  .search-course-image {
+    max-width: 90px;
+    max-height: 45px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+      rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    border-radius: 4px;
+  }
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+
+    p {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; /* number of lines to show */
+      line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      &::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 1px;
+        left: 50%;
+        bottom: 1px;
+        transition: all 0.4s ease;
+      }
+
+      &:hover {
+        color: #2f89fc;
+
+        &::after {
+          content: "";
+          display: block;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: #2f89fc;
+        }
+      }
+    }
+  }
+
+  .description {
+    .description-text {
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; /* number of lines to show */
+      line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+}

@@ -14,7 +14,7 @@ exports.create = async (req, res, next) => {
         course_name: req.body.course_name,
         description: req.body.description,
         subject_id: req.body.subject_id,
-        author: userInfor._id,
+        author_id: userInfor._id,
       },
       req.file
     );
@@ -152,6 +152,17 @@ exports.deleteEnrollFromUser = async (req, res, next) => {
       userInfor._id
     );
     res.status(200).json(course || "");
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.searchCourseWithCourseName = async (req, res, next) => {
+  try {
+    const courses = await courseManagerService.searchCourseWithCourseName(
+      req.query.course_name
+    );
+    res.status(200).json(courses || []);
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));
   }

@@ -12,6 +12,6 @@ export interface Topic {
         _id: string;
         post_id: string;
         title: string;
-        author: User;
+        author_id: User;
     }
 }

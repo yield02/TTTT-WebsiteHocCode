@@ -17,8 +17,11 @@ import { AppState } from '../../store/reducer';
 import { loadTopic } from '../../store/forum/topic/topic.actions';
 import { loadHashtag } from '../../store/forum/hashtag/hashtag.actions';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { Post, PostSearch } from '../../models/forum/Post';
+import { PostService } from '../../services/forum/post.service';
+import { SearchPostItemComponent } from './components/search-post-item/search-post-item.component';
 
 @Component({
   selector: 'app-forum',
@@ -32,7 +35,8 @@ import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.comp
     HeaderComponent,
     SidebarComponent,
     SearchComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    SearchPostItemComponent,
   ],
   providers: [provideIcons({ ionHomeOutline, heroClipboardDocumentList, ionDocumentTextOutline })],
   styleUrl: './forum.layout.scss',
@@ -42,8 +46,9 @@ export class ForumComponent implements OnInit {
 
   sidebar: boolean = false;
 
+  postSearch$: BehaviorSubject<PostSearch[]> = new BehaviorSubject<PostSearch[]>([]);
 
-  constructor(private _store: Store<AppState>, private _router: Router) {
+  constructor(private _store: Store<AppState>, private _router: Router, private _postService: PostService) {
 
   }
 
@@ -65,6 +70,12 @@ export class ForumComponent implements OnInit {
   toggleSideBar() {
     console.log('is toggle');
     this.sidebar = !this.sidebar;
+  }
+
+  searchPost(title: string) {
+    this._postService.searchPostWithTitle(title).subscribe(data => {
+      this.postSearch$.next(data);
+    })
   }
 
 }

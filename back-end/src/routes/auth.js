@@ -5,6 +5,13 @@ const upload = require("../middleware/uploadMiddleware");
 
 router.get("/userinfor", authController.getUserinfor);
 router.get("/logout", authController.logout);
+
+router.get("/send-verify-email", authController.sendVerifyEmail);
+router.get("/verify-email", authController.verifyEmail);
+
+router.get("/send-unverify-email", authController.sendUnVerifyEmail);
+router.get("/unverify-email", authController.unverifyEmail);
+
 router.post("/signUp", authController.signup);
 router.post("/login", authController.login);
 router.post(
@@ -14,11 +21,5 @@ router.post(
 );
 router.post("/update-information", authController.updateInformation);
 router.post("/change-password", authController.changePassword);
-
-router.get("/send-verify-email", authController.sendVerifyEmail);
-router.get("/verify-email", authController.verifyEmail);
-
-router.get("/send-unverify-email", authController.sendUnVerifyEmail);
-router.get("/unverify-email", authController.unverifyEmail);
 
 module.exports = router;

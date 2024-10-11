@@ -1,0 +1,14 @@
+<div class="search-item">
+  <a [routerLink]="['/forum', 'post', post.post_id]"
+    ><h4 class="title">
+      <p>{{ post.title }}</p>
+    </h4></a
+  >
+  <div class="flex justify-start items-center gap-2">
+    <ng-icon name="ionTimeOutline"></ng-icon>
+    <span class="description text-sm text-gray-500 italic">
+      {{ formatTime(post.createdAt) }} -
+      {{ post.author_id?.fullname || post.author_id?.username }}
+    </span>
+  </div>
+</div>

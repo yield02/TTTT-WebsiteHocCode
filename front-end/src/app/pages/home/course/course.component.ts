@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { RatingModule } from 'primeng/rating';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, switchMap, tap } from 'rxjs';
 import { Course } from '../../../models/Course';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducer';
@@ -47,8 +47,8 @@ import { RatingItemComponent } from '../../myactivities/components/mycourses/cou
 export class CourseComponent implements OnInit {
 
   rating: number = 0;
-  chapters$!: Observable<Chapter[]>;
-  course$!: Observable<Course | undefined>;
+  chapters$: BehaviorSubject<Chapter[]> = new BehaviorSubject<Chapter[]>([]);;
+  course$: BehaviorSubject<Course | undefined> = new BehaviorSubject<Course | undefined>(undefined);
   user$: Observable<AuthUser> = this._store.select(state => state.user);
   ratings$: BehaviorSubject<RatingInterface[]> = new BehaviorSubject<RatingInterface[]>([]);
 
@@ -66,41 +66,87 @@ export class CourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const course_id = this._route.snapshot.paramMap.get('courseId');
-
-    this.course$ = this._store.pipe(select(selectCourseFromCourseId(course_id!))).pipe(tap(course => {
-      if (!course && !this.fetchedCourse) {
-        this._store.dispatch(FetchingCourseFromCourseId({ course_id: course_id! }));
-      }
-    }));
-
-    this.chapters$ = this._store.pipe(select(selectChaptersFromCourseId(course_id!))).pipe(tap(chapters => {
-      if (chapters.length <= 0 && !this.fetchedChapters) {
-        this._store.dispatch(FetchingChapters({ course_id: course_id! }));
-        this.fetchedChapters = true;
-      }
-    }));
 
 
-    this._store.select((selectRatingOfCourse(course_id!))).pipe(
-      switchMap((ratings) => {
-        if (ratings.length <= 0 && !this.isFetchRating) {
-          this._store.dispatch(getRatingByCourseId({ courseId: course_id! }));
-          this.isFetchRating = true;
-        }
-        if (ratings.length > 0) {
-          let userList = ratings.map(rating => rating.author_id!) || [];
-          this.ratings$.next(ratings);
-          return this._store.select(selectUsersAndFetchingUsers(userList));
-        }
-        return of();
-      }),
-      tap((data) => {
-        if (data.fetchUsers && data.fetchUsers.length > 0) {
-          this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }));
-        }
-      })
-    ).subscribe();
+    this._route.params.pipe(switchMap((params: any) => {
+      this.isShowRating = false;
+      this.isCollapseAll = true;
+      this.fetchedCourse = false;
+      this.fetchedChapters = false;
+      this.isFetchRating = false;
+
+      // this.course$ = this._store.pipe(select(selectCourseFromCourseId(params.courseId!))).pipe(tap(course => {
+      //   if (!course && !this.fetchedCourse) {
+      //     this._store.dispatch(FetchingCourseFromCourseId({ course_id: params.courseId! }));
+      //   }
+      // }));
+
+      // this.chapters$ = this._store.pipe(select(selectChaptersFromCourseId(params.courseId!))).pipe(tap(chapters => {
+      //   if (chapters.length <= 0 && !this.fetchedChapters) {
+      //     this._store.dispatch(FetchingChapters({ course_id: params.courseId! }));
+      //     this.fetchedChapters = true;
+      //   }
+      // }));
+
+      // this._store.select((selectRatingOfCourse(params.courseId!))).pipe(
+      //   switchMap((ratings) => {
+      //     if (ratings.length <= 0 && !this.isFetchRating) {
+      //       this._store.dispatch(getRatingByCourseId({ courseId: params.courseId! }));
+      //       this.isFetchRating = true;
+      //     }
+      //     if (ratings.length > 0) {
+      //       let userList = ratings.map(rating => rating.author_id!) || [];
+      //       this.ratings$.next(ratings);
+      //       return this._store.select(selectUsersAndFetchingUsers(userList));
+      //     }
+      //     return of();
+      //   }),
+      //   tap((data) => {
+      //     if (data.fetchUsers && data.fetchUsers.length > 0) {
+      //       this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }));
+      //     }
+      //   })
+      // )
+
+      return combineLatest([
+        this._store.pipe(select(selectCourseFromCourseId(params.courseId!))).pipe(tap(course => {
+          if (!course && !this.fetchedCourse) {
+            this._store.dispatch(FetchingCourseFromCourseId({ course_id: params.courseId! }));
+          }
+          if (course) {
+            this.course$.next(course);
+          }
+        })),
+
+        this._store.pipe(select(selectChaptersFromCourseId(params.courseId!))).pipe(tap(chapters => {
+          if (chapters.length <= 0 && !this.fetchedChapters) {
+            this._store.dispatch(FetchingChapters({ course_id: params.courseId! }));
+            this.fetchedChapters = true;
+          }
+          this.chapters$.next(chapters);
+        })),
+
+        this._store.select((selectRatingOfCourse(params.courseId!))).pipe(
+          switchMap((ratings) => {
+            if (ratings.length <= 0 && !this.isFetchRating) {
+              this._store.dispatch(getRatingByCourseId({ courseId: params.courseId! }));
+              this.isFetchRating = true;
+            }
+            this.ratings$.next(ratings);
+            if (ratings.length > 0) {
+              let userList = ratings.map(rating => rating.author_id!) || [];
+              return this._store.select(selectUsersAndFetchingUsers(userList));
+            }
+            return of();
+          }),
+          tap((data) => {
+            if (data.fetchUsers && data.fetchUsers.length > 0) {
+              this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }));
+            }
+          })
+        )
+      ]);
+    })).subscribe();
 
   }
 
