@@ -1,0 +1,28 @@
+.handle-lessons {
+  padding: 4px 16px;
+  border-bottom: 1px solid #dddd;
+}
+
+.lesson-list {
+  border: 1px solid #dddd;
+  border-radius: 2px;
+  .table-header {
+    padding: 0 0 0 12px;
+    border-bottom: 1px solid #dddd;
+    span {
+      line-height: 100%;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+}
+
+::ng-deep {
+  .handle-lessons {
+    .actions-dropdown {
+      .p-dropdown-label {
+        padding: 0.5rem 0.25rem;
+      }
+    }
+  }
+}

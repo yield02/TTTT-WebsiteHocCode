@@ -21,7 +21,7 @@ exports.create = async (data, author_id) => {
       chapter: chapterSave._doc,
     };
   } catch (error) {
-    throw new apiError(500, error.message);
+    throw new apiError(error.statusCode, error.message);
   }
 };
 
@@ -46,7 +46,7 @@ exports.getChapterList = async (course_id) => {
       }),
     };
   } catch (error) {
-    throw new apiError(500, error.message);
+    throw new apiError(error.statusCode, error.message);
   }
 };
 
@@ -77,7 +77,7 @@ exports.deleteChapter = async (course_id, chapter_id, author_id) => {
       message: "Chương trình đã xóa thành công",
     };
   } catch (error) {
-    throw new apiError(500, error.message);
+    throw new apiError(error.statusCode, error.message);
   }
 };
 
@@ -97,6 +97,30 @@ exports.updateChapter = async (chapter_id, title, author_id) => {
       chapter: chapter._doc,
     };
   } catch (error) {
-    throw new apiError(500, error.message);
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+
+exports.sortChapter = async (course_id, chapters_id, author_id) => {
+  try {
+    const course = await Course.findByIdAndUpdate(
+      {
+        _id: course_id,
+        author_id: author_id,
+      },
+      {
+        chapters: chapters_id,
+      },
+      { new: true }
+    );
+    if (!course) {
+      throw new apiError(
+        404,
+        "Không tìm thấy khóa học, hoặc bạn không có quyền truy cập"
+      );
+    }
+    return course;
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
   }
 };

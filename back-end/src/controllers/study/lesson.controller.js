@@ -13,6 +13,20 @@ exports.create = async (req, res, next) => {
   }
 };
 
+exports.deleteMany = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await lessonService.deleteMany(
+      JSON.parse(req.params.lessons_id),
+      userInfor._id
+    );
+    res.status(204).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
 exports.delete = async (req, res, next) => {
   try {
     const token = req.cookies.token;
@@ -54,6 +68,36 @@ exports.getLessonList = async (req, res, next) => {
       userInfor._id
     );
     res.status(200).json(lessonList || []);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.sortLesson = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await lessonService.sortLesson(
+      req.params.chapter_id,
+      req.body.lessons_id,
+      userInfor._id
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.toggleUpdatePublish = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await lessonService.toggleUpdatePublish(
+      JSON.parse(req.params.lessons_id),
+      req.body.state,
+      userInfor._id
+    );
+    res.status(200).json(result);
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));
   }

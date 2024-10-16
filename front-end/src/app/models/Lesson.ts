@@ -6,6 +6,9 @@ export interface Lesson {
     createdAt?: String,
     updatedAt?: String,
     course_id: String,
+    manager: {
+        publish: boolean
+    }
 }
 
 
@@ -22,7 +25,7 @@ export interface UpdateLessonInterface {
     title: String,
     content: String,
     video: String,
-    new_chapter_id: String,
-    old_chapter_id: String,
+    new_chapter_id?: String,
+    old_chapter_id?: String,
     course_id: String,
 }

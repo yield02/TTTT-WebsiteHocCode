@@ -1,0 +1,50 @@
+<div class="chapter-container">
+  <div class="chapter-content">
+    <div class="flex flex-row items-center">
+      @if(sorting) {
+      <div class="sort flex flex-col">
+        <button class="sort-btn" (click)="UpSort()">
+          <ng-icon class="text-4xl" name="heroChevronUpSolid"></ng-icon>
+        </button>
+        <button class="sort-btn" (click)="DownSort()">
+          <ng-icon class="text-4xl" name="heroChevronDownSolid"></ng-icon>
+        </button>
+      </div>
+      }
+      <div
+        class="chapter flex justify-between items-center flex-1"
+        [ngClass]="lessonCollapsed || sorting ? 'active' : ''"
+      >
+        <button
+          class="chapter-title flex-1"
+          (click)="toggleLessonCollapse($event)"
+        >
+          Chương {{ index + 1 }}: {{ chapter?.title }}
+        </button>
+        <div class="">
+          @if(!sorting) {
+          <p-menu #menu [model]="moreAction" [popup]="true"></p-menu>
+          <p-button
+            (onClick)="menu.toggle($event)"
+            icon="pi pi-ellipsis-v"
+            [text]="true"
+          />
+          } @else {
+          <p-button
+            (onClick)="saveSort()"
+            icon="pi pi-times"
+            [text]="true"
+            severity="danger"
+          />
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  @if(lessonCollapsed) {
+  <div class="lessons-container">
+    <study-lesson-list [chapter]="chapter"></study-lesson-list>
+  </div>
+  }
+</div>
+<!-- <p-confirmDialog /> -->

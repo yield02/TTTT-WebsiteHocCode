@@ -1,0 +1,26 @@
+<div class="lesson-container flex flex-col gap-4">
+  <ng-container *ngIf="lesson.video">
+    <div class="video-wrapper">
+      <div class="video-play-wapper">
+        <youtube-player
+          allowfullscreen
+          #lesson_video
+          width="100"
+          height="100"
+          ng-show="showvideo"
+          class="video"
+          [videoId]="lesson.video.toString()"
+        />
+      </div>
+    </div>
+  </ng-container>
+  <div class="content">
+    <h1 class="content-heading-text text-4xl mb-2">{{ lesson.title }}</h1>
+    <editor
+      class="content-body"
+      [init]="initEditor"
+      [initialValue]="content.toString()"
+      apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+    ></editor>
+  </div>
+</div>

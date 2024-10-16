@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../store/reducer';
 import { FetchChaptersSucess, UpdateChapter } from '../store/chapters/chapters.actions';
 import { AddChapter } from '../store/mycoursemanager/mycoursemanager.actions';
+import { Course } from '../models/Course';
 
 interface createChapter {
   course_id: String;
@@ -52,6 +53,14 @@ export class ChapterService {
     return this.http.patch(`${environment.apiUrl}chapter/${chapter_id}`, {
       title
     }, { withCredentials: true });
+  }
+
+  sortChapter(course_id: string, chapters_id: string[]): Observable<Course> {
+    return this.http.patch<Course>(`${environment.apiUrl}chapter/sort/${course_id}`, {
+      chapters_id
+    }, {
+      withCredentials: true,
+    });
   }
 
 }

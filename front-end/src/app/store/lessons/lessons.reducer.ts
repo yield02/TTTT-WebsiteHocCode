@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import { CreateLessonSucess, DeleteAllLessons, DeleteLessons, DeleteLessonSucess, FetchingLessonSucess, UpdateLessonSucess } from './lessons.actions';
+import { CreateLessonSucess, DeleteAllLessons, DeleteLessons, DeleteLessonSucess, FetchingLessonSucess, UpdateLessonsSuccess, UpdateLessonSuccess } from './lessons.actions';
 import { Lesson } from '../../models/Lesson';
+import { state } from '@angular/animations';
 
 export const initialState: Lesson[] = []
 
@@ -12,7 +13,7 @@ export const lessonsReducer = createReducer(
     on(FetchingLessonSucess, (state, { lessons }) => {
         return [...state, ...lessons]
     }),
-    on(UpdateLessonSucess, (state, { lesson }) => {
+    on(UpdateLessonSuccess, (state, { lesson }) => {
         return [...state.map(item => {
             if (item._id === lesson._id) {
                 return { ...item, ...lesson };
@@ -28,5 +29,16 @@ export const lessonsReducer = createReducer(
     }),
     on(DeleteAllLessons, (state) => {
         return [];
+    }),
+    on(UpdateLessonsSuccess, (state, { lessons }) => {
+
+
+        return state.map(item => {
+            const index = lessons.findIndex(lesson => lesson._id === item._id);
+            if (index >= 0) {
+                return { ...item, ...lessons[index] };
+            }
+            return item;
+        })
     })
 );

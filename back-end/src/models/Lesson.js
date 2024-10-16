@@ -10,9 +10,21 @@ const lessonSchema = new mongoose.Schema(
       ref: "Course",
       required: true,
     },
+    chapter_id: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Chapter",
+      required: true,
+    },
     title: { type: String, required: true },
     content: { type: Object, required: false },
     video: { type: String, required: false },
+    manager: {
+      type: Map,
+      of: Boolean,
+      default: {
+        publish: false,
+      },
+    },
   },
   { timestamps: true }
 );

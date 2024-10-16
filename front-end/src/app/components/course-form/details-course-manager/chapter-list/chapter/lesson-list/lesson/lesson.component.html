@@ -1,0 +1,51 @@
+<div
+  class="lesson flex gap-4 items-center"
+  [ngClass]="sorting || checked ? 'active' : ''"
+>
+  <div>
+    @if(sorting) {
+    <div class="sort flex flex-col">
+      <button (click)="moveUp()" class="sort-btn">
+        <ng-icon class="text-2xl" name="heroChevronUpSolid"></ng-icon>
+      </button>
+      <button (click)="moveDown()" class="sort-btn">
+        <ng-icon class="text-2xl" name="heroChevronDownSolid"></ng-icon>
+      </button>
+    </div>
+    } @else {
+
+    <p-checkbox
+      [(ngModel)]="checked"
+      binary="true"
+      (onChange)="checkEmit()"
+    ></p-checkbox>
+    }
+  </div>
+  <span (click)="showContent($event)" class="flex-1">{{ lesson.title }}</span>
+  <span class="basis-1/6 flex items-center"
+    >{{ lesson.manager.publish == true ? "Công khai" : "Ẩn"
+    }}<ng-icon
+      class="ml-2 text-2xl"
+      [name]="lesson.manager.publish ? 'heroUsers' : 'heroEyeSlash'"
+    ></ng-icon>
+  </span>
+  <span class="basis-1/6">4</span>
+  @if(!sorting) {
+  <p-button
+    icon="pi pi-ellipsis-v"
+    [text]="true"
+    severity="primary"
+    size="small"
+    (onClick)="menu.toggle($event)"
+  ></p-button>
+  } @else {
+  <p-button
+    icon="pi pi-times"
+    [rounded]="true"
+    [text]="true"
+    severity="danger"
+    (onClick)="saveSort()"
+  />
+  }
+</div>
+<p-menu #menu popup="true" [model]="moreAction"></p-menu>

@@ -1,27 +1,26 @@
 import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
-
 registerLocaleData(vi);
-import { AfterRenderPhase, AfterRenderRef, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionChatboxOutline } from '@ng-icons/ionicons';
 import { select, Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { AppState } from '../../../../store/reducer';
 import { ActivatedRoute } from '@angular/router';
-import { fromEvent, mergeMap, Observable, of, pipe, switchMap, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { Lesson } from '../../../../models/Lesson';
 import { selectLessonFromId } from '../../../../store/lessons/lessons.selectors';
-import { FetchingLessons } from '../../../../store/lessons/lessons.actions';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HoursFormatPipe } from '../../../../pipe/my-datetime-format.pipe';
-import { AuthUser, User } from '../../../../models/User';
-import { checkUserEnroll, selectCourseFromCourseId } from '../../../../store/courses/courses.selector';
+import { AuthUser } from '../../../../models/User';
+import { checkUserEnroll, } from '../../../../store/courses/courses.selector';
 import { ContentComponent } from './content/content.component';
-import { YouTubePlayer } from '@angular/youtube-player';
+import { YOUTUBE_PLAYER_CONFIG, YouTubePlayer } from '@angular/youtube-player';
 import { updateAndCreateLearning } from '../../../../store/learning/learning.actions';
 import { selectLearningFromCourseId } from '../../../../store/learning/learning.selectors';
-import { LearningInterFace } from '../../../../models/Learning';
+
 @Component({
   selector: 'learning-lesson-content',
   standalone: true,
@@ -34,7 +33,12 @@ import { LearningInterFace } from '../../../../models/Learning';
     ContentComponent,
     HoursFormatPipe,
   ],
-  providers: [provideIcons({ ionChatboxOutline })],
+  providers: [provideIcons({ ionChatboxOutline }), {
+    provide: YOUTUBE_PLAYER_CONFIG,
+    useValue: {
+      loadApi: true
+    }
+  }],
   templateUrl: './lesson-content.component.html',
   styleUrl: './lesson-content.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

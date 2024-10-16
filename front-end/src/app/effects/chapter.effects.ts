@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
-import { CreateChapter, CreateChapterSuccess, DeleteChapter, DeleteChapterSuccess, FetchChaptersSucess, FetchingChapters, UpdateChapter, UpdateChapterError, UpdateChapterSuccess } from '../store/chapters/chapters.actions';
-import { AddChapter, DeleteChapter as CourseDeleteChapter } from '../store/mycoursemanager/mycoursemanager.actions';
+import { CreateChapter, CreateChapterSuccess, DeleteChapter, DeleteChapterSuccess, FetchChaptersSucess, FetchingChapters, UpdateChapter, UpdateChapterError, UpdateChapterSuccess, UpdateChapterTitle } from '../store/chapters/chapters.actions';
+import { AddChapter, DeleteChapter as CourseDeleteChapter, SortChapter, UpdateCourseManager } from '../store/mycoursemanager/mycoursemanager.actions';
 import { ChapterService } from '../services/chapter.service';
 import { AppState } from '../store/reducer';
 import { select, Store } from '@ngrx/store';
@@ -49,14 +49,13 @@ export class ChapterEffects {
                     )
             ),
             switchMap((action: any) => {
-                console.log(action);
                 return of(action, CourseDeleteChapter({ course_id: action.course_id, chapter_id: action.chapter_id }))
             })
         ));
 
 
-    updateChapter$ = createEffect(() => this.actions$.pipe(
-        ofType(UpdateChapter),
+    updateChapterTitle$ = createEffect(() => this.actions$.pipe(
+        ofType(UpdateChapterTitle),
         switchMap(_action =>
             this.chapterService.updateChapter(_action.chapter_id, _action.title).pipe(
                 map(() => UpdateChapterSuccess({ chapter_id: _action.chapter_id, title: _action.title })),
@@ -74,6 +73,17 @@ export class ChapterEffects {
             return this.chapterService.getChaptersFromCourseId(_action.course_id)
                 .pipe(
                     map(chapters => FetchChaptersSucess({ fetchValue: chapters })),
+                    catchError(error => of())
+                )
+        })
+    ));
+
+    sortChapter$ = createEffect(() => this.actions$.pipe(
+        ofType(SortChapter),
+        mergeMap(_action => {
+            return this.chapterService.sortChapter(_action.course_id as string, _action.chapters_id as string[])
+                .pipe(
+                    map(course => UpdateCourseManager({ course: course })),
                     catchError(error => of())
                 )
         })

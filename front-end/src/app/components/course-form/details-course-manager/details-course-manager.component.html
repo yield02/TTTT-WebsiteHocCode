@@ -1,0 +1,21 @@
+<div class="course-container">
+  <h1 class="heading-text">Nội dung khóa học</h1>
+  <div class="content-container">
+    <div class="switch-content flex flex-grow">
+      <ng-container *ngFor="let item of switchContent">
+        <button
+          (click)="switchTab(item.value)"
+          [ngClass]="activeSwitch == item.value ? 'active' : ''"
+          class="switch-item px-4 py-2"
+        >
+          <span class="text-xl">{{ item.title }}</span>
+        </button>
+      </ng-container>
+    </div>
+    <div class="content-list pt-4">
+      @if(activeSwitch == 'general') {
+      <study-chapter-list [course]="course"></study-chapter-list>
+      }
+    </div>
+  </div>
+</div>

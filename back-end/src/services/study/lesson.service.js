@@ -19,15 +19,20 @@ exports.create = async (
       throw new apiError("Không tìm thấy chương", 404);
     }
 
-    const videoId = VideoUtils.getYoutubeVideoId(video);
-    if (!videoId) {
-      throw new apiError("Link video không hợp lệ, phải sử dụng youtube", 400);
+    const videoId =
+      video.length == 11 || video.length == 0
+        ? video
+        : VideoUtils.getYoutubeVideoId(video);
+
+    if (!videoId && video.length != 0) {
+      throw new apiError(400, "Link video không hợp lệ, phải sử dụng youtube");
     }
 
     const lesson = new Lesson({
       author_id: author_id,
       title: title,
       course_id: course_id,
+      chapter_id: chapter_id,
       content: content,
       video: videoId,
       chapter_id: chapter_id,
@@ -37,22 +42,27 @@ exports.create = async (
     await chapter.save();
     return { lesson: lessonSave._doc };
   } catch (error) {
-    throw new apiError(500, "Internal Server Error");
+    console.log(error);
+    throw new apiError(500, error.message);
   }
 };
 
 exports.update = async (lesson_id, data, author_id) => {
   try {
-    console.log(lesson_id);
-    const videoId = VideoUtils.getYoutubeVideoId(data.video);
-    if (!videoId && data.video.length != 11) {
-      throw new apiError("Link video không hợp lệ, phải sử dụng youtube", 400);
+    const videoId =
+      data.video.length == 11 || data.video.length == 0
+        ? data.video
+        : VideoUtils.getYoutubeVideoId(video);
+
+    if (!videoId && data.video.length != 0) {
+      throw new apiError(400, "Link video không hợp lệ, phải sử dụng youtube");
     }
 
     const lesson = await Lesson.findOneAndUpdate(
       { _id: lesson_id, author_id: author_id },
       {
         title: data.title,
+        chapter_id: data.new_chapter_id,
         content: data.content,
         video: videoId || data.video,
       },
@@ -68,6 +78,7 @@ exports.update = async (lesson_id, data, author_id) => {
         { $pull: { lessons: lesson_id } },
         { new: true }
       );
+
       const newChapter = await Chapter.findByIdAndUpdate(
         data.new_chapter_id,
         { $push: { lessons: lesson_id } },
@@ -79,6 +90,73 @@ exports.update = async (lesson_id, data, author_id) => {
   } catch (error) {
     console.log(error);
     throw new apiError(500, error.message);
+  }
+};
+
+exports.toggleUpdatePublish = async (lessons_id, state, author_id) => {
+  try {
+    let lessons = await Lesson.find({
+      _id: { $in: lessons_id },
+      author_id: author_id,
+    });
+    if (lessons.length < 0) {
+      throw new apiError(404, "Không tìm thấy bài học");
+    }
+
+    if (
+      state != "" &&
+      state != "publish" &&
+      state != "hidden" &&
+      state != undefined
+    ) {
+      throw new apiError(400, "Trạng thái phải là 'publish' hoặc 'hidden'");
+    }
+
+    if (!state) {
+      lessons = await Promise.all(
+        lessons.map(async (lesson) => {
+          lesson.manager.set("publish", !lesson.manager.get("publish"));
+          return await lesson.save();
+        })
+      );
+    } else {
+      lessons = await Promise.all(
+        lessons.map(async (lesson) => {
+          lesson.manager.set("publish", state === "publish");
+          return await lesson.save();
+        })
+      );
+    }
+
+    return lessons;
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
+exports.deleteMany = async (lessons_id, author_id) => {
+  try {
+    const lesson = await Lesson.findById(lessons_id[0]);
+
+    const lessons = await Lesson.deleteMany({
+      _id: { $in: lessons_id },
+      author_id: author_id,
+    });
+    if (lessons.deletedCount === 0) {
+      throw new apiError(404, "Không tìm thấy bài học");
+    }
+
+    const chapter = await Chapter.findByIdAndUpdate(
+      lesson.chapter_id,
+      { $pull: { lessons: { $in: lessons_id } } },
+      { new: true }
+    );
+    if (!chapter) {
+      throw new apiError("Không tìm thấy chương", 404);
+    }
+    return chapter;
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
   }
 };
 
@@ -100,7 +178,8 @@ exports.getLessonList = async (chapter_id, user_id) => {
         // When user is author or user was enrolled in the course
         if (
           lesson.author_id == user_id ||
-          lesson.course_id.enroll.includes(user_id)
+          (lesson.course_id.enroll.includes(user_id) &&
+            lesson.manager.get("publish"))
         ) {
           return { ...lesson._doc, course_id: lesson._doc.course_id._id };
         }
@@ -136,5 +215,24 @@ exports.delete = async (lesson_id, chapter_id, author_id) => {
     );
   } catch (error) {
     throw new apiError(500, error.message);
+  }
+};
+
+exports.sortLesson = async (chapter_id, lessons_id, author_id) => {
+  try {
+    const chapter = await Chapter.findOneAndUpdate(
+      {
+        _id: chapter_id,
+        author_id: author_id,
+      },
+      { $set: { lessons: lessons_id } },
+      { new: true }
+    );
+    if (!chapter) {
+      throw new apiError("Không tìm thấy chương", 404);
+    }
+    return chapter;
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
   }
 };

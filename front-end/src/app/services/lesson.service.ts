@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CreateLessonInterface, Lesson, UpdateLessonInterface } from '../models/Lesson';
 import { environment } from '../../environments/environment';
+import { Chapter } from '../models/Chapter';
 
 
 
@@ -37,6 +38,18 @@ export class LessonService {
     return this.http.delete<{ lesson: Lesson }>(`${environment.apiUrl}lesson/${chapter_id}/${lesson_id}`, {
       withCredentials: true,
     });
+  }
+
+  sortLesson(chapter_id: string, lessons_id: string[]): Observable<Chapter> {
+    return this.http.patch<Chapter>(`${environment.apiUrl}lesson/sort/${chapter_id}`, { lessons_id }, { withCredentials: true });
+  }
+
+  toggleUpdatePublish(lessons_id: string[], state?: string): Observable<Lesson[]> {
+    return this.http.patch<Lesson[]>(`${environment.apiUrl}lesson/publish/${JSON.stringify(lessons_id)}`, { state }, { withCredentials: true });
+  }
+
+  deleteLessons(lessons_id: string[]) {
+    return this.http.delete(`${environment.apiUrl}lesson/deletes/${JSON.stringify(lessons_id)}`, { withCredentials: true });
   }
 
 }

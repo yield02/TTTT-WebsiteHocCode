@@ -21,7 +21,6 @@ import { MessageService } from 'primeng/api';
 import { Observable, of, switchMap, take, tap } from 'rxjs';
 import { ChapterService } from '../../services/chapter.service';
 import { Router } from '@angular/router';
-import { ChapterListComponent } from './chapter-list/chapter-list.component';
 import { AppState } from '../../store/reducer';
 import { CreateChapter } from '../../store/chapters/chapters.actions';
 import { CreateLessonInterface, Lesson } from '../../models/Lesson';
@@ -29,6 +28,10 @@ import { CreateLesson } from '../../store/lessons/lessons.actions';
 import { Subject } from '../../models/Subject';
 import { fetchingSubjects } from '../../store/subjects/subjects.actions';
 import { DropdownModule } from 'primeng/dropdown';
+import { DetailsCourseManagerComponent } from './details-course-manager/details-course-manager.component';
+import { ButtonModule } from 'primeng/button';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroChevronDown, heroChevronUp } from '@ng-icons/heroicons/outline';
 
 
 
@@ -46,12 +49,17 @@ import { DropdownModule } from 'primeng/dropdown';
     FieldsetModule,
     ToastModule,
     DropdownModule,
+    ButtonModule,
+    NgIconComponent,
 
-    ChapterListComponent,
     LessonFormComponent,
-    ChapterFormComponent
+    ChapterFormComponent,
+    DetailsCourseManagerComponent,
   ],
-  providers: [DialogService, MessageService],
+  providers: [DialogService, MessageService, provideIcons({
+    heroChevronDown,
+    heroChevronUp,
+  })],
   templateUrl: './course-form.component.html',
   styleUrl: './course-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,11 +75,16 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
 
     };
 
+
+  generalInforCollapsed: boolean = false;
+  contentCollapsed: boolean = false;
+
   form!: FormGroup;
   lessonFormRef: DynamicDialogRef | undefined;
   chapterFormRef: DynamicDialogRef | undefined;
   fetched: Boolean = false;
   subjects!: Observable<Subject[]>;
+
 
   constructor(
     private fb: FormBuilder,
@@ -88,6 +101,7 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(change: any): void {
 
     if (this.course?._id) {
+      this.generalInforCollapsed = true;
       this.form?.patchValue({
         _id: this.course?._id,
         course_name: this.course?.course_name,
@@ -113,6 +127,8 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
       image: [this.course?.image || null, Validators.compose([Validators.required])],
       subject_id: [this.course?.subject_id],
     });
+
+
   }
 
   showLessonForm() {
@@ -196,6 +212,13 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
         this.messageService.add({ severity: 'error', summary: 'Thất bại', detail: 'Cập nhật khóa học thất bại' })
       });
     }
+  }
+
+  toggleContentCollapsed() {
+    this.contentCollapsed = !this.contentCollapsed;
+  }
+  toggleGeneralInforCollapsed() {
+    this.generalInforCollapsed = !this.generalInforCollapsed;
   }
 
 }

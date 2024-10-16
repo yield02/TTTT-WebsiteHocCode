@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducer';
 import { ChapterFormComponent } from '../chapter-form/chapter-form.component';
 import { exhaustMap, of } from 'rxjs';
-import { DeleteChapter, UpdateChapter } from '../../../store/chapters/chapters.actions';
+import { DeleteChapter, UpdateChapterTitle } from '../../../store/chapters/chapters.actions';
 
 @Component({
     selector: 'app-chapter',
@@ -77,7 +77,7 @@ export class ChapterComponent implements OnChanges {
         this.chapterFormRef.onClose.pipe(
             exhaustMap((title) => {
                 if (title && title != chapter.title) {
-                    this._store.dispatch(UpdateChapter({ chapter_id: chapter._id, title: title }))
+                    this._store.dispatch(UpdateChapterTitle({ chapter_id: chapter._id, title: title }))
                 }
                 return of(null);
             })

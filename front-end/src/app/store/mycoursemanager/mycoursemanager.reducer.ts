@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Create, Add, AddChapter, UpdateCourseManager, DeleteCourseManager } from './mycoursemanager.actions';
+import { Create, Add, AddChapter, UpdateCourseManager, DeleteCourseManager, sortChapterUp, sortChapterDown } from './mycoursemanager.actions';
 import { Course } from '../../models/Course';
 
 
@@ -36,4 +36,41 @@ export const myCourseManagerReducer = createReducer(
             return item;
         })]
     }),
+    on(sortChapterUp, (state, { course_id, chapter_id }) => {
+        return state.map((course) => {
+            if (course._id === course_id) {
+                let chapters: String[] = [...course.chapters || []];
+                const index = chapters.indexOf(chapter_id);
+                if (index > 0) {
+                    const prevIndex = index - 1;
+                    chapters[index] = course.chapters![prevIndex];
+                    chapters[prevIndex] = course.chapters![index];
+                    return {
+                        ...course,
+                        chapters
+                    }
+                }
+            }
+            return course;
+        })
+    }),
+    on(sortChapterDown, (state, { course_id, chapter_id }) => {
+        return state.map((course) => {
+            if (course._id === course_id) {
+                let chapters: String[] = [...course.chapters || []];
+                const index = chapters.indexOf(chapter_id);
+                if (index >= 0) {
+                    console.log('vo day');
+                    const nextIndex = index + 1;
+                    chapters[index] = course.chapters![nextIndex];
+                    chapters[nextIndex] = course.chapters![index];
+                    return {
+                        ...course,
+                        chapters
+                    }
+                }
+            }
+            return course;
+        })
+    })
 );

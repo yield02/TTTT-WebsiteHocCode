@@ -63,7 +63,6 @@ export class LessonFormComponent implements OnInit {
       'table',
       'code',
       'help',
-      'wordcount',
       'codesample'
     ],
     toolbar:
@@ -81,6 +80,8 @@ export class LessonFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
     if (this._dialogConfig?.data?.course_id) {
       this.chapterList = this._store.pipe(select(selectChaptersMangerFromCourseId(this._dialogConfig.data?.course_id)));
     }
@@ -95,7 +96,7 @@ export class LessonFormComponent implements OnInit {
       this.form = this.fb.group({
         title: [this.lesson.title],
         video: [this.lesson.video],
-        chapter_id: [this.lesson = this._dialogConfig?.data?.chapter_id],
+        chapter_id: [this._dialogConfig?.data?.chapter_id],
         content: [content],
       })
     }
@@ -103,7 +104,7 @@ export class LessonFormComponent implements OnInit {
       this.form = this.fb.group({
         title: [''],
         video: [''],
-        chapter_id: [''],
+        chapter_id: [this._dialogConfig?.data?.chapter_id || ''],
         content: [''],
       })
     }

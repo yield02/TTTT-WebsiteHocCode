@@ -6,6 +6,7 @@ router.get("/:course_id", chapterController.getChapterList);
 
 router.post("/create", chapterController.create);
 
+router.patch("/sort/:course_id", chapterController.sortChapter);
 router.patch("/:chapter_id", chapterController.update);
 
 router.delete("/:course_id/:chapter_id", chapterController.delete);

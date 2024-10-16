@@ -16,7 +16,18 @@ export const selectLessonsFromChapterId = (chapter_id: String) => createSelector
     (lessons: Lesson[], chapters: Chapter[]): Lesson[] => {
         const chapter: Chapter | undefined = chapters.find((c: Chapter) => c._id === chapter_id);
         if (chapter) {
-            return lessons.filter((c: Lesson) => chapter!.lessons!.includes(c._id))
+
+            let result: Lesson[] = [];
+
+            chapter.lessons?.forEach((lesson_id: String) => {
+                const lesson: Lesson | undefined = lessons.find((l: Lesson) => l._id === lesson_id);
+                if (lesson) {
+                    result.push(lesson);
+                }
+            });
+
+
+            return result;
         }
         return []
 

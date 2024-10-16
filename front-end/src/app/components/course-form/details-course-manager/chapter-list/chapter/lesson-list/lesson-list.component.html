@@ -1,0 +1,75 @@
+<div class="lesson-list">
+  <p-confirmDialog />
+
+  @if(checkList.length > 0) {
+
+  <div class="handle-lessons flex justify-start items-center gap-4">
+    <span>Đã chọn {{ checkList.length }}</span>
+    <p-dropdown
+      class="actions-dropdown"
+      [options]="actions"
+      optionLabel="name"
+      optionValue="value"
+      [(ngModel)]="action"
+    ></p-dropdown>
+    <p-button
+      label="Áp dụng"
+      [outlined]="true"
+      [size]="'small'"
+      (onClick)="onActions()"
+    />
+  </div>
+  }
+  <div class="table-container">
+    <div class="table-header flex gap-4 items-center">
+      <div class="flex items-center">
+        <p-checkbox
+          class="mr-2"
+          [(ngModel)]="checkAll"
+          (onChange)="checkAllLesson()"
+          binary="true"
+        ></p-checkbox>
+        ({{ checkList.length }})
+      </div>
+      <span class="flex-1">Tiêu đề</span>
+      <span class="basis-1/6">Chế độ hiển thị</span>
+      <span class="basis-1/6">Bài tập</span>
+      <p-button
+        class="invisible"
+        icon="pi pi-sort"
+        [text]="true"
+        severity="primary"
+        size="small"
+      ></p-button>
+    </div>
+    @if(Lesson$ | async; as lessons) {
+
+    <ng-container
+      *ngFor="
+        let lesson of lessons.slice(filter.first, filter.first + filter.rows);
+        index as i
+      "
+    >
+      <study-lesson
+        [lesson]="lesson"
+        [index]="i"
+        [checked]="checkAll"
+        [chapter_id]="chapter._id!"
+        (checkEvent)="checkLesson($event)"
+        (sortEvent)="sortLesson()"
+      ></study-lesson>
+    </ng-container>
+
+    }
+  </div>
+  <div class="paginator">
+    @if(filter.total > filter.rows) {
+    <p-paginator
+      [totalRecords]="filter.total"
+      [rows]="filter.rows"
+      [first]="filter.first"
+      (onPageChange)="onPageChange($event)"
+    ></p-paginator>
+    }
+  </div>
+</div>

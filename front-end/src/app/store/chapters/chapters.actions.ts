@@ -16,9 +16,13 @@ export const CreateChapterSuccess = createAction('[Chapters Component] CreateSuc
 export const FetchingChapters = createAction('[Chapters Component] FetchingChapters', props<{ course_id: String }>());
 export const FetchChaptersSucess = createAction('[Chapters Component] FetchChaptersSucess', props<{ fetchValue: Chapter[] }>())
 
-export const UpdateChapter = createAction('[Chapters Component] Update', props<{ chapter_id: String, title: String }>());
+export const UpdateChapterTitle = createAction('[Chapters Component] Update Title', props<{ chapter_id: String, title: String }>());
+export const UpdateChapter = createAction('[Chapters Component] Update Chapter', props<{ chapter: Chapter }>());
 export const UpdateChapterSuccess = createAction('[Chapters Component] UpdateChapterSuccess', props<{ chapter_id: String, title: String }>());
 export const UpdateChapterError = createAction('[Chapters Component] UpdateChapterError');
+export const SortDownLesson = createAction('[Chapters Component] SortDownLesson', props<{ chapter_id: String, lesson_id: String }>());
+export const SortUpLesson = createAction('[Chapters Component] SortUpLesson', props<{ chapter_id: String, lesson_id: String }>());
+
 
 export const DeleteChapter = createAction('[Chapters Component] Delete', props<{ course_id: String, chapter_id: String }>());
 export const DeleteChapterSuccess = createAction('[Chapters Component] DeleteSuccess', props<{ chapter_id: String }>());

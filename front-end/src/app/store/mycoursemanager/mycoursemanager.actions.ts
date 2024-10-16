@@ -8,9 +8,13 @@ export const FetchCourseManager = createAction('[mycoursemanager Component] Fetc
 
 export const Create = createAction('[mycoursemanager Component] Create', props<{ course: Course }>());
 export const Add = createAction('[mycoursemanager Component] Add', props<{ courses: Course[] }>());
-export const UpdateCourseManager = createAction('[mycoursemanager Component] Update', props<{ course: Course }>());
 export const DeleteCourseManager = createAction('[mycoursemanager Component] Delete', props<{ course_id: String }>());
+export const SortChapter = createAction('[mycoursemanager Component] SortChapter', props<{ course_id: String, chapters_id: String[] }>());
 
+export const UpdateCourseManager = createAction('[mycoursemanager Component] Update', props<{ course: Course }>());
+
+export const sortChapterUp = createAction('[mycoursemanager Component] SortChapterUp', props<{ course_id: String, chapter_id: String }>());
+export const sortChapterDown = createAction('[mycoursemanager Component] SortChapterDown', props<{ course_id: String, chapter_id: String }>());
 
 export const AddChapter = createAction('[mycoursemanager Component] AddChapter', props<{ course_id: String, chapter_id: String }>());
 export const DeleteChapter = createAction('[mycoursemanager Component] DeleteChapter', props<{ course_id: String, chapter_id: String }>());
@@ -24,3 +28,4 @@ export const FindUserInCourseWithUserName = createAction('[mycoursemanager Compo
 export const fetchUsersInCourse = createAction('[mycoursemanager Component] Fetch Users', props<{ course_id: String, filter: Filter, typeList: 'enroll' | 'waiting_enroll' }>());
 
 export const DeleteUserEnrollFromAuth = createAction('[mycoursemanager Component] Delete User Enroll', props<{ course_id: String, users_id: String[] }>());
+

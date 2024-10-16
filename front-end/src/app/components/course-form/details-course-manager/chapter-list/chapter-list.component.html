@@ -1,0 +1,23 @@
+<div class="chapter-list">
+  <div class="header flex justify-between items-center">
+    <h2 class="heading-text">Danh sách chương:</h2>
+    <div class="pr-4">
+      <p-menu #menu [popup]="true" [model]="moreAction"></p-menu>
+      <p-button
+        (onClick)="menu.toggle($event)"
+        icon="pi pi-ellipsis-v"
+        [text]="true"
+      />
+    </div>
+  </div>
+  <div class="chapter-list-container flex flex-col gap-4">
+    <ng-container *ngFor="let chapter_id of course.chapters; index as i">
+      <study-chapter
+        [course_id]="course._id!"
+        [chapter_id]="chapter_id"
+        [index]="i"
+        (saveSortEvent)="sortChapter()"
+      ></study-chapter>
+    </ng-container>
+  </div>
+</div>

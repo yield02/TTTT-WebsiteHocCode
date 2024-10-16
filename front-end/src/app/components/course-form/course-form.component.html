@@ -1,7 +1,18 @@
-<div class="course-form">
-  <p-toast></p-toast>
+<div class="course-form flex flex-col gap-4">
+  <p-button
+    [outlined]="true"
+    severity="secondary"
+    (onClick)="toggleGeneralInforCollapsed()"
+  >
+    <span class="mr-2">Tiêu đề khóa học</span>
+    <ng-icon
+      class="text-2xl"
+      [name]="generalInforCollapsed ? 'heroChevronDown' : 'heroChevronUp'"
+    ></ng-icon
+  ></p-button>
   <form
-    class="flex flex-col gap-4"
+    *ngIf="!generalInforCollapsed"
+    class="form-container flex flex-col gap-4"
     [formGroup]="form"
     (ngSubmit)="form.valid && onSubmit()"
     enctype="multipart/form-data"
@@ -89,10 +100,13 @@
     </div>
   </form>
   <ng-template [ngIf]="course?._id">
-    <course-form-chapter-list
+    <!-- <course-form-chapter-list
       [course_id]="course!._id!"
       (showChapterFormEvent)="showChapterForm()"
       (showLessonFormEvent)="showLessonForm()"
-    ></course-form-chapter-list>
+    ></course-form-chapter-list> -->
+    <study-details-course-manager
+      [course]="course!"
+    ></study-details-course-manager>
   </ng-template>
 </div>

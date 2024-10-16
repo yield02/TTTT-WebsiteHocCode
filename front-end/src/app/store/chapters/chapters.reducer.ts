@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { CreateChapter, UpdateChapter, CreateChapterSuccess, DeleteChapterSuccess, UpdateChapterSuccess, ChapterCreateLesson, ChapterUpdateLesson, ChapterDeleteLesson, FetchChaptersSucess } from './chapters.actions';
+import { CreateChapter, UpdateChapter, CreateChapterSuccess, DeleteChapterSuccess, UpdateChapterSuccess, ChapterCreateLesson, ChapterUpdateLesson, ChapterDeleteLesson, FetchChaptersSucess, SortDownLesson, SortUpLesson } from './chapters.actions';
 import { Chapter } from '../../models/Chapter';
 
 export const initialState: Chapter[] = []
@@ -36,6 +36,9 @@ export const chaptersReducer = createReducer(
         });
     }),
     on(ChapterUpdateLesson, (state, { old_chapter_id, new_chapter_id, lesson_id }) => {
+
+        console.log(old_chapter_id, new_chapter_id);
+
         if (old_chapter_id == new_chapter_id) {
             return state;
         }
@@ -61,5 +64,38 @@ export const chaptersReducer = createReducer(
             }
             return chapter;
         })]
+    }),
+    on(SortDownLesson, (state, { chapter_id, lesson_id }) => {
+
+        return state.map((chapter) => {
+            if (chapter._id === chapter_id) {
+                const index = chapter.lessons!.findIndex((id) => id === lesson_id);
+                if (index >= 0) {
+                    const lessons = [...chapter.lessons || []];
+                    lessons[index] = lessons[index + 1];
+                    lessons[index + 1] = lesson_id;
+                    return { ...chapter, lessons };
+                }
+            }
+            return chapter;
+        })
+
+    }),
+    on(SortUpLesson, (state, { chapter_id, lesson_id }) => {
+        return state.map((chapter) => {
+            if (chapter._id === chapter_id) {
+                const index = chapter.lessons!.findIndex((id) => id === lesson_id);
+                if (index > 0) {
+                    const lessons = [...chapter.lessons || []];
+                    lessons[index] = lessons[index - 1];
+                    lessons[index - 1] = lesson_id;
+                    return { ...chapter, lessons };
+                }
+            }
+            return chapter;
+        })
+    }),
+    on(UpdateChapter, (state, { chapter }) => {
+        return state.map(item => item._id === chapter._id ? chapter : item);
     })
 );

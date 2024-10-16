@@ -1,0 +1,26 @@
+.lesson {
+  padding: 0 0 0 12px;
+  cursor: pointer;
+  &.active {
+    background: #e3e0f3;
+  }
+  &:hover {
+    background: #e3e0f3;
+  }
+  border-bottom: 1px solid #dddd;
+
+  span {
+    line-height: 100%;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .sort {
+    margin-right: 8px;
+    .sort-btn {
+      &:hover {
+        color: #9c1de7;
+      }
+    }
+  }
+}
