@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MenuModule } from 'primeng/menu';
 import { heroEyeSlash, heroUsers } from '@ng-icons/heroicons/outline';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ActivatedRoute } from '@angular/router';
 import { LessonFormComponent } from '../../../../../lesson-form/lesson-form.component';
@@ -17,6 +17,11 @@ import { DeleteLesson, ToggleUpdatePublish, UpdateLesson } from '../../../../../
 import { AppState } from '../../../../../../../store/reducer';
 import { SortDownLesson, SortUpLesson } from '../../../../../../../store/chapters/chapters.actions';
 import { ShowLessonContentComponent } from '../../../../../show-lesson-content/show-lesson-content.component';
+import { ExerciseManagerComponent } from '../../../../exercise-manager/exercise-manager.component';
+import { selectQuestionFromQuestionId, selectQuestionsFromLessonId } from '../../../../../../../store/question/question.selectors';
+import { tap } from 'rxjs';
+import { createQuestions, getQuestionsFromLessionId } from '../../../../../../../store/question/question.actions';
+import { Question } from '../../../../../../../models/Question';
 
 @Component({
     selector: 'study-lesson',
@@ -48,9 +53,11 @@ export class LessonComponent implements OnInit {
     @Output() sortEvent: EventEmitter<any> = new EventEmitter<any>();
     sorting: boolean = false;
 
+    numberQuestion: number = 0;
+    fetchedQuestion: boolean = false;
 
     contentRef: DynamicDialogRef | undefined;
-
+    exerciseRef: DynamicDialogRef | undefined;
 
     moreAction: MenuItem[] = [{
         label: 'Cài đặt',
@@ -59,6 +66,7 @@ export class LessonComponent implements OnInit {
                 label: 'Quản lý bài tập',
                 icon: 'pi pi-plus',
                 command: () => {
+                    this.showExerciseManager();
                 }
             },
             {
@@ -139,6 +147,18 @@ export class LessonComponent implements OnInit {
                 this._store.dispatch(ToggleUpdatePublish({ lessons_id: [this.lesson._id] as string[] }))
             }
         });
+
+        this._store.pipe(select(selectQuestionsFromLessonId(this.lesson._id as string))).pipe(
+            tap((questions) => {
+                if (questions.length > 0) {
+                    this.numberQuestion = questions.length;
+                }
+                if (questions.length <= 0 && !this.fetchedQuestion) {
+                    this._store.dispatch(getQuestionsFromLessionId({ lesson_id: this.lesson._id as string }));
+                    this.fetchedQuestion = true;
+                }
+            })
+        ).subscribe();
     }
 
     toggleSorting(): void {
@@ -161,7 +181,6 @@ export class LessonComponent implements OnInit {
 
 
     showContent(event: MouseEvent) {
-        console.log(event);
         this.contentRef = this._dialogSerive.open(ShowLessonContentComponent, {
             header: "Nội dung bài học",
             width: '60%',
@@ -171,6 +190,35 @@ export class LessonComponent implements OnInit {
             modal: true,
         });
     }
+
+    showExerciseManager() {
+        this.exerciseRef = this._dialogSerive.open(ExerciseManagerComponent, {
+            header: "Quản lý bài tập",
+            width: '60%',
+            height: '90%',
+            data: { lesson: this.lesson },
+            contentStyle: { 'overflow-y': 'auto' },
+            modal: true,
+            closable: false,
+        })
+
+        this.exerciseRef.onClose.subscribe(
+            (questions) => {
+                if (questions.length > 0) {
+                    const questionsData = questions.map((question: Question) => {
+                        return {
+                            ...question,
+                            lesson_id: this.lesson._id,
+                            course_id: this._activatedRoute.snapshot.params['courseid']
+                        }
+                    });
+
+                    this._store.dispatch(createQuestions({ questions: questionsData }));
+                }
+            }
+        )
+    }
+
 
 
 

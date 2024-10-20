@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { OrderListModule } from 'primeng/orderlist';
 import { Chapter } from '../../models/Chapter';
 import { FieldsetModule } from 'primeng/fieldset';
-import { LessonComponent } from './lesson/lesson.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { LessonFormComponent } from './lesson-form/lesson-form.component';
 import { ChapterFormComponent } from './chapter-form/chapter-form.component';

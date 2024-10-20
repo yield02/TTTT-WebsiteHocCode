@@ -1,0 +1,201 @@
+<div class="question" #questionElement [class.active]="focusing">
+  <h1 class="heading-text">Câu {{ index + 1 }}.</h1>
+  <div class="question-content flex flex-col gap-4">
+    <div class="question-title flex justify-start items-center gap-4 flex-wrap">
+      <input
+        name="title"
+        class="flex-1 basis-2/4"
+        type="text"
+        pInputText
+        placeholder="Tiêu đề"
+        required
+        minlength="6"
+        [(ngModel)]="_question.title"
+      />
+      <p-dropdown
+        name="type"
+        class="question-type basis-1/4"
+        [options]="questionType"
+        [(ngModel)]="_question.type"
+        optionLabel="name"
+        optionValue="code"
+        [virtualScrollItemSize]="40"
+      ></p-dropdown>
+    </div>
+    <div class="description flex flex-col gap-4">
+      <editor
+        name="content"
+        [init]="content"
+        outputFormat="html"
+        licenseKey="gpl"
+        apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+        [(ngModel)]="_question.content"
+      ></editor>
+    </div>
+    <div class="question-answers flex flex-col gap-4">
+      <!-- When type === 'code' -->
+      <ng-container *ngIf="_question.type === 'code'">
+        <ng-container *ngFor="let item of _question.testKey; index as i">
+          <div class="test-key-container flex gap-4 items-end flex-wrap py-4">
+            <input
+              required
+              type="text"
+              [name]="'input' + i"
+              [(ngModel)]="_question.testKey![i].input"
+              pInputText
+              placeholder="Input"
+            />
+            <input
+              required
+              type="text"
+              [name]="'output' + i"
+              [(ngModel)]="_question.testKey![i].output"
+              pInputText
+              placeholder="Output"
+            />
+            <p-button
+              (onClick)="deleteTestKey(i)"
+              [size]="'small'"
+              icon="pi pi-trash"
+              [rounded]="true"
+              severity="danger"
+              [outlined]="true"
+            />
+          </div>
+        </ng-container>
+        @if(focusing) {
+        <div>
+          <p-button
+            (click)="addTestKey()"
+            label="Thêm test key"
+            icon="pi pi-plus"
+            [text]="true"
+            [raised]="true"
+            severity="secondary"
+          />
+        </div>
+        }
+      </ng-container>
+
+      <!-- When type === 'choice' -->
+      <ng-container *ngIf="_question.type === 'choice'">
+        <ng-container *ngFor="let item of _question.options; index as i">
+          <div class="test-key-container flex gap-4 items-center py-4">
+            <p-radioButton
+              name="choice"
+              [(ngModel)]="_question.answer![0]"
+              [value]="_question.options![i]"
+            ></p-radioButton>
+            <input
+              required
+              type="text"
+              [id]="'choice' + i"
+              [name]="'choice' + i"
+              [value]="_question.options![i]"
+              (change)="updateChoiceValue($event, i)"
+              pInputText
+              placeholder="Nội dung"
+            />
+            <p-button
+              (onClick)="deleteChoice(i)"
+              [size]="'small'"
+              icon="pi pi-trash"
+              [rounded]="true"
+              severity="danger"
+              [outlined]="true"
+            />
+          </div>
+        </ng-container>
+        @if(focusing) {
+        <div>
+          <p-button
+            (click)="addChoice()"
+            label="Thêm lựa chọn"
+            icon="pi pi-plus"
+            [text]="true"
+            [raised]="true"
+            severity="secondary"
+          />
+        </div>
+        }
+        <div class="explain">
+          <editor
+            [init]="explain"
+            name="content"
+            placeholder="Giải thích"
+            outputFormat="html"
+            licenseKey="gpl"
+            apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+            [(ngModel)]="_question.explanation"
+          ></editor>
+        </div>
+      </ng-container>
+
+      <!-- When type === 'multi-choice' -->
+      <ng-container *ngIf="_question.type === 'multichoice'">
+        <ng-container *ngFor="let item of _question.options; index as i">
+          <div class="test-key-container flex gap-4 items-center py-4">
+            <p-checkbox
+              [name]="'choice' + i"
+              [(ngModel)]="_question.answer![i]"
+              inputId="binary"
+              binary="true"
+            />
+            <input
+              required
+              type="text"
+              [id]="'choice' + i"
+              [name]="'choice' + i"
+              [value]="_question.options![i]"
+              (change)="updateChoiceValue($event, i)"
+              pInputText
+              placeholder="Nội dung"
+            />
+            <p-button
+              (onClick)="deleteChoice(i)"
+              [size]="'small'"
+              icon="pi pi-trash"
+              [rounded]="true"
+              severity="danger"
+              [outlined]="true"
+            />
+          </div>
+        </ng-container>
+        @if(focusing) {
+        <div>
+          <p-button
+            (click)="addChoice()"
+            label="Thêm lựa chọn"
+            icon="pi pi-plus"
+            [text]="true"
+            [raised]="true"
+            severity="secondary"
+          />
+        </div>
+        }
+        <div class="explain">
+          <editor
+            [init]="explain"
+            name="content"
+            placeholder="Giải thích"
+            outputFormat="html"
+            licenseKey="gpl"
+            apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+            [(ngModel)]="_question.explanation"
+          ></editor>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  @if(focusing) {
+  <div class="action flex justify-end items-center mt-2">
+    <p-button
+      (onClick)="removeQuestion()"
+      icon="pi pi-trash"
+      [rounded]="true"
+      severity="danger"
+      [outlined]="true"
+    />
+  </div>
+  }
+</div>

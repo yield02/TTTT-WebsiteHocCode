@@ -5,6 +5,8 @@ import { ForumComponent } from "./myactivities.layout";
 import { HeaderComponent } from "../../components/header/header.component";
 import { SearchComponent } from "../../components/Search/Search.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
+import { TooltipModule } from "primeng/tooltip";
+import { EditorComponent } from "@tinymce/tinymce-angular";
 
 
 
@@ -22,7 +24,7 @@ import { SidebarComponent } from "./components/sidebar/sidebar.component";
         MyActivitiesRoutingModule,
     ],
     exports: [],
-    providers: [],
+    providers: [EditorComponent],
     bootstrap: [],
 })
 

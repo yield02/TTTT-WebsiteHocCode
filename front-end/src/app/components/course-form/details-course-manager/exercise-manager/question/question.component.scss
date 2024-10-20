@@ -1,0 +1,42 @@
+.question {
+  border-radius: 8px;
+  padding: 12px 12px;
+  margin-bottom: 12px;
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+  border-left: 4px solid transparent;
+
+  transition: all 0.3s ease;
+
+  &.active {
+    border-left-color: #a855f7;
+  }
+
+  .heading-text {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .question-content {
+    .question-title {
+      .question-type {
+        min-width: 166px;
+      }
+    }
+  }
+  .test-key-container {
+    border-bottom: 1px solid #eeee;
+  }
+}
+
+::ng-deep {
+  .question {
+    .question-title {
+      .question-type {
+        .p-dropdown.p-inputwrapper {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

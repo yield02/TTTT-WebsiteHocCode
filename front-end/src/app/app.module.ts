@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { EffectsModule } from '@ngrx/effects';
 import effects from './effects';
+import { EditorComponent, EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import effects from './effects';
     }),
     ToastModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, EditorComponent, { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }],
   bootstrap: [AppComponent],
 })
 export class AppModule {

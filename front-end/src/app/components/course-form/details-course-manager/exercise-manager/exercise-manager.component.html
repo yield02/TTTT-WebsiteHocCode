@@ -1,0 +1,27 @@
+<div class="exercise-manager">
+  <div class="question-list">
+    <ng-container *ngFor="let question of questions; index as i">
+      <study-question
+        [question]="question"
+        [index]="i"
+        (updateQuestionEvent)="updateQuestion($event)"
+        (removeQuestionEvent)="removeQuestion($event)"
+      ></study-question>
+    </ng-container>
+  </div>
+  <div class="add-question flex justify-center items-center">
+    <p-button
+      label="Thêm câu hỏi"
+      [icon]="'pi pi-plus'"
+      (onClick)="addQuestion()"
+    />
+  </div>
+  <div class="save">
+    <p-button
+      (onClick)="closeDialog()"
+      label="Đóng"
+      [raised]="true"
+      severity="info"
+    />
+  </div>
+</div>

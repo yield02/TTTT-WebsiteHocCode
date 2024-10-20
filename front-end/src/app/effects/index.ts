@@ -8,6 +8,7 @@ import { PostEffects } from "./forum/post.effects";
 import { TopicEffects } from "./forum/topic.effects";
 import { LearningEffects } from "./learning.effects";
 import { LessonEffects } from "./lesson.effects";
+import { QuesionEffects } from "./question.effects";
 import { RatingEffects } from "./rating.effects";
 import { ReplyDiscussEffects } from "./reply-discuss.effects";
 import { SubjectEffects } from "./subject.effects";
@@ -29,6 +30,7 @@ const effects: Array<any> = [
     HashtagEffects,
     PostEffects,
     CommentEffects,
+    QuesionEffects,
 ];
 
 export default effects;
