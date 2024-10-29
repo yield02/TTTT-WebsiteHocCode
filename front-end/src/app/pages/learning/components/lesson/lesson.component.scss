@@ -30,3 +30,36 @@
     font-size: 14px;
   }
 }
+
+.question-container {
+  opacity: 0.2;
+
+  &.active {
+    opacity: 1;
+  }
+
+  .question {
+    height: 40px;
+    width: 40px;
+    font-weight: 700;
+    color: #444;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+
+    &.active {
+      background: #dedede;
+    }
+
+    &.right {
+      background: #a7ff83;
+    }
+    &.fail {
+      background: #ff304f;
+      color: #ffff;
+    }
+    &:hover {
+      background: #ffff;
+    }
+  }
+  margin-bottom: 12px;
+}

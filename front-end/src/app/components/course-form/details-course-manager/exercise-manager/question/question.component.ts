@@ -9,7 +9,7 @@ import { EditorComponent, EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tiny
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { Editor } from 'tinymce';
 import { CheckboxModule } from 'primeng/checkbox';
-
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 
 
@@ -25,7 +25,8 @@ import { CheckboxModule } from 'primeng/checkbox';
         FormsModule,
         EditorModule,
         RadioButtonModule,
-        CheckboxModule
+        CheckboxModule,
+        InputTextareaModule,
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }
@@ -36,6 +37,75 @@ import { CheckboxModule } from 'primeng/checkbox';
 })
 export class QuestionComponent implements OnInit {
     _question!: Question;
+
+    codeList: string[] = [
+        "typescript",
+        "nodejs",
+        "bootstrap",
+        "cpp",
+        "c",
+        "csharp",
+        "java",
+        "javascript",
+        "html",
+        "jquery",
+        "ada",
+        "assembly",
+        "backbonejs",
+        "bash",
+        "basic",
+        "brainfk",
+        "bulma",
+        "clojure",
+        "cobol",
+        "coffeescript",
+        "commonlisp",
+        "d",
+        "ejs",
+        "elixir",
+        "erlang",
+        "fsharp",
+        "fortran",
+        "foundation",
+        "go",
+        "groovy",
+        "haskell",
+        "jshell",
+        "kotlin",
+        "lua",
+        "mariadb",
+        "materialize",
+        "sqlserver",
+        "milligram",
+        "mongodb",
+        "mysql",
+        "objectivec",
+        "ocaml",
+        "octave",
+        "oracle",
+        "plsql",
+        "paperCss",
+        "pascal",
+        "perl",
+        "php",
+        "postgresql",
+        "prolog",
+        "python",
+        "python2",
+        "r",
+        "racket",
+        "redis",
+        "ruby",
+        "rust",
+        "scala",
+        "semanticUI",
+        "skeleton",
+        "sqlite",
+        "swift",
+        "tcl",
+        "text",
+        "uikit",
+        "vb",];
 
     @Input() set question(value: Question) {
         this._question = {
@@ -194,10 +264,13 @@ export class QuestionComponent implements OnInit {
             this._question.options = [];
         }
         else if (this._question.type === 'choice') {
+            console.log(this._question.answer);
+
             this._question.testKey = [];
             this._question.answer = [this._question.answer![0] as string];
         }
         else {
+            console.log(this._question.answer);
             this._question.testKey = [];
         }
         this.updateQuestionEvent.emit({ question: this._question, index: this.index });
@@ -219,7 +292,6 @@ export class QuestionComponent implements OnInit {
 
     addChoice() {
         this._question.options?.push('');
-        this._question.answer?.push(false);
     }
     deleteChoice(index: number) {
         this._question.options?.splice(index, 1);
@@ -229,5 +301,7 @@ export class QuestionComponent implements OnInit {
     updateChoiceValue(event: any, index: number) {
         let value = event.target.value;
         this._question.options![index] = value;
+        this._question.answer;
     }
+
 }

@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { LessonComponent } from './lesson/lesson.component';
 import { PaginatorModule } from 'primeng/paginator';
-import { BehaviorSubject, take, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, of, switchMap, take, tap } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService } from 'primeng/api';
@@ -14,6 +14,8 @@ import { selectLessonsFromChapterId } from '../../../../../../store/lessons/less
 import { AppState } from '../../../../../../store/reducer';
 import { Lesson } from '../../../../../../models/Lesson';
 import { Chapter } from '../../../../../../models/Chapter';
+import { getQuestionsFromLessionIds } from '../../../../../../store/question/question.actions';
+import { selectQuestionsFromLessonIds } from '../../../../../../store/question/question.selectors';
 
 
 interface Filter {
@@ -68,6 +70,8 @@ export class LessonListComponent implements OnInit {
 
     Lesson$: BehaviorSubject<Lesson[]> = new BehaviorSubject<Lesson[]>([]);
     fetchedLesson: boolean = false;
+    fetchedQuestion: boolean = false;
+
     checkList: string[] = [];
 
     checkAll: boolean = false;
@@ -77,16 +81,34 @@ export class LessonListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._store.pipe(select(selectLessonsFromChapterId(this.chapter._id)), tap(lessons => {
-            if (lessons.length > 0) {
-                this.Lesson$.next(lessons);
-                this.filter.total = lessons.length;
-            }
-            if (lessons.length <= 0 && !this.fetchedLesson) {
-                this._store.dispatch(FetchingLessons({ chapter_id: this.chapter._id }));
-                this.fetchedLesson = true;
-            }
-        })).subscribe();
+        this._store.pipe(select(selectLessonsFromChapterId(this.chapter._id)),
+            switchMap(lessons => {
+                if (lessons.length > 0) {
+                    this.Lesson$.next(lessons);
+                    this.filter.total = lessons.length;
+                }
+                if (lessons.length <= 0 && !this.fetchedLesson) {
+                    const lesson_ids: string[] = lessons.map(lesson => lesson._id as string);
+                    this._store.dispatch(FetchingLessons({ chapter_id: this.chapter._id }));
+                    this.fetchedLesson = true;
+                    return combineLatest({
+                        questions: of([]),
+                        lesson_ids: of(lesson_ids || [])
+                    });
+                }
+                else {
+                    const lesson_ids: string[] = lessons.map(lesson => lesson._id as string);
+                    return combineLatest({
+                        questions: this._store.pipe(select(selectQuestionsFromLessonIds(lesson_ids))),
+                        lesson_ids: of(lesson_ids || [])
+                    });
+                }
+            }), tap(data => {
+                if (data?.questions?.length <= 0 && !this.fetchedQuestion && data?.lesson_ids?.length > 0) {
+                    this._store.dispatch(getQuestionsFromLessionIds({ lesson_ids: data.lesson_ids }));
+                    this.fetchedQuestion = true;
+                }
+            })).subscribe();
     }
 
 

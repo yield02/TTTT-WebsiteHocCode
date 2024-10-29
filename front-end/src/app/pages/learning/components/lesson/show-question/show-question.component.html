@@ -1,0 +1,176 @@
+<div class="show-question">
+  <div
+    class="content-box flex-row"
+    [class.choice]="question.type == 'choice' || question.type == 'multichoice'"
+    [class.code]="question.type == 'code'"
+  >
+    <div class="basis-1/2">
+      <h1 class="title">
+        {{ question.title }}
+      </h1>
+      <editor
+        class="content-body"
+        [init]="initEditor"
+        apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+        [initialValue]="question.content.toString()"
+      ></editor>
+    </div>
+    <div class="content-question flex-1">
+      <div *ngIf="question.type == 'choice' || question.type == 'multichoice'">
+        @if(isCheckAnswer) {
+        <ng-container *ngFor="let option of question.options; index as i">
+          <div
+            class="choice-item"
+            (click)="onAnswerChange(option, i)"
+            [class.right]="question.answer?.includes(option)"
+            [class.danger]="
+              !question.answer?.includes(option) && answer?.includes(option)
+            "
+            [class.active]="answer?.includes(option)"
+          >
+            {{ option }}
+          </div>
+        </ng-container>
+        } @else {
+        <ng-container *ngFor="let option of question.options; index as i">
+          <div
+            class="choice-item"
+            (click)="onAnswerChange(option, i)"
+            [class.active]="answer?.includes(option)"
+          >
+            {{ option }}
+          </div>
+        </ng-container>
+        }
+        <div
+          *ngIf="question.type == 'choice' || question.type == 'multichoice'"
+          class="submit mt-2 flex justify-end items-center"
+        >
+          <p-button
+            label="Nộp bài"
+            [rounded]="true"
+            [outlined]="true"
+            size="small"
+            (onClick)="checkAnswer()"
+          ></p-button>
+        </div>
+        <div *ngIf="isCheckAnswer" class="description">
+          <div class="border"></div>
+          <div [innerHTML]="question.explanation"></div>
+        </div>
+      </div>
+      <div *ngIf="question.type == 'code'" class="code-container flex-1">
+        <div class="flex justify-between bg-grey">
+          <div class="flex items-center flex-wrap">
+            <ng-container *ngFor="let file of files; index as i">
+              <study-show-question-file-item
+                [index]="i"
+                [active]="currentFileIndex === i"
+                [name]="file.filename"
+                (edit)="editFileValue($event)"
+                (remove)="removeFile($event)"
+                (onClick)="changeFileCurrent($event)"
+              ></study-show-question-file-item>
+            </ng-container>
+            <p-button
+              icon="pi pi-plus"
+              [text]="true"
+              severity="secondary"
+              (onClick)="addFile()"
+            />
+          </div>
+          <div class="py-1 px-2">
+            <p-dropdown
+              class="language-dropdown"
+              [options]="codeList"
+              [(ngModel)]="editorOptions.language"
+              (onChange)="onLanguageChange($event.value)"
+              [editable]="true"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        <ng-container *ngFor="let file of files; index as i">
+          <ng-container *ngIf="currentFileIndex === i">
+            <ngx-monaco-editor
+              class="code-editor"
+              [options]="editorOptions"
+              [(ngModel)]="file.content"
+              (onInit)="InitEditor($event)"
+            ></ngx-monaco-editor>
+          </ng-container>
+        </ng-container>
+
+        <div class="submit mt-2 flex justify-between items-center">
+          <h3 class="text-xl">Test:</h3>
+          <p-button
+            label="Nộp bài"
+            [rounded]="true"
+            [outlined]="true"
+            size="small"
+            (onClick)="submitCode()"
+          ></p-button>
+        </div>
+        <div class="code-result flex mt-2">
+          <div class="result-container input basis-1/2">
+            <h3 class="text-xl">Input:</h3>
+            <ng-container *ngFor="let test of question.testKey">
+              <p>{{ test.input }}</p>
+            </ng-container>
+          </div>
+          <div class="result-container output basis-1/2">
+            <h3 class="text-xl">Output:</h3>
+            <ng-container *ngFor="let test of question.testKey">
+              <p>{{ test.output }}</p>
+            </ng-container>
+          </div>
+        </div>
+        <h3 class="text-xl mt-2">Kết quả:</h3>
+        <div class="code-result flex pb-20">
+          <div class="result-container input basis-1/2">
+            <h3 class="text-xl">Input:</h3>
+            <ng-container *ngFor="let test of question.testKey">
+              <p>{{ test.input }}</p>
+            </ng-container>
+          </div>
+          <div class="result-container output basis-1/2">
+            <h3 class="text-xl">Output:</h3>
+            <ng-container *ngFor="let item of answer; index as i">
+              <p
+                [class.danger]="item != question.testKey![i].output"
+                [class.right]="item == question.testKey![i].output"
+              >
+                {{ item }}
+              </p>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navigation flex gap-4 justify-center items-center">
+    <p-button
+      (onClick)="backCloseDialog()"
+      class="text-xl"
+      [rounded]="true"
+      [outlined]="true"
+      severity="secondary"
+      size="small"
+      ><ng-icon class="text-2xl" name="heroChevronLeft"></ng-icon> Bài trước
+    </p-button>
+    <p-button
+      (onClick)="nextCloseDialog()"
+      class="text-xl"
+      [rounded]="true"
+      [outlined]="true"
+      size="small"
+      >Bài tiếp theo <ng-icon class="text-2xl" name="heroChevronRight"></ng-icon
+    ></p-button>
+  </div>
+  @if(runningCode) {
+  <div class="loading-container flex justify-center items-center">
+    <p-progressSpinner ariaLabel="loading" />
+  </div>
+  }
+</div>

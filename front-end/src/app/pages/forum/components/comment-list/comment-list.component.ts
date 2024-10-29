@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { PaginatorModule } from 'primeng/paginator';
 import { CommentComponent } from './comment/comment.component';
 import { DropdownModule } from 'primeng/dropdown';
@@ -12,7 +12,6 @@ import { AppState } from '../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
 import { FetchUsers } from '../../../../store/users/users.actions';
 import { selectUserFetch } from '../../../../store/users/users.selector';
-import { selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
 import { getCommentsByPostId } from '../../../../store/forum/comment/comment.actions';
 import { selectCommentsWithPostId } from '../../../../store/forum/comment/comment.selectors';
 

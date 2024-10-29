@@ -11,6 +11,7 @@ const replyDiscussRouter = require("./study/reply-discuss");
 const ratingRouter = require("./study/rating");
 const learningRouter = require("./study/learning");
 const questionRouter = require("./study/question");
+const exerciseRouter = require("./study/exercise");
 
 const topicRouter = require("./forum/topic");
 const postRouter = require("./forum/post");
@@ -34,5 +35,6 @@ function route(app) {
   app.use("/api/comment", commentRouter);
   app.use("/api/hashtag", hashtagRouter);
   app.use("/api/question", questionRouter);
+  app.use("/api/exercise", exerciseRouter);
 }
 module.exports = route;

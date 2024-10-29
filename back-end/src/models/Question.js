@@ -9,13 +9,14 @@ const questionSchema = new mongoose.Schema(
       required: true,
       enum: ["code", "choice", "multichoice"],
     },
+    language: { type: String, required: false },
     options: { type: [], required: false },
     answer: { type: [], required: false },
     explanation: { type: String, required: false },
     testKey: {
       type: [
         {
-          input: { type: String, required: true },
+          input: { type: String },
           output: { type: String, required: true },
         },
       ],

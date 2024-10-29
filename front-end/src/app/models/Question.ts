@@ -3,11 +3,12 @@ export interface Question {
     title: string;
     content: string;
     type: 'code' | 'choice' | 'multichoice';
+    language?: string;
     options?: string[];
     answer?: (boolean | string)[];
     explanation?: string;
     testKey?: {
-        input: string;
+        input?: string;
         output: string;
     }[];
     author_id?: string;

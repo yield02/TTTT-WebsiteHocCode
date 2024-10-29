@@ -12,6 +12,16 @@ import { MessageService } from 'primeng/api';
 import { EffectsModule } from '@ngrx/effects';
 import effects from './effects';
 import { EditorComponent, EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor-v2';
+
+
+const monacoConfig: NgxMonacoEditorConfig = {
+  baseUrl: 'app-name/assets', // configure base path for monaco editor. Starting with version 8.0.0 it defaults to './assets'. Previous releases default to '/assets'
+  defaultOptions: { scrollBeyondLastLine: false }, // pass default options to be used
+  onMonacoLoad: () => { console.log((<any>window).monaco); }, // here monaco object will be available as window.monaco use this function to extend monaco editor functionalities.
+  requireConfig: { preferScriptTags: true }, // allows to oweride configuration passed to monacos loader
+  monacoRequire: (<any>window).monacoRequire // pass here monacos require function if you loaded monacos loader (loader.js) yourself 
+};
 
 @NgModule({
   declarations: [
@@ -23,8 +33,14 @@ import { EditorComponent, EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tiny
     BrowserAnimationsModule,
     NoopAnimationsModule,
     HttpClientModule,
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot(reducers, {
+      runtimeChecks: {
+        strictStateImmutability: false,
+        strictActionImmutability: false,
+      },
+    }),
     EffectsModule.forRoot(effects),
+    MonacoEditorModule.forRoot(),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       // logOnly: environment.production, // Restrict extension to log-only mode

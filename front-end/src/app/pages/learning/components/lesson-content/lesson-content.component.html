@@ -35,7 +35,12 @@
       >
     </div>
     <learning-lesson-content-box [lesson_id]="lesson._id">
-      <div class="content-box mb-8" [innerHTML]="lesson.content"></div>
+      <editor
+        class="content-body"
+        [init]="initEditor"
+        [(ngModel)]="content"
+        apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+      ></editor>
     </learning-lesson-content-box>
   </div>
 </div>

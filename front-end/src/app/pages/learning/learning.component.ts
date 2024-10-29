@@ -71,17 +71,14 @@ export class LearningComponent implements OnInit {
       select(selectLearningFromCourseId(this._activatedRoute.snapshot.params['courseId'])),
       switchMap((learning: LearningInterFace | undefined) => {
         if (learning) {
-          console.log('vo learning');
           this._router.navigate([`/learning/${this._activatedRoute.snapshot.params['courseId']}`], { queryParams: { chapter_id: learning.current_chapter, lesson_id: learning.current_lesson } });
           return of(undefined);
         }
         return this._store.pipe(select(selectFirstChapterAndLesson(this._activatedRoute.snapshot.params['courseId'])))
-        // if (this.index == 1 && this.chapter_index == 1) {
-        //   this._router.navigate([`/learning/${this.lesson.course_id}`], { queryParams: { chapter_id: this.chapter_id, lesson_id: this.lesson._id } });
-        // }
+
       }), tap(data => {
-        console.log('khong ton tai data');
         if (!data) return;
+
         console.log('vo mac dinh');
         this._router.navigate([`/learning/${course_id}`], { queryParams: { chapter_id: data.chapter._id, lesson_id: data.lesson._id } });
       })

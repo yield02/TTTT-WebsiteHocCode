@@ -1,8 +1,6 @@
-@if(active$ | async; as active) {
 <div
-  class="lesson-container flex justify-between items-center {{
-    active ? 'active' : ''
-  }}"
+  class="lesson-container flex justify-between items-center"
+  [class.active]="active$ | async"
   (click)="navigateToLesson()"
 >
   <div class="">
@@ -22,7 +20,24 @@
     }
   </div>
 </div>
-} @else {
+<div
+  class="question-container flex items-center gap-4 flex-wrap"
+  [class.active]="active$ | async"
+>
+  <ng-container *ngFor="let question of questions; index as i">
+    <button
+      class="question"
+      [disabled]="!(active$ | async)"
+      [class.active]="!checkQuestion(question)"
+      [class.right]="checkAnswer(question) == true"
+      [class.fail]="checkAnswer(question) == false"
+      (click)="showQuestionDialog(question, i)"
+    >
+      {{ i + 1 }}
+    </button>
+  </ng-container>
+</div>
+<!-- @else {
 <div
   class="lesson-container flex justify-between items-center"
   (click)="navigateToLesson()"
@@ -44,4 +59,4 @@
     }
   </div>
 </div>
-}
+} -->

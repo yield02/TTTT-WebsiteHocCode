@@ -12,11 +12,9 @@ export class QuestionService {
   constructor(private _http: HttpClient) { }
 
 
-  getQuestionsFromLessonId(lesson_id: string): Observable<Question[]> {
+  getQuestionsFromLessonId(lesson_ids: string[]): Observable<Question[]> {
 
-    const lessons_id = [lesson_id.trim()];
-
-    return this._http.get<Question[]>(`${environment.apiUrl}question/lessons/${JSON.stringify(lessons_id)}`);
+    return this._http.get<Question[]>(`${environment.apiUrl}question/lessons/${JSON.stringify(lesson_ids)}`);
   }
 
   createQuestions(questions: Question[]): Observable<Question[]> {

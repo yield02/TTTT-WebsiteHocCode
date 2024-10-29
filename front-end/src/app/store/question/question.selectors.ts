@@ -24,3 +24,10 @@ export const selectQuestionsFromLessonId = (lesson_id: string) => createSelector
     }
 );
 
+
+export const selectQuestionsFromLessonIds = (lesson_ids: string[]) => createSelector(
+    selectQuestionState,
+    (questions: Question[]) => {
+        return questions.filter((question: Question) => lesson_ids.includes(question.lesson_id!)) || [];
+    }
+);

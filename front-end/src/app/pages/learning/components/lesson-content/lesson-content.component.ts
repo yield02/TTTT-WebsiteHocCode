@@ -2,7 +2,7 @@ import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
 registerLocaleData(vi);
 
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionChatboxOutline } from '@ng-icons/ionicons';
 import { select, Store } from '@ngrx/store';
@@ -20,6 +20,9 @@ import { ContentComponent } from './content/content.component';
 import { YOUTUBE_PLAYER_CONFIG, YouTubePlayer } from '@angular/youtube-player';
 import { updateAndCreateLearning } from '../../../../store/learning/learning.actions';
 import { selectLearningFromCourseId } from '../../../../store/learning/learning.selectors';
+import { EditorComponent, EditorModule } from '@tinymce/tinymce-angular';
+import { Editor } from 'tinymce';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'learning-lesson-content',
@@ -29,6 +32,8 @@ import { selectLearningFromCourseId } from '../../../../store/learning/learning.
     ButtonModule,
     NgIconComponent,
     YouTubePlayer,
+    EditorComponent,
+    FormsModule,
 
     ContentComponent,
     HoursFormatPipe,
@@ -49,10 +54,43 @@ export class LessonComponent implements OnInit, AfterViewInit, AfterViewChecked 
   course_id!: String;
   lesson$!: Observable<Lesson | undefined>;
   user$: Observable<AuthUser | undefined> = this._store.select(state => state.user);
+  content: string = '';
   isFetched: boolean = false;
   learningFetched = false;
+  initEditor: EditorComponent['init'] = {
+    menubar: false,
+    statusbar: false,
+    toolbar: false,
+    editable_root: false,
+    base_url: '/tinymce',
+    suffix: '.min',
+    resize: 'both',
+    autoresize_on_init: true,
+    plugins: [
+      'image',
+      'advlist',
+      'autolink',
+      'lists',
+      'link',
+      'image',
+      'charmap',
+      'preview',
+      'anchor',
+      'searchreplace',
+      'visualblocks',
+      'code',
+      'fullscreen',
+      'insertdatetime',
+      'media',
+      'table',
+      'code',
+      'help',
+      'codesample',
+      'autoresize'
+    ],
+  }
 
-  constructor(private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private sanitizer: DomSanitizer) {
+  constructor(private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private sanitizer: DomSanitizer, private _changeDetector: ChangeDetectorRef) {
 
   }
 
@@ -61,9 +99,17 @@ export class LessonComponent implements OnInit, AfterViewInit, AfterViewChecked 
 
     const lesson_id = this._activatedRoute.snapshot.paramMap.get("lesson_id")!;
 
+
+
+
     this.lesson$ = this._activatedRoute.queryParams.pipe(
       switchMap((params) => {
         return this._store.select(selectLessonFromId(params['lesson_id']!))
+      }), tap(lesson => {
+        if (lesson) {
+          this.content = lesson.content?.toString() || '';
+          this._changeDetector.detectChanges();
+        }
       }));
     //     .pipe(tap(lesson => {
     //       console.log(lesson, lesson?.video, lesson?.content, params['chapter_id']);

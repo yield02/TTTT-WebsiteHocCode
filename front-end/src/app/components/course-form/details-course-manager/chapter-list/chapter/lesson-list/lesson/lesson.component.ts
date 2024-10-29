@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronDownSolid, heroChevronUpSolid } from '@ng-icons/heroicons/solid';
@@ -20,7 +20,7 @@ import { ShowLessonContentComponent } from '../../../../../show-lesson-content/s
 import { ExerciseManagerComponent } from '../../../../exercise-manager/exercise-manager.component';
 import { selectQuestionFromQuestionId, selectQuestionsFromLessonId } from '../../../../../../../store/question/question.selectors';
 import { tap } from 'rxjs';
-import { createQuestions, getQuestionsFromLessionId } from '../../../../../../../store/question/question.actions';
+import { createQuestions } from '../../../../../../../store/question/question.actions';
 import { Question } from '../../../../../../../models/Question';
 
 @Component({
@@ -130,7 +130,7 @@ export class LessonComponent implements OnInit {
         ]
     }];
 
-    constructor(private _dialogSerive: DialogService, private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private _confirmationService: ConfirmationService) {
+    constructor(private _dialogSerive: DialogService, private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private _confirmationService: ConfirmationService, private _changeDetector: ChangeDetectorRef) {
     }
 
     ngOnInit(): void {
@@ -150,12 +150,10 @@ export class LessonComponent implements OnInit {
 
         this._store.pipe(select(selectQuestionsFromLessonId(this.lesson._id as string))).pipe(
             tap((questions) => {
-                if (questions.length > 0) {
+                if (questions?.length > 0) {
                     this.numberQuestion = questions.length;
-                }
-                if (questions.length <= 0 && !this.fetchedQuestion) {
-                    this._store.dispatch(getQuestionsFromLessionId({ lesson_id: this.lesson._id as string }));
-                    this.fetchedQuestion = true;
+                    this._changeDetector.detectChanges();
+
                 }
             })
         ).subscribe();

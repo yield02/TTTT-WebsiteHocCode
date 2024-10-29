@@ -30,6 +30,8 @@ import { Comment } from '../models/forum/Comment';
 import { commentReducer } from './forum/comment/comment.reducer';
 import { Question } from '../models/Question';
 import { questionReducer } from './question/question.reducer';
+import { Exercise } from '../models/Exercise';
+import { exerciseReducer } from './exercise/exercise.reducer';
 
 export interface AppState {
     user: AuthUser,
@@ -47,7 +49,8 @@ export interface AppState {
     hashtag: Hashtag[],
     post: Post[],
     comment: Comment[],
-    question: Question[]
+    question: Question[],
+    exercise: Exercise[],
 }
 
 
@@ -67,7 +70,8 @@ const reducers: ActionReducerMap<AppState> = {
     hashtag: hashtagReducer,
     post: postReducer,
     comment: commentReducer,
-    question: questionReducer
+    question: questionReducer,
+    exercise: exerciseReducer,
 }
 
 export default reducers;

@@ -50,14 +50,17 @@ export const selectFirstChapterAndLesson = (course_id: String) => createSelector
     (courses: Course[], chapters: Chapter[], lessons: Lesson[]): { chapter: Chapter, lesson: Lesson } | undefined => {
         const course: Course | undefined = courses.find(c => c._id === course_id);
         if (!course) {
+            console.log("Course not found");
             return undefined;
         }
         const chapter = chapters.find(c => c._id === (course?.chapters && course.chapters[0]));
         if (!chapter) {
+            console.log("Chapter not found");
             return undefined;
         }
         const lesson = lessons.find(l => l._id === (chapter?.lessons && chapter.lessons[0]));
         if (!lesson) {
+            console.log("Lesson not found");
             return undefined;
         }
         return { chapter, lesson };

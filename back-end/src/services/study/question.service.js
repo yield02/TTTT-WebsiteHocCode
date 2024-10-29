@@ -6,11 +6,11 @@ exports.createQuestion = async (data, author_id) => {
     if (!data.testKey && !data.options && !data.answer) {
       throw new ApiError(400, "Thông tin câu hỏi không đầy đủ");
     }
-    console.log(data.lesson_id);
     const question = new Question({
       title: data.title,
       content: data.content,
       type: data.type,
+      language: data?.language,
       options: data?.options,
       answer: data?.answer,
       testKey: data?.testKey,
@@ -37,6 +37,7 @@ exports.updateQuestion = async (data, author_id) => {
           title: data.title,
           content: data.content,
           type: data.type,
+          language: data?.language,
           options: data?.options || [],
           answer: data?.answer || [],
           testKey: data?.testKey || [],
@@ -48,6 +49,7 @@ exports.updateQuestion = async (data, author_id) => {
     if (!question) {
       throw new ApiError(404, "Không tìm thấy câu h��i");
     }
+
     return question;
   } catch (error) {
     throw new ApiError(500, error.message);

@@ -1,0 +1,10 @@
+<div class="name-container" [class.active]="active" (click)="clickItem()">
+  <form #nameForm="ngForm">
+    <input name="title" [(ngModel)]="name" />
+  </form>
+  <div class="btn flex justify-center items-center gap-2">
+    <button class="flex justify-center items-center" (click)="removeItem()">
+      <ng-icon class="text-gray-500 text-3xl" name="ionCloseSharp"></ng-icon>
+    </button>
+  </div>
+</div>

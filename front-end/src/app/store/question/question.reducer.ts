@@ -15,12 +15,8 @@ export const questionReducer = createReducer(
         return state.filter((question) => !question_ids.includes(question._id));
     }),
     on(Update, (state, { question }) => {
-        return state.map((item) => {
-            if (item._id === question._id) {
-                return { ...item, ...question };
-            }
-            return item;
-        });
+        console.log(question);
+        return state.map(item => item._id === question._id ? question : item);
     }),
 
     on(Updates, (state, { questions }) => {

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, map, of, switchMap } from "rxjs";
-import { Add, createQuestions, deleteQuestions, getQuestionsFromLessionId, Remove, Update, updateQuestion } from "../store/question/question.actions";
+import { catchError, map, mergeMap, of, switchMap } from "rxjs";
+import { Add, createQuestions, deleteQuestions, getQuestionsFromLessionIds, Remove, Update, updateQuestion } from "../store/question/question.actions";
 import { QuestionService } from "../services/question.service";
 
 @Injectable({ providedIn: 'root' })
@@ -10,9 +10,9 @@ export class QuesionEffects {
     constructor(private actions$: Actions, private _questionSerive: QuestionService) { }
 
     getQuestionFromLessonId$ = createEffect(() => this.actions$.pipe(
-        ofType(getQuestionsFromLessionId),
+        ofType(getQuestionsFromLessionIds),
         switchMap((_action) =>
-            this._questionSerive.getQuestionsFromLessonId(_action.lesson_id)
+            this._questionSerive.getQuestionsFromLessonId(_action.lesson_ids)
                 .pipe(
                     map(questions => Add({ questions: questions })),
                     catchError(error => of())

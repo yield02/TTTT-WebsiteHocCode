@@ -22,7 +22,7 @@ export class DetailsCourseManagerComponent {
 
     switchContent = [
         { title: 'Tổng quan', value: 'general' },
-        { title: 'Danh sách bài học', value: 'lessons' },
+        // { title: 'Danh sách bài học', value: 'lessons' },
     ];
 
     constructor() {

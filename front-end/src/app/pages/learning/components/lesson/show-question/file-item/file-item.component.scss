@@ -1,0 +1,33 @@
+.name-container {
+  position: relative;
+  padding: 16px 8px;
+  border-bottom: 4px solid transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  &:hover {
+    .btn {
+      display: flex;
+    }
+  }
+
+  .btn {
+    transition: all 0.15s ease;
+    display: none;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+  }
+
+  &.active {
+    border-bottom-color: #8685ef;
+  }
+
+  input {
+    background: transparent;
+    outline: none;
+    width: max-content;
+    line-height: 100%;
+    max-width: 100px;
+  }
+}
