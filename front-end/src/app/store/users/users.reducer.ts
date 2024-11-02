@@ -15,6 +15,10 @@ export const usersReducer = createReducer(
         const newState = [...state];
         // Check if user is already in state
         users.forEach((user) => {
+
+            const index = state.indexOf(user);
+            console.log(index);
+
             if (!state.find((u) => u._id == user._id)) {
                 newState.push(user);
             };

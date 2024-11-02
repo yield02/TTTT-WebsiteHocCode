@@ -49,7 +49,7 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {
 
     this.courses$ = this._store.pipe(select(selectCoursesFromSubjectId(this.subject._id))).pipe(tap(courses => {
-      if (courses.length <= 0 && !this.fetched) {
+      if (!this.fetched) {
         this._store.dispatch(FetchingCoursesFromSubject({ subject_id: this.subject._id }));
         this.fetched = true;
       }

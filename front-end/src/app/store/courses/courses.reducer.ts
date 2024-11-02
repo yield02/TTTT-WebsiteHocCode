@@ -7,7 +7,8 @@ export const initialState: Course[] = []
 export const coursesReducer = createReducer(
     initialState,
     on(FetchingCoursesSucess, (state, { courses }) => {
-        return [...state, ...courses];
+        const newCourses = courses.filter(course => !state.some(existingCourse => existingCourse._id === course._id));
+        return [...state, ...newCourses];
     }),
     on(Create, (state, { course }) => {
         return state

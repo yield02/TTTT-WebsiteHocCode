@@ -1,16 +1,16 @@
-@if(user$ | async; as user) {
 <div class="rating-container flex py-4">
   <div>
     <p-avatar
       styleClass="mr-2"
       size="large"
       [image]="
-        (user?.avatar?.contentType == 'url' && user?.avatar?.url?.toString()) ||
-        (user?.avatar?.buffer &&
+        (rating.author_id?.avatar?.contentType == 'url' &&
+          rating.author_id?.avatar?.url?.toString()) ||
+        (rating.author_id?.avatar?.buffer &&
           'data:' +
-            user?.avatar?.contentType +
+            rating.author_id?.avatar?.contentType +
             ';base64,' +
-            user?.avatar?.buffer) ||
+            rating.author_id?.avatar?.buffer) ||
         'assets/images/avatar-user-default.png'
       "
       shape="circle"
@@ -18,7 +18,9 @@
   </div>
   <div>
     <div class="flex items-center justify-start gap-4">
-      <h4 class="name">{{ user.fullname || user.username }}</h4>
+      <h4 class="name">
+        {{ rating.author_id?.fullname || rating.author_id?.username }}
+      </h4>
       <p-rating
         class="rating-star"
         [(ngModel)]="rating.star"
@@ -32,5 +34,3 @@
     </div>
   </div>
 </div>
-
-}

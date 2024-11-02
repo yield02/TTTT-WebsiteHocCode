@@ -35,7 +35,7 @@ export class RatingItemComponent implements OnInit {
   constructor(private _store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.user$ = this._store.select(selectUserFromId(this.rating.author_id!));
+    this.user$ = this._store.select(selectUserFromId(this.rating.author_id?._id!));
   }
   formatTime(date: String): string {
     return formatDate(new Date(date.toString()), 'dd/MM/yyyy ', 'vi')

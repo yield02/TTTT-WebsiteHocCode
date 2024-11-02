@@ -3,7 +3,7 @@ const ReplyDiscuss = require("../../models/ReplyDiscuss");
 const Course = require("../../models/Course");
 const ApiError = require("../../utils/apiError");
 const Lesson = require("../../models/Lesson");
-
+const User = require("../../models/User");
 var mongoose = require("mongoose");
 exports.create = async (data) => {
   try {
@@ -22,7 +22,15 @@ exports.create = async (data) => {
       course_id: lesson.course_id,
       lesson_id: data.lesson_id,
     });
-    return await discuss.save();
+
+    const author = await User.findById(data.author_id).select(
+      "username fullname avatar"
+    );
+
+    return {
+      ...(await discuss.save())._doc,
+      author_id: author,
+    };
   } catch (error) {
     throw new ApiError(500, error.message);
   }
@@ -30,10 +38,16 @@ exports.create = async (data) => {
 
 exports.getDiscussByLessonId = async (lesson_id) => {
   try {
-    const discusses = await Discuss.find({ lesson_id }).sort({
-      likes: -1,
-      createdAt: -1,
-    });
+    const discusses = await Discuss.find({ lesson_id })
+      .sort({
+        likes: -1,
+        createdAt: -1,
+      })
+      .populate({
+        path: "author_id",
+        model: "User",
+        select: "username avatar fullname",
+      });
     return { discusses: discusses };
   } catch (error) {
     throw new ApiError(500, error.message);
@@ -45,14 +59,26 @@ exports.updateContentDiscuss = async (discuss_id, content, author_id) => {
     if (!discuss_id) {
       throw new ApiError("Thông tin yêu cầu không đầy đủ", 400);
     }
-    const result = await Discuss.findByIdAndUpdate(
-      discuss_id,
+    const result = await Discuss.findOneAndUpdate(
+      { _id: discuss_id, author_id: author_id },
       {
         content: content,
       },
       { new: true }
     );
-    return result;
+
+    if (!result) {
+      throw new ApiError("Không tìm thấy bình luận", 404);
+    }
+
+    const author = await User.findById(author_id).select(
+      "username fullname avatar"
+    );
+
+    return {
+      ...result._doc,
+      author_id: author,
+    };
   } catch (error) {
     throw new ApiError(500, error.message);
   }
@@ -85,25 +111,57 @@ exports.InteractDiscuss = async (discuss_id, author_id) => {
       throw new ApiError(400, "Thông tin yêu cầu không đầy đ��");
     }
     const result = await Discuss.findById(discuss_id);
+
+    if (!result) {
+      throw new ApiError(404, "Không tìm thấy bình luận");
+    }
+
     if (result.likes.includes(author_id)) {
       result.likes = result.likes.filter((id) => id != author_id);
     } else {
       result.likes.push(author_id);
     }
-    await result.save();
-    return result;
+
+    const author = await User.findById(result.author_id).select(
+      "username fullname avatar"
+    );
+
+    return {
+      ...(await result.save())._doc,
+      author_id: author,
+    };
   } catch (error) {
     throw new ApiError(500, error.message);
   }
 };
 
-exports.getDiscussByCourseId = async (course_id) => {
+exports.getDiscussByCourseId = async (course_id, lesson_id = "all") => {
   try {
-    const discusses = Discuss.find({ course_id }).sort({
-      likes: -1,
-      createdAt: -1,
-    });
-    return discusses;
+    if (lesson_id == "all") {
+      const discusses = Discuss.find({ course_id })
+        .sort({
+          likes: -1,
+          createdAt: -1,
+        })
+        .populate({
+          path: "author_id",
+          model: "User",
+          select: "username avatar fullname",
+        });
+      return discusses;
+    } else {
+      const discusses = Discuss.find({ course_id, lesson_id })
+        .sort({
+          likes: -1,
+          createdAt: -1,
+        })
+        .populate({
+          path: "author_id",
+          model: "User",
+          select: "username avatar fullname",
+        });
+      return discusses;
+    }
   } catch (error) {
     throw new ApiError(500, error.message);
   }

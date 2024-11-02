@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Discuss } from '../../models/Discuss';
-import { AddDiscuss, AddReplyDiscussToDiscuss, DeleteDiscussSuccess, DeleteReplyDiscussFromDiscuss, UpdateDiscussSuccess } from './discuss.actions';
+import { AddDiscuss, AddReplyDiscussToDiscuss, DeleteDiscussSuccess, DeleteReplyDiscussFromDiscuss, ReplaceAllDiscussions, UpdateDiscussSuccess } from './discuss.actions';
 import { Update } from '../user/user.actions';
 
 export const initialState: Discuss[] = [];
@@ -31,4 +31,8 @@ export const discussReducer = createReducer(
         }
         return item;
     })),
+    on(ReplaceAllDiscussions, (state, { discusses }) => {
+        return [...discusses];
+    })
+
 );

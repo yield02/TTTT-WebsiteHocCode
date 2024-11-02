@@ -23,10 +23,10 @@
           {{ user.fullname || user.username }}
         </h1>
         <div class="flex gap-4">
-          <span class="text-gray-600 description"
+          <!-- <span class="text-gray-600 description"
             ><ng-icon class="description-icon" name="ionCafeOutline"></ng-icon>
             Converstation Starter</span
-          >
+          > -->
           <span class="text-gray-600 description"
             ><ng-icon class="description-icon" name="ionCalendarNumberOutline">
             </ng-icon>
@@ -52,7 +52,14 @@
       {{ formatTime(post.createdAt) }}
     </span>
   </div>
-  <div class="content" [innerHTML]="post.content"></div>
+  <!-- <div class="content"> -->
+  <editor
+    class="content-body"
+    [init]="initEditor"
+    [initialValue]="post.content.toString()"
+    apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+  ></editor>
+  <!-- </div> -->
   @if(auth$ | async; as authUser) {
   <div class="content-bottom flex justify-between items-center">
     <!-- <a pButton label="Bình luận" [text]="true" size="small"></a> -->

@@ -44,7 +44,7 @@ export class RatingListComponent implements OnInit {
     const courseId = this._activeRoute.snapshot.paramMap.get('courseId');
 
     this._store.select((selectRatingOfCourse(courseId!))).pipe(
-      switchMap((ratings) => {
+      tap((ratings) => {
         if (ratings.length <= 0 && !this.isFetching) {
           this._store.dispatch(getRatingByCourseId({ courseId: courseId! }));
           this.isFetching = true;
@@ -52,14 +52,6 @@ export class RatingListComponent implements OnInit {
         if (ratings.length > 0) {
           this.paginator.totalRecord = ratings.length;
           this.ratings$.next(ratings);
-          let userList = ratings.map(rating => rating.author_id!) || [];
-          return this._store.select(selectUsersAndFetchingUsers(userList));
-        }
-        return of();
-      }),
-      tap((data) => {
-        if (data.fetchUsers && data.fetchUsers.length > 0) {
-          this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }));
         }
       })
     ).subscribe();

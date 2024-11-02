@@ -12,6 +12,8 @@ export const myCourseManagerReducer = createReducer(
         return state
     }),
     on(Add, (state, { courses }) => {
+        const existingCourseIds = state.map(course => course._id);
+        courses = courses.filter(course => !existingCourseIds.includes(course._id));
         return [...state, ...courses];
     }),
     on(UpdateCourseManager, (state, { course }) => {

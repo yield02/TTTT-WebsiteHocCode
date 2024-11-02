@@ -38,7 +38,11 @@ exports.createRating = async (data, course_id, author_id) => {
 
 exports.getRatingOfCourse = async function (course_id) {
   try {
-    const ratings = await Rating.find({ course_id });
+    const ratings = await Rating.find({ course_id }).populate({
+      path: "author_id",
+      model: "User",
+      select: "username avatar fullname",
+    });
     return ratings;
   } catch (error) {
     throw new ApiError(500, error.message);

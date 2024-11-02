@@ -43,7 +43,12 @@
           </div>
         </div>
       </div>
-      <div class="content px-14 mt-2" [innerHTML]="comment.content"></div>
+      <editor
+        class="content-body px-14 mt-2"
+        [init]="initEditor"
+        [initialValue]="comment.content.toString()"
+        apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+      ></editor>
       @if(user$ | async; as user) {
       <div class="action-btn">
         <p-button

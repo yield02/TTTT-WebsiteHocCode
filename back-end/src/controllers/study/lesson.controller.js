@@ -102,3 +102,18 @@ exports.toggleUpdatePublish = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.getLessonByCourseId = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    const lessonList = await lessonService.getLessonByCourseId(
+      req.params.course_id,
+      userInfor._id
+    );
+    res.status(200).json(lessonList || []);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

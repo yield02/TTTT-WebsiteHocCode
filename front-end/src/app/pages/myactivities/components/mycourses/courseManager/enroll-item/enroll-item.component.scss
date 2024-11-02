@@ -1,4 +1,20 @@
 .enroll-item {
   padding: 8px 0px;
   border-bottom: 1px solid #dedede;
+  cursor: pointer;
+
+  &.active {
+    background: #ecfffb;
+  }
+}
+
+::ng-deep {
+  .enroll-item {
+    .chart {
+      canvas {
+        width: 90px !important;
+        height: 90px !important;
+      }
+    }
+  }
 }

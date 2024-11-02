@@ -1,7 +1,7 @@
 <p-confirmDialog></p-confirmDialog>
-<div class="w-full">
+<div class="enroll-container w-full flex flex-col">
   <h1 class="title mt-4">Thành Viên</h1>
-  <div class="enroll-list w-full">
+  <div class="enroll-list w-full flex-1 flex flex-col">
     <div class="tools flex justify-between items-center">
       <div class="flex gap-4">
         <div>
@@ -41,7 +41,38 @@
         />
       </div>
     </div>
-    <div class="list-container">
+    <div
+      class="actions-container items-center gap-4 justify-between"
+      [class.active]="usersCheckedId.length > 0"
+    >
+      <p-dropdown
+        [options]="[
+          { name: 'Gửi thông báo', action: 'NY' },
+          { name: 'Rome', action: 'RM' },
+          { name: 'London', action: 'LDN' },
+          { name: 'Istanbul', action: 'IST' },
+          { name: 'Paris', action: 'PRS' }
+        ]"
+        optionLabel="name"
+      ></p-dropdown>
+      <p-button
+        [size]="'small'"
+        label="áp dụng"
+        [text]="true"
+        severity="info"
+      />
+    </div>
+    <div class="list-title">
+      <div class="grid grid-cols-12 items-center gap-4">
+        <div></div>
+        <h2 class="font-semibold col-span-2">Tên người dùng</h2>
+        <h2 class="font-semibold col-span-2">Email</h2>
+        <h2 class="font-semibold col-span-2">Số điện thoại</h2>
+        <h2 class="font-semibold col-span-2">Quá trình học tập</h2>
+        <h2 class="font-semibold col-span-3 text-center">Bài tập</h2>
+      </div>
+    </div>
+    <div class="list-container flex-1">
       @if(userList$ | async; as users) {
       <ng-container *ngFor="let user of users">
         <course-manager-enroll-item

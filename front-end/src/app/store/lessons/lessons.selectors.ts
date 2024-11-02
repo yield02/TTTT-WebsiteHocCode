@@ -52,3 +52,8 @@ export const selectLessonFromId = (lesson_id: String) => createSelector(
     selectLessons,
     (lessons: Lesson[]): Lesson | undefined => lessons.find((l: Lesson) => l._id === lesson_id)
 );
+
+export const selectLessonFromCourseId = (course_id: String) => createSelector(
+    selectLessons,
+    (lessons: Lesson[]): Lesson[] => lessons.filter((l: Lesson) => l.course_id === course_id)
+);

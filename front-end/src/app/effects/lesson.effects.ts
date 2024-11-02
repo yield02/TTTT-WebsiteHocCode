@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of, switchMap, take, tap } from 'rxjs';
 import { LessonService } from '../services/lesson.service';
-import { CallAPIDeleteLessons, CreateLesson, CreateLessonSucess, DeleteLesson, DeleteLessons, DeleteLessonSucess, FetchingLessons, FetchingLessonSucess, sortLesson, ToggleUpdatePublish, UpdateLesson, UpdateLessonsSuccess, UpdateLessonSuccess } from '../store/lessons/lessons.actions';
+import { AddAllLessons, CallAPIDeleteLessons, CreateLesson, CreateLessonSucess, DeleteLesson, DeleteLessons, DeleteLessonSucess, FetchingLessons, FetchingLessonsByCourseId, FetchingLessonSucess, sortLesson, ToggleUpdatePublish, UpdateLesson, UpdateLessonsSuccess, UpdateLessonSuccess } from '../store/lessons/lessons.actions';
 import { ChapterCreateLesson, ChapterDeleteLesson, ChapterUpdateLesson, UpdateChapter } from '../store/chapters/chapters.actions';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../store/reducer';
@@ -94,6 +94,14 @@ export class LessonEffects {
             catchError(error => of())
         ))
     ));
+
+    FetchingLessonsByCourseId$ = createEffect(() => this.actions$.pipe(
+        ofType(FetchingLessonsByCourseId),
+        switchMap(_action => this.lessonService.getLessonsByCourseId(_action.course_id).pipe(
+            map(lessons => AddAllLessons({ lessons: lessons })),
+            catchError(error => of())
+        ))
+    ))
 
 
 

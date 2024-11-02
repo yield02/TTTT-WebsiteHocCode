@@ -38,13 +38,15 @@ export class MycoursesComponent implements OnInit, AfterViewInit {
   @ViewChild('form') searchForm!: NgForm;
   courses: BehaviorSubject<Course[]> = new BehaviorSubject<Course[]>([]);
   searchValue: String = '';
+  isFetching: boolean = false;
 
 
   constructor(private store: Store<AppState>, private courseManagerService: CourseManagerService) {
 
     // fetch data when component is initialized
     this.store.select('myCourseManager').pipe(switchMap((data: Course[]) => {
-      if (data.length <= 0) {
+      if (!this.isFetching) {
+        this.isFetching = true;
         return this.courseManagerService.getCourses();
       }
       return of({ courses: [] });

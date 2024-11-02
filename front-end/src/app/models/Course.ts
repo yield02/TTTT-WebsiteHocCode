@@ -17,6 +17,8 @@ export interface Course {
     updatedAt?: String,
     subject_id?: String,
     averageRating?: Number,
+    totalQuestion?: Number,
+    totalLesson?: Number,
 }
 
 

@@ -104,10 +104,22 @@ export const selectUserInCourseFromCourseId = (course_id: String, filter: Filter
             return { users: [], fetchUsers: [] };
         }
 
-        const users_id = course[typeList]?.slice(filter.start, filter.end) || [];
+        // console.log("start", filter.start)
+        // console.log("end", filter.end)
+
+        let courseUserList = [...course[typeList] || []];
+        if (filter.sort == 'desc') {
+            courseUserList.reverse();
+        }
+
+        const users_id = courseUserList.slice(filter.start, filter.end) || [];
+        // console.log('users_id', users_id, filter.sort);
         userList = users.filter((u: User) => users_id!.includes(u._id));
         let userListId = userList.map((c: User) => c._id);
         fetchUsers = users_id.filter((c: String) => !userListId.includes(c));
+
+        // console.log('fetch User', fetchUsers);
+        // console.log('users', userList);
 
         return { users: userList, fetchUsers: fetchUsers };
     }

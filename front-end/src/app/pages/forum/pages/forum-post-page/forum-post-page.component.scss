@@ -59,5 +59,10 @@
     .content * {
       all: revert;
     }
+    .content-body {
+      .tox-tinymce {
+        border: none;
+      }
+    }
   }
 }

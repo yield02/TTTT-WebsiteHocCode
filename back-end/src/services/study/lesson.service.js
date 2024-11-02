@@ -236,3 +236,12 @@ exports.sortLesson = async (chapter_id, lessons_id, author_id) => {
     throw new apiError(error.statusCode, error.message);
   }
 };
+
+exports.getLessonByCourseId = async (course_id, author_id) => {
+  try {
+    const lessons = await Lesson.find({ course_id, author_id });
+    return lessons;
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};

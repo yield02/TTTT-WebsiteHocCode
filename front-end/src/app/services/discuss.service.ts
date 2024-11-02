@@ -3,7 +3,6 @@ import { Discuss } from '../models/Discuss';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { DeleteDiscussByAuthor } from '../store/discuss/discuss.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +20,8 @@ export class DiscussService {
     return this._http.get<{ discusses: Discuss[] }>(`${environment.apiUrl}discuss/lesson/${lesson_id}`, { withCredentials: true }).pipe(map(data => data.discusses));
   }
 
-  getDiscussesFromCourseId(course_id: String): Observable<Discuss[]> {
-    return this._http.get<Discuss[]>(`${environment.apiUrl}discuss/course/${course_id}`, { withCredentials: true });
+  getDiscussesFromCourseId(course_id: String, lesson_id: string = 'all'): Observable<Discuss[]> {
+    return this._http.get<Discuss[]>(`${environment.apiUrl}discuss/course/${course_id}/${lesson_id}`, { withCredentials: true });
   }
 
   updateContentDiscuss(discuss: Discuss): Observable<Discuss> {

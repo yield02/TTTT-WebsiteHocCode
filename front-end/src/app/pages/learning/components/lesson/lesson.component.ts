@@ -164,6 +164,9 @@ export class LessonComponent implements OnInit {
     }
 
     navigateToLesson() {
+        if (this.lesson.video == '' && this.lesson.content == '') {
+            return;
+        }
         this._router.navigate([`/learning/${this.lesson.course_id}`], { queryParams: { chapter_id: this.chapter_id, lesson_id: this.lesson._id } });
     }
     ngOnDestroy(): void {

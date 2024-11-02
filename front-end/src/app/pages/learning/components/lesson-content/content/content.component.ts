@@ -37,7 +37,7 @@ export class ContentComponent {
                 lesson_id: this.lesson_id
             },
             position: 'left',
-            header: "Danh sách bình luận",
+            header: "Thảo luận",
             width: '70vw',
             height: '80vh',
             baseZIndex: 1000,

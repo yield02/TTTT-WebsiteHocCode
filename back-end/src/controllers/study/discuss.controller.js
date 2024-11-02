@@ -77,7 +77,8 @@ exports.interactDiscuss = async (req, res, next) => {
 exports.getDiscussByCourseId = async (req, res, next) => {
   try {
     const discusses = await DiscussService.getDiscussByCourseId(
-      req.params.course_id
+      req.params.course_id,
+      req.params.lesson_id
     );
     res.status(200).json(discusses || []);
   } catch (error) {

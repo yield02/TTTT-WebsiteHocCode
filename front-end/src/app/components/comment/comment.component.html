@@ -1,17 +1,16 @@
 <div class="comment-container flex flex-col">
   @if(isEdit == false) {
   <div class="flex flex-grow-0">
-    @if(author$ | async; as author) {
     <div class="flex items-start">
       <p-avatar
         [image]="
-          (author?.avatar?.contentType == 'url' &&
-            author?.avatar?.url?.toString()) ||
-          (author?.avatar?.buffer &&
+          (comment.author_id?.avatar?.contentType == 'url' &&
+            comment.author_id?.avatar?.url?.toString()) ||
+          (comment.author_id?.avatar?.buffer &&
             'data:' +
-              author?.avatar?.contentType +
+              comment.author_id?.avatar?.contentType +
               ';base64,' +
-              author?.avatar?.buffer) ||
+              comment.author_id?.avatar?.buffer) ||
           'assets/images/avatar-user-default.png'
         "
         styleClass="mr-2"
@@ -21,17 +20,23 @@
       />
     </div>
     <div class="body flex-1">
-      <div class="head flex items-center gap-4">
-        <h1 class="name">{{ author.fullname || author.username }}</h1>
-        -
-        <a class="course-name text-gray-dark underline">Cài đặt Angular</a>
+      <div class="head flex items-center gap-4 pb-2">
+        <h1 class="name">
+          {{ comment.author_id?.fullname || comment.author_id?.username }}
+        </h1>
+        @if(lesson$ | async; as lesson) {
+        <span>-</span>
+        <a class="course-name text-gray-dark underline cursor-pointer">{{
+          lesson?.title
+        }}</a>
+        }
       </div>
       <div class="content" [innerHTML]="comment.content"></div>
       <div class="actions">
         <button
           (click)="onInteract()"
           [class]="
-            comment.likes?.includes(user?._id!)
+            comment.likes?.includes(this.user?._id!)
               ? 'action-btn active'
               : 'action-btn'
           "
@@ -44,7 +49,6 @@
         <span class="time">{{ comment.createdAt! | FromNowTime }}</span>
       </div>
     </div>
-    }
     <div class="more flex items-center sm:p-8 max-sm:hidden">
       <!-- <button class="more-btn text-gray-dark">
           <ng-icon name="ionEllipsisHorizontalOutline"></ng-icon>
@@ -73,8 +77,8 @@
           type="reply"
           (edit)="onEditReply($event)"
           (delete)="onDeleteReply($event)"
-          [user]="user"
           [comment]="reply"
+          [user]="user"
         ></app-comment>
       </ng-container>
       }

@@ -1,3 +1,6 @@
+import { Exercise } from "./Exercise";
+import { LearningInterFace } from "./Learning";
+
 export interface User {
     _id: String,
     user_id: Number,
@@ -17,6 +20,8 @@ export interface User {
     birthday?: String,
     createdAt?: string,
     updatedAt?: string,
+    learning?: LearningInterFace,
+    exercises?: Exercise[],
 }
 
 export interface AuthUser {

@@ -23,7 +23,14 @@ export class LessonService {
   }
 
   getLessons(chapter_id: String): Observable<{ lessons: Lesson[] }> {
-    return this.http.get<{ lessons: Lesson[] }>(`${environment.apiUrl}lesson/${chapter_id}`, {
+    return this.http.get<{ lessons: Lesson[] }>(`${environment.apiUrl}lesson/chapter/${chapter_id}`, {
+      withCredentials: true,
+    });
+  }
+
+  getLessonsByCourseId(course_id: String): Observable<Lesson[]
+  > {
+    return this.http.get<Lesson[]>(`${environment.apiUrl}lesson/course/${course_id}`, {
       withCredentials: true,
     });
   }

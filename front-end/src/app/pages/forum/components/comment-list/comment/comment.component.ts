@@ -20,6 +20,7 @@ import { selectCommentsWithCommentsId } from '../../../../../store/forum/comment
 import { FetchUsers } from '../../../../../store/users/users.actions';
 
 import vi from '@angular/common/locales/vi';
+import { EditorComponent } from '@tinymce/tinymce-angular';
 registerLocaleData(vi);
 
 
@@ -32,7 +33,8 @@ registerLocaleData(vi);
         NgIconComponent,
         ButtonModule,
         SpeedDialModule,
-        CommentEditorComponent
+        CommentEditorComponent,
+        EditorComponent,
     ],
     providers: [provideIcons({
         ionCalendarNumberOutline,
@@ -56,6 +58,39 @@ export class CommentComponent implements OnInit {
     replies$?: BehaviorSubject<Comment[]> = new BehaviorSubject<Comment[]>([]);
 
     isEdit: boolean = false;
+
+    initEditor: EditorComponent['init'] = {
+        menubar: false,
+        statusbar: false,
+        toolbar: false,
+        editable_root: false,
+        base_url: '/tinymce',
+        suffix: '.min',
+        resize: 'both',
+        autoresize_on_init: true,
+        plugins: ['image',
+            'advlist',
+            'autolink',
+            'lists',
+            'link',
+            'image',
+            'charmap',
+            'preview',
+            'anchor',
+            'searchreplace',
+            'visualblocks',
+            'code',
+            'fullscreen',
+            'insertdatetime',
+            'media',
+            'table',
+            'code',
+            'help',
+            'codesample',
+            'autoresize'
+        ],
+    }
+
 
 
     moreActions!: MenuItem[] | null;

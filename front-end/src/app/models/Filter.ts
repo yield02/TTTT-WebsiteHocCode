@@ -1,6 +1,7 @@
 export interface Filter {
     start: number;
     end: number;
+    sort?: 'desc' | 'asc';
     toString(): string;
 }
 

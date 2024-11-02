@@ -29,10 +29,18 @@
   .sub-icon {
     font-size: 14px;
   }
+
+  &.disable {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
 }
 
 .question-container {
   opacity: 0.2;
+  &.display {
+    display: none;
+  }
 
   &.active {
     opacity: 1;

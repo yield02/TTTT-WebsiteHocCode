@@ -16,17 +16,19 @@
     </div>
   </div>
   <p-tabView>
-    <p-tabPanel header="Quản lý thành viên">
+    <p-tabPanel header="Quản lý đăng ký">
       <div class="member-manager flex justify-center items-center">
         <div class="container flex flex-col justify-center items-center">
           <course-manager-waiting-list class="w-full" [course]="course">
           </course-manager-waiting-list>
-          <course-manager-enroll-list
-            class="w-full"
-            [course]="course"
-          ></course-manager-enroll-list>
         </div>
       </div>
+    </p-tabPanel>
+    <p-tabPanel header="Quản lý thành viên">
+      <course-manager-enroll-list
+        class="w-full"
+        [course]="course"
+      ></course-manager-enroll-list>
     </p-tabPanel>
     <p-tabPanel header="Thảo luận">
       <ng-container>

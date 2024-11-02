@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const lessonsController = require("../../controllers/study/lesson.controller");
 
-router.get("/:chapter_id", lessonsController.getLessonList);
+router.get("/course/:course_id", lessonsController.getLessonByCourseId);
+router.get("/chapter/:chapter_id", lessonsController.getLessonList);
 
 router.post("/create", lessonsController.create);
 

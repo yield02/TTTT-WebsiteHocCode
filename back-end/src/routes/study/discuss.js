@@ -3,7 +3,10 @@ const router = express.Router();
 const discussController = require("../../controllers/study/discuss.controller");
 
 router.get("/lesson/:lesson_id", discussController.getDiscussByLessonId);
-router.get("/course/:course_id", discussController.getDiscussByCourseId);
+router.get(
+  "/course/:course_id/:lesson_id",
+  discussController.getDiscussByCourseId
+);
 
 router.post("/create", discussController.createDiscuss);
 

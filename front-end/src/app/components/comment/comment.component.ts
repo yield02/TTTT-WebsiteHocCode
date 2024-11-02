@@ -13,13 +13,15 @@ import { CommentEditorComponent } from '../comment-editor/comment-editor.compone
 import { AuthUser, User } from '../../models/User';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../store/reducer';
-import { BehaviorSubject, Observable, Subscriber, Subscription, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subscriber, Subscription, switchAll, switchMap, tap } from 'rxjs';
 import { selectUserFromId } from '../../store/users/users.selector';
 import { fromNowTimeFormat } from '../../pipe/fromNowTimeFormat';
 import { CreateReplyDiscuss, DeleteReplyDiscuss, FetchReplyDiscuss, InteractReplyDiscuss, UpdateReplyDiscuss } from '../../store/reply-discuss/reply-discuss.actions';
 import { CreateReplyDiscussInterface, ReplyDiscuss } from '../../models/ReplyDiscuss';
 import { selectReplyDiscussFromDiscussId } from '../../store/reply-discuss/reply-discuss.selectors';
 import { InteractDiscuss } from '../../store/discuss/discuss.actions';
+import { Lesson } from '../../models/Lesson';
+import { selectLessonFromId } from '../../store/lessons/lessons.selectors';
 
 @Component({
   selector: 'app-comment',
@@ -44,10 +46,9 @@ import { InteractDiscuss } from '../../store/discuss/discuss.actions';
 export class CommentComponent implements OnInit, OnDestroy {
   @Input() comment!: Discuss | ReplyDiscuss;
   @Input() isAdmin: boolean = false;
-
   @Input() type: 'comment' | 'reply' = 'comment';
-
   @Input() user?: AuthUser | null;
+
 
   @Output() delete = new EventEmitter<Discuss | ReplyDiscuss>();
   @Output() deleteReply = new EventEmitter<{ reply_id: String, discuss_id: String }>();
@@ -55,6 +56,10 @@ export class CommentComponent implements OnInit, OnDestroy {
   @Output() report = new EventEmitter<Discuss | ReplyDiscuss>();
 
 
+
+  loadReply$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  lesson$?: Observable<Lesson | undefined>;
 
   reply$: BehaviorSubject<Discuss[]> = new BehaviorSubject<ReplyDiscuss[]>([]);
 
@@ -72,13 +77,13 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   ]);
 
-  author$!: Observable<User | undefined>;
 
   replyValue: String = '';
   isReply: boolean = false;
   isEdit: boolean = false;
 
   loadReply: boolean = false;
+  fetchedReply: boolean = false;
 
 
   subcription: Subscription[] = [];
@@ -92,9 +97,8 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.author$ = this._store.select(selectUserFromId(this.comment.author_id!));
 
-    if (this.user?._id == this.comment?.author_id) {
+    if (this.user?._id == this.comment?.author_id?._id) {
       this.items$.next([
         {
           tooltipOptions: {
@@ -129,7 +133,10 @@ export class CommentComponent implements OnInit, OnDestroy {
 
       ])
     }
-    else if (this.isAdmin) {
+    if (this.isAdmin) {
+      if (this.isDiscuss(this.comment)) {
+        this.lesson$ = this._store.pipe(select(selectLessonFromId(this.comment.lesson_id!)));
+      }
       this.items$.next([
         {
           tooltipOptions: {
@@ -156,13 +163,16 @@ export class CommentComponent implements OnInit, OnDestroy {
     }
 
     if (this.type === 'comment') {
-      this._store.select(selectReplyDiscussFromDiscussId(this.comment._id!)).pipe(tap((data) => {
-        if (data.fetchReplyDiscussId.length > 0) {
-          this._store.dispatch(FetchReplyDiscuss({ replyDiscucssesId: data.fetchReplyDiscussId as String[] }));
-        }
-        if (data.replyDiscusses.length > 0) {
-          this.reply$.next(data.replyDiscusses);
-        }
+      this.loadReply$.pipe(switchMap(loadReply => {
+        return this._store.select(selectReplyDiscussFromDiscussId(this.comment._id!)).pipe(tap((data) => {
+          if (data.fetchReplyDiscussId.length > 0 && !this.fetchedReply && this.loadReply) {
+            this._store.dispatch(FetchReplyDiscuss({ replyDiscucssesId: data.fetchReplyDiscussId as String[] }));
+            this.fetchedReply = true;
+          }
+          if (data.replyDiscusses.length > 0) {
+            this.reply$.next(data.replyDiscusses);
+          }
+        }))
       })).subscribe();
     }
 
@@ -174,7 +184,7 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   handleLoadReply(): void {
     this.loadReply = true;
-
+    this.loadReply$.next(true);
   }
 
   toggleIsEdit(): void {
@@ -217,6 +227,10 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
 
+
+  isDiscuss(comment: Discuss | ReplyDiscuss): comment is Discuss {
+    return (comment as Discuss).lesson_id !== undefined;
+  }
 
   ngOnDestroy(): void {
 

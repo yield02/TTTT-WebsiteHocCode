@@ -51,25 +51,14 @@ export class CommentDialogComponent implements OnInit {
     ngOnInit() {
         this._store.pipe(
             select(selectDiscussFromLessonId(this._dialogConfig.data.lesson_id)),
-            switchMap((discusses => {
+            tap((discusses => {
                 if (discusses.length <= 0 && !this.fetched) {
                     this._store.dispatch(FetchingDiscusses({ lesson_id: this._dialogConfig.data.lesson_id }));
                     this.fetched = true;
+                    return;
                 }
-                const users = discusses.reduce((acc: String[], discuss: Discuss) => {
-                    if (!acc.includes(discuss.author_id!)) {
-                        acc.push(discuss.author_id!);
-                    }
-                    return acc;
-                }, []);
                 this.discussList$.next(discusses);
-                return this._store.pipe(select(selectUsersAndFetchingUsers(users)))
-            })),
-            tap((data) => {
-                if (data.fetchUsers.length > 0) {
-                    this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }))
-                }
-            })
+            }))
         ).subscribe();
     }
 

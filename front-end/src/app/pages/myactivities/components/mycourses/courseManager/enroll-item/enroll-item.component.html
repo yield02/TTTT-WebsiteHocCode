@@ -1,18 +1,51 @@
-<div class="enroll-item flex items-center gap-4">
-  <p-checkbox
-    [binary]="true"
-    [ngModel]="isCheck"
-    (onChange)="onChangeCheckBox()"
-  />
-  <p-avatar
-    class=""
-    label="V"
-    styleClass="mr-2"
-    size="large"
-    [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
-    shape="circle"
-  />
-  <h2 class="basis-1/4">{{ user?.fullname || user?.username }}</h2>
-  <h2 class="basis-1/4">{{ user?.email }}</h2>
-  <h2 class="basis-1/4">{{ user?.phone }}</h2>
+<div
+  class="enroll-item grid grid-cols-12 gap-4"
+  [class.active]="isCheck"
+  (click)="showInformationDialog()"
+>
+  <div class="flex justify-center items-center gap-4">
+    <p-checkbox
+      [binary]="true"
+      [ngModel]="isCheck"
+      (onChange)="onChangeCheckBox()"
+    />
+    <p-avatar
+      class=""
+      styleClass="mr-2"
+      size="large"
+      [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
+      [image]="
+        (user?.avatar?.contentType == 'url' && user?.avatar?.url?.toString()) ||
+        (user?.avatar?.buffer &&
+          'data:' +
+            user?.avatar?.contentType +
+            ';base64,' +
+            user?.avatar?.buffer) ||
+        'assets/images/avatar-user-default.png'
+      "
+      shape="circle"
+    />
+  </div>
+  <div class="col-span-2 flex items-center">
+    <h2>
+      {{ user?.username }}
+    </h2>
+  </div>
+  <div class="flex items-center col-span-2 overflow-clip">
+    <h2 class="">{{ user?.email }}</h2>
+  </div>
+  <div class="flex items-center col-span-2 overflow-clip">
+    <h2>{{ user?.phone }}</h2>
+  </div>
+  <div class="col-span-2 flex items-center">
+    <p-progressBar class="w-5/6" [value]="studyProgress"></p-progressBar>
+  </div>
+  <div class="col-span-3 chart">
+    <p-chart
+      class="flex items-center justify-center"
+      type="doughnut"
+      [data]="exerciseData"
+      [options]="optionsExerciseChart"
+    ></p-chart>
+  </div>
 </div>

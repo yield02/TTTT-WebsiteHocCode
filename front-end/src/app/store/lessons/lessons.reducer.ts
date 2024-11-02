@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { CreateLessonSucess, DeleteAllLessons, DeleteLessons, DeleteLessonSucess, FetchingLessonSucess, UpdateLessonsSuccess, UpdateLessonSuccess } from './lessons.actions';
+import { AddAllLessons, CreateLessonSucess, DeleteAllLessons, DeleteLessons, DeleteLessonSucess, FetchingLessonSucess, UpdateLessonsSuccess, UpdateLessonSuccess } from './lessons.actions';
 import { Lesson } from '../../models/Lesson';
 import { state } from '@angular/animations';
 
@@ -40,5 +40,8 @@ export const lessonsReducer = createReducer(
             }
             return item;
         })
+    }),
+    on(AddAllLessons, (state, { lessons }) => {
+        return lessons;
     })
 );

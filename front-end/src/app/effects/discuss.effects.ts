@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { UserService } from "../services/user.service";
 import { DiscussService } from "../services/discuss.service";
-import { AddDiscuss, CreateDiscuss, DeleteDiscussByAuthor, DeleteDiscussByAuthorCourse, DeleteDiscussSuccess, FetchingDiscusses, FetchingDiscussesFromCourseId, InteractDiscuss, UpdateContentDiscuss, UpdateDiscussSuccess } from "../store/discuss/discuss.actions";
+import { AddDiscuss, CreateDiscuss, DeleteDiscussByAuthor, DeleteDiscussByAuthorCourse, DeleteDiscussSuccess, FetchingDiscusses, FetchingDiscussesFromCourseId, InteractDiscuss, ReplaceAllDiscussions, UpdateContentDiscuss, UpdateDiscussSuccess } from "../store/discuss/discuss.actions";
 import { catchError, map, of, switchMap, tap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -39,8 +39,8 @@ export class DiscussEffects {
 
     loadDiscussFromCourse$ = createEffect(() => this.actions$.pipe(
         ofType(FetchingDiscussesFromCourseId),
-        switchMap((_action) => this._discussService.getDiscussesFromCourseId(_action.course_id).pipe(
-            map(discusses => AddDiscuss({ discusses })),
+        switchMap((_action) => this._discussService.getDiscussesFromCourseId(_action.course_id, _action?.lesson_id).pipe(
+            map(discusses => ReplaceAllDiscussions({ discusses })),
             catchError(error => of())
         ))
     ))

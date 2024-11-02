@@ -134,7 +134,7 @@ export class CourseComponent implements OnInit {
             }
             this.ratings$.next(ratings);
             if (ratings.length > 0) {
-              let userList = ratings.map(rating => rating.author_id!) || [];
+              let userList = ratings.map(rating => rating.author_id?._id!) || [];
               return this._store.select(selectUsersAndFetchingUsers(userList));
             }
             return of();

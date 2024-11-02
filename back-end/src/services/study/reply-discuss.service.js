@@ -2,6 +2,7 @@ const apiError = require("../../utils/apiError");
 const ReplyDiscuss = require("../../models/ReplyDiscuss");
 const Discuss = require("../../models/Discuss");
 const Course = require("../../models/Course");
+const User = require("../../models/User");
 
 exports.createReplyDiscuss = async (data, author_id) => {
   try {
@@ -13,11 +14,19 @@ exports.createReplyDiscuss = async (data, author_id) => {
       author_id: author_id,
       discuss_id: data.discuss_id,
     });
-    await replyDiscuss.save();
+
     const discuss = await Discuss.findByIdAndUpdate(data.discuss_id, {
       $push: { replies: replyDiscuss._id },
     });
-    return replyDiscuss;
+
+    const author = await User.findById(author_id).select(
+      "username fullname avatar"
+    );
+
+    return {
+      ...(await replyDiscuss.save())._doc,
+      author_id: author,
+    };
   } catch (error) {
     throw new apiError(500, error.message);
   }
@@ -27,6 +36,10 @@ exports.getReplyDiscussesFromIds = async (replyDiscusses_id) => {
   try {
     const replies = await ReplyDiscuss.find({
       _id: { $in: replyDiscusses_id },
+    }).populate({
+      path: "author_id",
+      model: "User",
+      select: "username avatar fullname",
     });
     return replies;
   } catch (error) {
@@ -45,7 +58,12 @@ exports.UpdateContentReplyDiscuss = async (reply_id, content, author_id) => {
         content: content,
       },
       { new: true }
-    );
+    ).populate({
+      path: "author_id",
+      model: "User",
+      select: "username avatar fullname",
+    });
+
     return result;
   } catch (error) {
     throw new apiError(500, error.message);
@@ -87,8 +105,15 @@ exports.InteractReplyDiscuss = async (reply_id, author_id) => {
     } else {
       result.likes.push(author_id);
     }
-    await result.save();
-    return result;
+
+    const author = await User.findById(result.author_id).select(
+      "username fullname avatar"
+    );
+
+    return {
+      ...(await result.save())._doc,
+      author_id: author,
+    };
   } catch (error) {
     throw new apiError(500, error.message);
   }

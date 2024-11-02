@@ -72,7 +72,6 @@ export class CourseManagerService {
   }
 
   getUsersInCourse(course_id: String, filter: Filter, typeList: 'enroll' | 'waiting_enroll'): Observable<User[]> {
-    console.log(filter);
     return this.http.get<User[]>(`${environment.apiUrl}user/course/${course_id}/?filter=${JSON.stringify(filter)}&typeList=${typeList}`, {
       withCredentials: true,
     });

@@ -1,6 +1,7 @@
 <div
   class="lesson-container flex justify-between items-center"
   [class.active]="active$ | async"
+  [class.disable]="lesson.video == '' && lesson.content == '' ? true : false"
   (click)="navigateToLesson()"
 >
   <div class="">
@@ -23,6 +24,7 @@
 <div
   class="question-container flex items-center gap-4 flex-wrap"
   [class.active]="active$ | async"
+  [class.display]="lesson.video == '' && lesson.content == '' ? true : false"
 >
   <ng-container *ngFor="let question of questions; index as i">
     <button

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { EnrollItemComponent } from '../enroll-item/enroll-item.component';
 import { PaginatorModule } from 'primeng/paginator';
@@ -16,6 +16,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { CourseManagerService } from '../../../../../../services/course-manger.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
     selector: 'course-manager-enroll-list',
@@ -28,6 +29,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
         CheckboxModule,
         InputTextModule,
         ConfirmDialogModule,
+        DropdownModule,
 
         FormsModule,
 
@@ -52,8 +54,10 @@ export class EnrollListComponent {
     subcriptions: Subscription[] = [];
     paginator!: { first: number, rows: number, total: number };
 
+    isFetch: boolean = false;
 
-    constructor(private _store: Store<AppState>, private _confirmService: ConfirmationService, private _courseManagerService: CourseManagerService) {
+
+    constructor(private _store: Store<AppState>, private _confirmService: ConfirmationService, private _courseManagerService: CourseManagerService, private _changeDetector: ChangeDetectorRef) {
     }
 
 
@@ -67,6 +71,7 @@ export class EnrollListComponent {
                 return this.fetching(data.pagination);
             })).subscribe((users) => {
                 this.userList$.next(users);
+                this.usersCheckedId = []
             }));
     }
 
@@ -92,12 +97,15 @@ export class EnrollListComponent {
 
 
     fetching(paginator: { first: number, rows: number, total: number }): Observable<User[]> {
+        console.log(this.isFetch);
         const start = paginator.first;
         const end = paginator.first + paginator.rows;
         this.paginator.total = this.course.enroll?.length || 0;
-        return this._store.pipe(select(selectUserInCourseFromCourseId(this.course._id!, { start, end }, 'enroll'))).pipe(map(data => {
-            if (data.fetchUsers.length > 0) {
+        return this._store.pipe(select(selectUserInCourseFromCourseId(this.course._id!, { start, end, sort: 'desc' }, 'enroll'))).pipe(map(data => {
+            if (data.fetchUsers.length > 0 && !this.isFetch) {
+                console.log('call');
                 this._store.dispatch(fetchUsersInCourse({ course_id: this.course._id!, filter: { start, end }, typeList: 'enroll' }));
+                this.isFetch = true;
             }
             return data.users;
         }));
@@ -119,6 +127,7 @@ export class EnrollListComponent {
 
     onPageOfChange(event: any) {
         this.paginator = { ...this.paginator, first: event.first };
+        this.isFetch = false;
         this.userFetching$.next({ username: this.findUserName, pagination: this.paginator });
     }
 

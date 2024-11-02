@@ -1,5 +1,5 @@
 import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionCafeOutline, ionCalendarNumberOutline, ionHeartOutline } from '@ng-icons/ionicons';
@@ -11,7 +11,7 @@ import { AppState } from '../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { Post } from '../../../../models/forum/Post';
-import { selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
+import { selectAuthorPostId, selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
 import { deletePost, interactWithPost, loadPostWithId, toggleBlockComment, toggleHiddenPost } from '../../../../store/forum/post/post.actions';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { MenuItem } from 'primeng/api';
@@ -24,6 +24,7 @@ import { createComment } from '../../../../store/forum/comment/comment.actions';
 
 import vi from '@angular/common/locales/vi';
 import { state } from '@angular/animations';
+import { EditorComponent } from '@tinymce/tinymce-angular';
 registerLocaleData(vi);
 
 @Component({
@@ -36,6 +37,7 @@ registerLocaleData(vi);
         ButtonModule,
         RouterLink,
         SpeedDialModule,
+        EditorComponent,
 
 
         CommentEditorComponent,
@@ -51,7 +53,7 @@ registerLocaleData(vi);
     styleUrl: './forum-post-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForumPostPageComponent implements OnInit {
+export class ForumPostPageComponent implements OnInit, OnChanges {
 
 
     auth$: Observable<AuthUser> = this._store.select(state => state.user);
@@ -72,25 +74,39 @@ export class ForumPostPageComponent implements OnInit {
         updatedAt: '',
 
     });
-    user$: BehaviorSubject<User> = new BehaviorSubject<User>({
-        _id: '',
-        user_id: 0,
-        username: '',
-        email: '',
-        fullname: '',
-        role: [],
-        gender: false,
-        phone: '',
-        address: '',
-        status: {},
-        avatar: {
-            url: '',
-            contentType: '',
-            buffer: '',
-        },
-        birthday: '',
-    });
+    user$: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
+    initEditor: EditorComponent['init'] = {
+        menubar: false,
+        statusbar: false,
+        toolbar: false,
+        editable_root: false,
+        base_url: '/tinymce',
+        suffix: '.min',
+        resize: 'both',
+        autoresize_on_init: true,
+        plugins: ['image',
+            'advlist',
+            'autolink',
+            'lists',
+            'link',
+            'image',
+            'charmap',
+            'preview',
+            'anchor',
+            'searchreplace',
+            'visualblocks',
+            'code',
+            'fullscreen',
+            'insertdatetime',
+            'media',
+            'table',
+            'code',
+            'help',
+            'codesample',
+            'autoresize'
+        ],
+    }
 
     actions: MenuItem[] = [
 
@@ -109,6 +125,18 @@ export class ForumPostPageComponent implements OnInit {
 
     }
     ngOnInit(): void {
+
+        const post_id = this._activatedRoute.snapshot.params['postId'];
+
+        this._store.pipe(select(selectAuthorPostId(post_id)))
+            .subscribe(
+                user => {
+                    if (user) {
+                        this.user$.next(user);
+                    }
+                }
+            );
+
 
         this._activatedRoute.params.pipe(switchMap((params: any) => {
             return this._store.pipe(
@@ -131,46 +159,15 @@ export class ForumPostPageComponent implements OnInit {
                         this._store.dispatch(FetchUsers({ users_id: [author] }));
                         return this._store.pipe(select(selectUserFromId(author)));
                     }
-                    return of({});
-                }),
-                tap(user => {
-                    if (user) {
-                        this.user$.next(user as User);
-                    }
-                }));
-        })).subscribe(params => {
-        })
-
-
-        // this._store.pipe(
-        //     select(selectPostWithPostId(
-        //         this._activatedRoute.snapshot.params['postId'],
-        //     )),
-        //     map(post => {
-        //         if (!post) {
-        //             this._store.dispatch(loadPostWithId({
-        //                 id: this._activatedRoute.snapshot.params['postId'],
-        //             }));
-        //         }
-        //         else {
-        //             this.post$.next(post);
-        //         }
-        //         return post?.author;
-        //     }),
-        //     switchMap((author) => {
-        //         if (author) {
-        //             this._store.dispatch(FetchUsers({ users_id: [author] }));
-        //             return this._store.pipe(select(selectUserFromId(author)));
-        //         }
-        //         return of({});
-        //     }),
-        //     tap(user => {
-        //         if (user) {
-        //             this.user$.next(user as User);
-        //         }
-        //     })
-
-        // ).subscribe();
+                    return of(null);
+                }))
+        })).subscribe(
+            author => {
+                if (author) {
+                    this.user$.next(author);
+                }
+            }
+        );
 
 
         // check user and post to add more action for post
@@ -259,6 +256,12 @@ export class ForumPostPageComponent implements OnInit {
             }
 
         })
+    }
+
+    ngOnChanges(
+        change: SimpleChanges
+    ): void {
+        console.log(change);
     }
 
 

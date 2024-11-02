@@ -47,6 +47,7 @@ export class PostFormComponent implements OnInit {
         statusbar: false,
         resize: true,
         autoresize_on_init: true,
+        object_resizing: 'img',
         content_css: 'tinymce-5',
         plugins: [
             'table',

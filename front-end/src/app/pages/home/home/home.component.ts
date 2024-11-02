@@ -23,11 +23,11 @@ export class HomeComponent implements OnInit {
 
     }
     ngOnInit(): void {
-        this.subjects = this._store.select(state => state.subjects).pipe(tap(subjects => {
-            if (subjects.length <= 0 && !this.fetched) {
-                this._store.dispatch(fetchingSubjects());  // dispatch action to fetch subjects from api.
-                this.fetched = true;
-            }
-        }));
+        // this.subjects = this._store.select(state => state.subjects).pipe(tap(subjects => {
+        //     if (!this.fetched) {
+        //         this._store.dispatch(fetchingSubjects());  // dispatch action to fetch subjects from api.
+        //         this.fetched = true;
+        //     }
+        // }));
     }
 }

@@ -4,11 +4,11 @@
   <ng-container *ngFor="let discuss of discussList.slice(0, maxLength)">
     <app-comment
       [comment]="discuss"
-      [user]="user$ | async"
       (delete)="onDeleteDiscuss($event)"
       (edit)="onEditDiscussion($event)"
       (report)="onReportDiscuss($event)"
       (deleteReply)="onDeleteReply($event)"
+      [user]="user$ | async"
     ></app-comment>
   </ng-container>
   }@else { Không có bình luận nào. cho tài liệu! } @if (discussList.length > 10

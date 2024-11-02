@@ -1,6 +1,9 @@
 const Course = require("../../models/Course");
 const Rating = require("../../models/Rating");
 const User = require("../../models/User");
+const Lesson = require("../../models/Lesson");
+const Question = require("../../models/Question");
+
 const apiError = require("../../utils/apiError");
 const resize = require("../../utils/resize");
 const fs = require("fs");
@@ -106,8 +109,18 @@ exports.getById = async (courseId) => {
       { $group: { _id: null, averageRating: { $avg: "$star" } } },
     ]);
 
+    const totalLesson = await Lesson.countDocuments({
+      course_id: courseId,
+    });
+
+    const totalQuestion = await Question.countDocuments({
+      course_id: courseId,
+    });
+
     return {
       ...courseData._doc,
+      totalLesson,
+      totalQuestion,
       averageRating: averageRating[0]?.averageRating || 0,
     };
   } catch (error) {
@@ -133,9 +146,19 @@ exports.getByAuthor = async (authorId) => {
 
     const result = await Promise.all(
       courses.map(async (course) => {
+        const totalLesson = await Lesson.countDocuments({
+          course_id: course._id,
+        });
+
+        const totalQuestion = await Question.countDocuments({
+          course_id: course._id,
+        });
+
         if (course.rating.length <= 0) {
           return {
             ...course._doc,
+            totalLesson,
+            totalQuestion,
             averageRating: 0,
           };
         }
@@ -147,6 +170,8 @@ exports.getByAuthor = async (authorId) => {
 
         return {
           ...course._doc,
+          totalLesson,
+          totalQuestion,
           averageRating: rating[0].averageRating,
         };
       })
@@ -169,9 +194,18 @@ exports.getBySubjectId = async (subjectId) => {
 
     const result = await Promise.all(
       courses.map(async (course) => {
+        const totalLesson = await Lesson.countDocuments({
+          course_id: course._id,
+        });
+
+        const totalQuestion = await Question.countDocuments({
+          course_id: course._id,
+        });
         if (course.rating.length <= 0) {
           return {
             ...course._doc,
+            totalLesson,
+            totalQuestion,
             averageRating: 0,
           };
         }
@@ -183,6 +217,8 @@ exports.getBySubjectId = async (subjectId) => {
 
         return {
           ...course._doc,
+          totalLesson,
+          totalQuestion,
           averageRating: rating[0].averageRating,
         };
       })

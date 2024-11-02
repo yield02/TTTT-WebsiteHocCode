@@ -100,8 +100,8 @@ export class CommentListComponent implements OnInit, OnDestroy {
                 this.comments$.next(data.comments);
                 this.ref.detectChanges();
 
-                let users_id = data.comments.map(item => item.author_id);
-                return this._store.pipe(select(selectUserFetch(users_id as string[])))
+                let users_id = new Set(data.comments.map(item => item.author_id));
+                return this._store.pipe(select(selectUserFetch([...users_id] as string[])))
             }), tap(users_id => {
                 if (users_id.length > 0) {
                     this._store.dispatch(FetchUsers({ users_id: users_id as String[] }))
