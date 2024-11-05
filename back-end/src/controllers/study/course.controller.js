@@ -58,7 +58,7 @@ exports.getCourseAuthor = async (req, res, next) => {
 exports.getCoursesFromSubjectId = async (req, res, next) => {
   try {
     const courses = await courseManagerService.getBySubjectId(
-      req.query.subject_id
+      JSON.parse(req.query.subject_id)
     );
     res.status(200).json(courses || []);
   } catch (error) {

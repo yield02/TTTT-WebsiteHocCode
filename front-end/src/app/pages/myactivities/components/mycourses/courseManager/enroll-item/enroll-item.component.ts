@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -11,6 +11,7 @@ import { AppState } from '../../../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
 import { selectCourseManagerFromId } from '../../../../../../store/mycoursemanager/mycoursemanager.selectors';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'course-manager-enroll-item',
@@ -28,7 +29,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './enroll-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EnrollItemComponent implements OnChanges, OnInit {
+export class EnrollItemComponent implements OnChanges, OnInit, OnDestroy {
   @Input() user!: User;
   @Input() checkAll!: Boolean;
 
@@ -41,6 +42,9 @@ export class EnrollItemComponent implements OnChanges, OnInit {
   optionsExerciseChart: any;
 
   studyProgress: number = 50;
+
+
+  selectCourseManagerSubscription!: Subscription;
 
   constructor(private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private _changeDetector: ChangeDetectorRef) {
 
@@ -67,7 +71,7 @@ export class EnrollItemComponent implements OnChanges, OnInit {
       }
     };
 
-    this._store.pipe(select(selectCourseManagerFromId(course_id))).subscribe(course => {
+    this.selectCourseManagerSubscription = this._store.pipe(select(selectCourseManagerFromId(course_id))).subscribe(course => {
       this.studyProgress = Math.round(((Number(this.user.learning?.completed_lessons.length) || 0) / Number(course?.totalLesson || 0)) * 100);
 
       const totalRightQuestion = this.user.exercises?.filter(exercise => exercise.status).length || 0;
@@ -112,6 +116,9 @@ export class EnrollItemComponent implements OnChanges, OnInit {
   showInformationDialog() {
   }
 
+  ngOnDestroy() {
+    this.selectCourseManagerSubscription.unsubscribe();
+  }
 
 
 }

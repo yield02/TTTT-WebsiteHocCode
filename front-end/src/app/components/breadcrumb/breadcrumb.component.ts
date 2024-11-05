@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, OnInit } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Scroll } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroClipboardDocumentList } from '@ng-icons/heroicons/outline';
@@ -7,7 +7,7 @@ import { ionDocumentTextOutline, ionHomeOutline } from '@ng-icons/ionicons';
 import { select, Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { BehaviorSubject, filter, map, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, filter, map, of, Subscription, switchMap, take, tap } from 'rxjs';
 import { AppState } from '../../store/reducer';
 import { selectTopic } from '../../store/forum/topic/topic.selectors';
 import { selectPostWithPostId } from '../../store/forum/post/post.selectors';
@@ -30,7 +30,7 @@ import { Topic } from '../../models/forum/Topic';
     styleUrl: './breadcrumb.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BreadcrumbComponent implements OnInit {
+export class BreadcrumbComponent implements OnInit, OnDestroy {
     itemsBreadcrumb: MenuItem[] = [];
 
     itemsBreadcrumb$: BehaviorSubject<MenuItem[]> = new BehaviorSubject<MenuItem[]>([{
@@ -38,13 +38,14 @@ export class BreadcrumbComponent implements OnInit {
         route: '/forum'
     }]);
 
+    routerSubcription!: Subscription;
 
     constructor(private _activatedRouter: ActivatedRoute, private _router: Router, private ref: ChangeDetectorRef, private _store: Store<AppState>) {
 
 
     }
     ngOnInit(): void {
-        this._router.events.pipe(
+        this.routerSubcription = this._router.events.pipe(
             map(
                 val => {
 
@@ -120,6 +121,9 @@ export class BreadcrumbComponent implements OnInit {
     }
 
 
-
+    ngOnDestroy(): void {
+        this.routerSubcription.unsubscribe();
+        this.itemsBreadcrumb$.unsubscribe();
+    }
 
 }

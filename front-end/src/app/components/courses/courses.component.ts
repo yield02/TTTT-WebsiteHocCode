@@ -8,7 +8,7 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from '../../store/reducer';
 import { selectCoursesFromSubjectId } from '../../store/courses/courses.selector';
 import { Observable, tap } from 'rxjs';
-import { FetchingCoursesFromSubject } from '../../store/courses/courses.actions';
+import { FetchingCoursesFromSubjectIds } from '../../store/courses/courses.actions';
 
 interface PageEvent {
   first: number;
@@ -50,7 +50,7 @@ export class CoursesComponent implements OnInit {
 
     this.courses$ = this._store.pipe(select(selectCoursesFromSubjectId(this.subject._id))).pipe(tap(courses => {
       if (!this.fetched) {
-        this._store.dispatch(FetchingCoursesFromSubject({ subject_id: this.subject._id }));
+        this._store.dispatch(FetchingCoursesFromSubjectIds({ subject_ids: [this.subject._id] as string[] }));
         this.fetched = true;
       }
     }));

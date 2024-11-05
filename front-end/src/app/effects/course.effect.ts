@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { SubjectService } from "../services/subject.service";
 import { CourseService } from "../services/course.service";
-import { FetchingCourseFromCourseId, FetchingCourseFromCourseIds, FetchingCoursesFromSubject, FetchingCoursesSucess, UserEnrollCourse, UserEnrollCourseSucess } from "../store/courses/courses.actions";
+import { FetchingCourseFromCourseId, FetchingCourseFromCourseIds, FetchingCoursesFromSubjectIds, FetchingCoursesSucess, UserEnrollCourse, UserEnrollCourseSucess } from "../store/courses/courses.actions";
 import { catchError, map, mergeMap, of, switchMap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -11,8 +11,8 @@ export class CourseEffects {
     constructor(private actions$: Actions, private _subjectService: SubjectService, private _coursesService: CourseService) { }
 
     loadCourses$ = createEffect(() => this.actions$.pipe(
-        ofType(FetchingCoursesFromSubject),
-        mergeMap((_action) => this._coursesService.getCoursesBySubjectId(_action.subject_id).pipe(
+        ofType(FetchingCoursesFromSubjectIds),
+        mergeMap((_action) => this._coursesService.getCoursesBySubjectIds(_action.subject_ids).pipe(
             map(res => FetchingCoursesSucess({ courses: res.courses })),
             catchError(error => of())
         ))

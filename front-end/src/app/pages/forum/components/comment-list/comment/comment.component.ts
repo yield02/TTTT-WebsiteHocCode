@@ -1,5 +1,5 @@
 import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionCafeOutline, ionCalendarNumberOutline } from '@ng-icons/ionicons';
 import { MenuItem } from 'primeng/api';
@@ -10,7 +10,7 @@ import { Comment } from '../../../../../models/forum/Comment';
 
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../../../store/reducer';
-import { BehaviorSubject, combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { AuthUser, User } from '../../../../../models/User';
 import { selectUserFetch, selectUserFromId } from '../../../../../store/users/users.selector';
 import { state } from '@angular/animations';
@@ -44,7 +44,7 @@ registerLocaleData(vi);
     styleUrl: './comment.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent implements OnInit, OnDestroy {
 
     @Input() comment!: Comment;
     @Input() isReply: boolean = false;
@@ -94,6 +94,9 @@ export class CommentComponent implements OnInit {
 
 
     moreActions!: MenuItem[] | null;
+
+    subscriptions: Subscription[] = [];
+
     constructor(private _store: Store<AppState>) {
 
     }
@@ -113,7 +116,7 @@ export class CommentComponent implements OnInit {
 
         this.author$ = this._store.pipe(select(selectUserFromId(this.comment.author_id!)));
 
-        combineLatest({ user: this._store.select(state => state.user), author: this._store.pipe(select(selectUserFromId(this.comment.author_id!))) }).subscribe(data => {
+        this.subscriptions.push(combineLatest({ user: this._store.select(state => state.user), author: this._store.pipe(select(selectUserFromId(this.comment.author_id!))) }).subscribe(data => {
             if (data.user._id === data.author?._id) {
                 this.moreActions?.push(
                     {
@@ -135,7 +138,7 @@ export class CommentComponent implements OnInit {
                         }
                     })
             }
-        });
+        }));
 
         this._store.pipe(
             select(selectCommentsWithCommentsId(this.comment.replies || [])),
@@ -201,6 +204,8 @@ export class CommentComponent implements OnInit {
         this.isEdit = false;
     }
 
-
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
 
 } 

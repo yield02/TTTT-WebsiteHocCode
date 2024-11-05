@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Lesson } from '../../../../models/Lesson';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,7 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../../store/reducer';
 import { selectQuestionsFromLessonId } from '../../../../store/question/question.selectors';
 import { deleteQuestions, updateQuestion } from '../../../../store/question/question.actions';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-exercise-manager',
@@ -25,11 +26,12 @@ import { deleteQuestions, updateQuestion } from '../../../../store/question/ques
     styleUrl: './exercise-manager.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExerciseManagerComponent implements OnInit {
+export class ExerciseManagerComponent implements OnInit, OnChanges {
     @Input() lesson!: Lesson;
 
     questions: Question[] = [];
 
+    questionSubscription: Subscription | undefined;
 
     constructor(private _dynamicDialogConfig: DynamicDialogConfig, private _dynamicDialogRef: DynamicDialogRef, private _changeDetector: ChangeDetectorRef, private _store: Store<AppState>) {
 
@@ -39,7 +41,7 @@ export class ExerciseManagerComponent implements OnInit {
         this.lesson = this._dynamicDialogConfig?.data?.lesson;
 
 
-        this._store.pipe(select(selectQuestionsFromLessonId(this.lesson._id! as string))).subscribe(questions => {
+        this.questionSubscription = this._store.pipe(select(selectQuestionsFromLessonId(this.lesson._id! as string))).subscribe(questions => {
             this.questions = questions;
             this._changeDetector.detectChanges(); // trigger change detection to update the component view with the new data.
         })
@@ -80,5 +82,8 @@ export class ExerciseManagerComponent implements OnInit {
         );
     }
 
+    ngOnChanges(): void {
+        this.questionSubscription?.unsubscribe();
+    }
 
 }

@@ -163,7 +163,7 @@ export class CommentComponent implements OnInit, OnDestroy {
     }
 
     if (this.type === 'comment') {
-      this.loadReply$.pipe(switchMap(loadReply => {
+      this.subcription.push(this.loadReply$.pipe(switchMap(loadReply => {
         return this._store.select(selectReplyDiscussFromDiscussId(this.comment._id!)).pipe(tap((data) => {
           if (data.fetchReplyDiscussId.length > 0 && !this.fetchedReply && this.loadReply) {
             this._store.dispatch(FetchReplyDiscuss({ replyDiscucssesId: data.fetchReplyDiscussId as String[] }));
@@ -173,7 +173,7 @@ export class CommentComponent implements OnInit, OnDestroy {
             this.reply$.next(data.replyDiscusses);
           }
         }))
-      })).subscribe();
+      })).subscribe());
     }
 
   }

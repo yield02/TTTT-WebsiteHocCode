@@ -1,0 +1,53 @@
+<div class="learning-item flex flex-row items-center gap-4">
+  <div class="image-container">
+    <img
+      class="img"
+      [src]="
+        'data:' +
+        (course?.image)!.contentType! +
+        ';base64,' +
+        (course?.image)!.buffer
+      "
+    />
+  </div>
+  <div
+    class="information-container flex-grow flex-1 flex flex-col justify-between"
+  >
+    <div class="flex flex-col gap-1">
+      <div class="tag">
+        <div class="tag-item">
+          @if (subject$ | async; as subject) {
+          <ng-container>
+            {{ subject?.title }}
+          </ng-container>
+          }
+        </div>
+      </div>
+      <h1 class="title font-bold text-xl">{{ course?.course_name }}</h1>
+    </div>
+    <div
+      class="progress-container inline-flex justify-between items-center gap-4"
+    >
+      <div class="progress flex-1">
+        <label class="text-sm text-gray-500"
+          >Tiến độ:
+          <span class="font-bold text-gray-900">{{ progress }}%</span></label
+        >
+        <p-progressBar class="progress-bar" [value]="progress">
+          <ng-template pTemplate="content" let-value> </ng-template>
+        </p-progressBar>
+      </div>
+      <div class="button-container">
+        <p-button
+          label="Chủ đ��"
+          [routerLink]="['/learning', learning.course_id]"
+          label="Tiếp tục"
+          [outlined]="true"
+          [raised]="true"
+          size="small"
+          severity="secondary"
+        />
+      </div>
+    </div>
+  </div>
+</div>

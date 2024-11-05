@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Question } from '../../../../../models/Question';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EditorComponent, EditorModule } from '@tinymce/tinymce-angular';
@@ -11,7 +11,7 @@ import { heroChevronLeft, heroChevronRight } from '@ng-icons/heroicons/outline';
 import { DropdownModule } from 'primeng/dropdown';
 import { StudyFileItemComponent } from './file-item/file-item.component';
 import { ExecuteCodeService } from '../../../../../services/executeCode.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Exercise } from '../../../../../models/Exercise';
 import { ActivatedRoute } from '@angular/router';
@@ -41,7 +41,7 @@ import { createExercise, createOrUpdateExercise, updateExercise } from '../../..
     styleUrl: './show-question.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShowQuestionComponent implements OnInit {
+export class ShowQuestionComponent implements OnInit, OnDestroy {
 
     @Input() question!: Question;
     exercise: Exercise = {
@@ -174,6 +174,8 @@ export class ShowQuestionComponent implements OnInit {
             'autoresize'
         ],
     }
+
+    subscriptions: Subscription[] = [];
 
     constructor(
         private _dynamicDialogRef: DynamicDialogRef,
@@ -313,7 +315,7 @@ export class ShowQuestionComponent implements OnInit {
             });
         }) as Observable<any>[];
 
-        forkJoin(arraySubmit).subscribe(res => {
+        this.subscriptions.push(forkJoin(arraySubmit).subscribe(res => {
             res.forEach(item => {
                 if (item?.stdout) {
                     this.answer?.push(item.stdout);
@@ -342,7 +344,7 @@ export class ShowQuestionComponent implements OnInit {
         }, () => {
             this.runningCode = false;
             this._changeDetector.detectChanges();
-        })
+        }))
     }
 
     checkAnswer() {
@@ -367,5 +369,9 @@ export class ShowQuestionComponent implements OnInit {
     }
     backCloseDialog() {
         this._dynamicDialogRef.close('back');
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 }

@@ -1,5 +1,5 @@
 import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionCafeOutline, ionCalendarNumberOutline, ionHeartOutline } from '@ng-icons/ionicons';
@@ -9,7 +9,7 @@ import { CommentEditorComponent } from '../../components/comment-editor/comment-
 import { CommentListComponent } from '../../components/comment-list/comment-list.component';
 import { AppState } from '../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { Post } from '../../../../models/forum/Post';
 import { selectAuthorPostId, selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
 import { deletePost, interactWithPost, loadPostWithId, toggleBlockComment, toggleHiddenPost } from '../../../../store/forum/post/post.actions';
@@ -53,7 +53,7 @@ registerLocaleData(vi);
     styleUrl: './forum-post-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForumPostPageComponent implements OnInit, OnChanges {
+export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
 
 
     auth$: Observable<AuthUser> = this._store.select(state => state.user);
@@ -121,6 +121,8 @@ export class ForumPostPageComponent implements OnInit, OnChanges {
 
     ];
 
+    subscriptions: Subscription[] = [];
+
     constructor(private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private _router: Router) {
 
     }
@@ -128,17 +130,17 @@ export class ForumPostPageComponent implements OnInit, OnChanges {
 
         const post_id = this._activatedRoute.snapshot.params['postId'];
 
-        this._store.pipe(select(selectAuthorPostId(post_id)))
+        this.subscriptions.push(this._store.pipe(select(selectAuthorPostId(post_id)))
             .subscribe(
                 user => {
                     if (user) {
                         this.user$.next(user);
                     }
                 }
-            );
+            ));
 
 
-        this._activatedRoute.params.pipe(switchMap((params: any) => {
+        this.subscriptions.push(this._activatedRoute.params.pipe(switchMap((params: any) => {
             return this._store.pipe(
                 select(selectPostWithPostId(
                     params['postId'],
@@ -167,11 +169,11 @@ export class ForumPostPageComponent implements OnInit, OnChanges {
                     this.user$.next(author);
                 }
             }
-        );
+        ));
 
 
         // check user and post to add more action for post
-        combineLatest({
+        this.subscriptions.push(combineLatest({
             user: this._store.select(state => state.user),
             post: this._store.pipe(select(selectPostWithPostId(this._activatedRoute.snapshot.params['postId'])))
         }
@@ -255,7 +257,7 @@ export class ForumPostPageComponent implements OnInit, OnChanges {
                 }
             }
 
-        })
+        }));
     }
 
     ngOnChanges(
@@ -295,6 +297,10 @@ export class ForumPostPageComponent implements OnInit, OnChanges {
                 post: post_id,
             }
         }))
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
 }

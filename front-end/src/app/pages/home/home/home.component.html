@@ -1,10 +1,138 @@
-<div class="home-container">
-  <!-- <ng-container *ngFor="let subject of subjects | async">
-    <app-courses [subject]="subject"></app-courses>
-  </ng-container> -->
+<div class="container home-container">
   <div class="my-learning">
-    <h1 class="text-start">Tiếp tục bài học</h1>
-    <div class="learning-box"></div>
+    <h1 class="text-start text-2xl font-semibold mb-8">Tiếp tục bài học</h1>
+    <ng-container *ngIf="learnings$ | async as learnings">
+      <div
+        class="learning-box grid max-xl:grid-cols-2 max-lg:grid-cols-1 grid-cols-3 gap-4"
+      >
+        @if(calculateLengthOfLearnings(learnings) > 0) {
+        <ng-container
+          *ngFor="let learning of learnings | keyvalue | slice : 0 : 5"
+        >
+          <study-home-learning-item
+            [learning]="learning.value"
+          ></study-home-learning-item>
+        </ng-container>
+        }
+      </div>
+      @if(calculateLengthOfLearnings(learnings) >= 5) {
+
+      <div class="flex justify-end items-center">
+        <p-button label="Xem thêm" [text]="true" size="small" />
+      </div>
+      }
+    </ng-container>
   </div>
-  <div class="course"></div>
+  <div class="course mt-12">
+    <div class="course-header flex justify-between items-center">
+      <div class="drop-down-course">
+        <p-dropdown
+          name="typesubject"
+          [options]="typeSubjects"
+          optionLabel="title"
+          optionValue="_id"
+          placeholder="Chọn ngôn ngữ"
+          [formControl]="typeSubject"
+        ></p-dropdown>
+      </div>
+      <div class="filter-action flex gap-2">
+        <div
+          class="search flex flex-row gap-2 text-gray-500"
+          [class.forcus]="isSearching"
+          #search
+        >
+          <button class="search-btn flex" (click)="toggleSearching()">
+            <ng-icon class="text-3xl" name="ionSearchOutline"></ng-icon>
+          </button>
+          <input
+            class="search-input"
+            name="searchCourse"
+            placeholder="Tìm kiếm khóa học"
+            [formControl]="searchCourse"
+          />
+        </div>
+        <div>
+          <button
+            (click)="op.toggle($event)"
+            class="filter font-bold flex items-center gap-1"
+          >
+            <ng-icon class="text-2xl" name="ionFilterOutline"></ng-icon>
+            <span>Bộ lọc</span>
+          </button>
+          <p-overlayPanel #op>
+            <div class="flex flex-col gap-4">
+              <h6 class="text-sm font-bold">Bộ lọc</h6>
+              <div class="flex flex-col">
+                <label class="text-sm italic">Đối tượng:</label>
+                <p-dropdown
+                  [options]="[
+                    {
+                      label: 'Tất cả',
+                      value: ['averageRating', 'enroll.length', 'createdAt']
+                    },
+                    {
+                      label: 'Thời gian',
+                      value: ['createdAt']
+                    },
+                    {
+                      label: 'Số lượng học viên',
+                      value: ['enroll.length'],
+                    },
+                    {
+                      label: 'Đánh giá',
+                      value: ['averageRating'],
+                    }
+                  ]"
+                  optionLabel="label"
+                  optionValue="value"
+                  (onChange)="fieldFilterChange($event)"
+                ></p-dropdown>
+              </div>
+              <div class="flex flex-col">
+                <label class="text-sm italic">Sắp xếp:</label>
+                <p-dropdown
+                  [options]="[
+                    {
+                      label: 'Giảm dần',
+                      value: 'desc'
+                    },
+                    {
+                      label: 'Tăng dần',
+                      value: 'asc',
+                    }
+                  ]"
+                  optionLabel="label"
+                  optionValue="value"
+                  (onChange)="typeFilterChange($event)"
+                ></p-dropdown>
+              </div>
+            </div>
+          </p-overlayPanel>
+        </div>
+      </div>
+    </div>
+    <div
+      class="course-list grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1 gap-6 mt-4"
+    >
+      <ng-container
+        *ngFor="
+          let course of courses.slice(
+            paginator.page * paginator.rows,
+            paginator.page * paginator.rows + paginator.rows
+          )
+        "
+      >
+        <study-home-course [course]="course"></study-home-course>
+      </ng-container>
+    </div>
+    <div class="paginator mt-4" *ngIf="paginator.pageCount > 1">
+      <p-paginator
+        [totalRecords]="paginator.total"
+        [rows]="paginator.rows"
+        [first]="paginator.first"
+        (onPageChange)="onPageChange($event)"
+        [showFirstLastIcon]="false"
+      ></p-paginator>
+    </div>
+  </div>
 </div>

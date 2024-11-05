@@ -5,4 +5,78 @@
   width: 100%;
   max-width: none;
   padding: 64px;
+
+  .my-learning {
+  }
+
+  .course {
+    .drop-down-course {
+    }
+    .filter-action {
+      .search {
+        border-right: 1px solid #dedede;
+        .search-input {
+          font-size: 16px;
+          display: none;
+          animation: fadeInInput 0.3s ease;
+        }
+
+        .search-btn {
+          padding: 0 4px;
+        }
+
+        &.forcus {
+          border: 1px solid #dedede;
+          border-radius: 30px;
+          padding: 2px 8px;
+          animation: fadeInSearch 0.3s linear;
+          .search-btn {
+            border-right: 1px solid #dedede;
+          }
+          .search-input {
+            display: block;
+            border: none;
+            outline: none;
+            width: 100%;
+          }
+        }
+      }
+
+      .filter {
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .course {
+    .drop-down-course {
+      .p-dropdown {
+        border: none;
+      }
+    }
+  }
+}
+
+@keyframes fadeInInput {
+  0% {
+    opacity: 0;
+    width: 0;
+  }
+  100% {
+    opacity: 1;
+    width: 100%;
+  }
+}
+
+@keyframes fadeInSearch {
+  0% {
+    width: 27px;
+  }
+  100% {
+    width: 260px;
+  }
 }

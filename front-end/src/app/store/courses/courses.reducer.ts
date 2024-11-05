@@ -22,7 +22,10 @@ export const coursesReducer = createReducer(
     on(UserEnrollCourseSucess, (state, { course }) => {
         return state.map((item) => {
             if (item._id === course._id) {
-                return course;
+                return {
+                    ...item,
+                    enroll: course.enroll
+                }
             }
             return item
         });

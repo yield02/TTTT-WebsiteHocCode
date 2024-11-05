@@ -65,7 +65,7 @@
     </div>
     <div class="flex justify-center mt-10">
       @if(user$ | async; as user) { @if( course?.enroll?.includes(user._id) ||
-      course?.author_id == user._id) {
+      course?.author_id?._id == user._id) {
       <p-button
         [routerLink]="'/learning/' + course._id"
         label="Bắt đầu học"

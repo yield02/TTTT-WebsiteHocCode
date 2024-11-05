@@ -3,7 +3,7 @@ import { Course } from '../../models/Course';
 
 
 
-export const FetchingCoursesFromSubject = createAction('[Courses Component] fetching FromSubjectId', props<{ subject_id: String }>());
+export const FetchingCoursesFromSubjectIds = createAction('[Courses Component] fetching FromSubjectId', props<{ subject_ids: string[] }>());
 export const FetchingCourseFromCourseId = createAction('[Courses Component] fetching FromCourseId', props<{ course_id: String }>());
 export const FetchingCourseFromCourseIds = createAction('[Courses Component] fetching CourseIds', props<{ course_ids: String[] }>());
 

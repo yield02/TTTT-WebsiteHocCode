@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroPencil, } from '@ng-icons/heroicons/outline';
 import { heroTrophySolid } from '@ng-icons/heroicons/solid';
 import { ionCloseSharp } from '@ng-icons/ionicons';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 
 @Component({
     selector: 'study-show-question-file-item',
@@ -25,7 +25,7 @@ import { debounceTime } from 'rxjs';
     styleUrl: './file-item.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StudyFileItemComponent implements OnInit, AfterViewInit {
+export class StudyFileItemComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() name: string = '';
     @Input() index: number = 0;
     @Input() active: boolean = false;
@@ -37,12 +37,13 @@ export class StudyFileItemComponent implements OnInit, AfterViewInit {
 
     @ViewChild('nameForm') form!: FormGroup;
 
+    listenChangeSubscription: Subscription | undefined;
 
     ngOnInit(): void {
     }
 
     ngAfterViewInit(): void {
-        this.form.valueChanges.pipe(debounceTime(800)).subscribe((value) => {
+        this.listenChangeSubscription = this.form.valueChanges.pipe(debounceTime(800)).subscribe((value) => {
             this.editContent(value.title);
         })
     }
@@ -58,5 +59,9 @@ export class StudyFileItemComponent implements OnInit, AfterViewInit {
 
     editContent(name: string) {
         this.edit.emit({ name, index: this.index });
+    }
+
+    ngOnDestroy(): void {
+        this.listenChangeSubscription?.unsubscribe();
     }
 }

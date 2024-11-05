@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LoginComponent } from '../login/login.component';
 import { SignupComponent } from '../signup/signup.component';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { User } from '../../models/User';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Observable, map, of, switchMap } from 'rxjs';
+import { Observable, Subscription, map, of, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -33,7 +33,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   $isAuth: Observable<boolean>;
 
 
@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   @ViewChild('login') login!: LoginComponent;
   @ViewChild('signup') logout!: SignupComponent;
 
-
+  authenSubscription: Subscription | undefined;
 
   constructor(private store: Store<{ user: User }>, private authService: AuthService, private route: ActivatedRoute) {
     this.$isAuth = this.store.pipe(map(({ user }) => {
@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.$isAuth.pipe(switchMap((isAuth) => {
+    this.authenSubscription = this.$isAuth.pipe(switchMap((isAuth) => {
       if (!isAuth) {
         return this.authService.isAuth();
       }
@@ -74,6 +74,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   toSignup(): void {
     this.login.toggleDialog();
     this.logout.toggleDialog();
+  }
+
+
+  ngOnDestroy(): void {
+    this.authenSubscription?.unsubscribe();
   }
 
 }

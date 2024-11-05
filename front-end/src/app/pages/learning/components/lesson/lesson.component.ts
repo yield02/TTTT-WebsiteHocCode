@@ -6,7 +6,7 @@ import { heroCheckCircleSolid } from '@ng-icons/heroicons/solid';
 import { ionDocumentTextOutline } from '@ng-icons/ionicons';
 import { Lesson } from '../../../../models/Lesson';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, map, take, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, map, Subscription, take, takeUntil, tap } from 'rxjs';
 import { Observable } from 'rxjs';
 import { AppState } from '../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
@@ -36,7 +36,7 @@ import { selectExercisesByLessonId } from '../../../../store/exercise/exercise.s
     styleUrl: './lesson.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LessonComponent implements OnInit {
+export class LessonComponent implements OnInit, OnDestroy {
     @Input() lesson!: Lesson;
     @Input() index!: number;
     @Input() chapter_index!: number;
@@ -52,6 +52,8 @@ export class LessonComponent implements OnInit {
 
     questionDyalogRef: DynamicDialogRef | undefined;
 
+    subscriptions: Subscription[] = [];
+
     constructor(private _router: Router, private _activatedRoute: ActivatedRoute, private _store: Store<AppState>, private cdr: ChangeDetectorRef, private _dialogService: DialogService) {
 
     }
@@ -61,19 +63,19 @@ export class LessonComponent implements OnInit {
 
         const course_id = this._activatedRoute.snapshot.params['courseId'];
 
-        this._store.pipe(select(selectLearningFromCourseId(course_id))).subscribe(learning => {
+        this.subscriptions.push(this._store.pipe(select(selectLearningFromCourseId(course_id))).subscribe(learning => {
             if (learning && learning.completed_lessons.includes(this.lesson._id)) {
                 this.learned = true;
                 this.cdr.detectChanges();
             }
-        });
+        }));
 
-        this._store.pipe(select(selectExercisesByLessonId(this.lesson._id as string))).subscribe(exercise => {
+        this.subscriptions.push(this._store.pipe(select(selectExercisesByLessonId(this.lesson._id as string))).subscribe(exercise => {
             this.exercises = exercise;
             this.cdr.detectChanges();
-        })
+        }))
 
-        this._activatedRoute.queryParams.pipe(
+        this.subscriptions.push(this._activatedRoute.queryParams.pipe(
             map(params => {
                 if (params['lesson_id'] === this.lesson._id) {
                     this.active$.next(true);
@@ -82,7 +84,7 @@ export class LessonComponent implements OnInit {
                     this.active$.next(false);
                 }
             })
-        ).subscribe();
+        ).subscribe());
 
 
         // this._store.pipe(select(selectLearningFromCourseId(this.lesson.course_id)), take(2), tap((learning: LearningInterFace | undefined) => {
@@ -91,18 +93,12 @@ export class LessonComponent implements OnInit {
         // })).subscribe();
 
 
-        this._store.pipe(select(selectQuestionsFromLessonId(this.lesson._id as string)), tap((questions: Question[]) => {
+        this.subscriptions.push(this._store.pipe(select(selectQuestionsFromLessonId(this.lesson._id as string)), tap((questions: Question[]) => {
             if (questions.length > 0) {
                 this.questions = questions;
                 this.cdr.detectChanges();
             }
-
-            // if (questions.length <= 0 && !this.fetchedQuestion) {
-            //     console.log(questions.length, this.fetchedQuestion)
-            //     this._store.dispatch(getQuestionsFromLessionId({ lesson_id: this.lesson._id as string }));
-            //     this.fetchedQuestion = true;
-            // }
-        })).subscribe();
+        })).subscribe());
 
     }
 
@@ -123,7 +119,7 @@ export class LessonComponent implements OnInit {
             header: `Bài tập ${index + 1}`,
         });
 
-        this.questionDyalogRef?.onClose.subscribe((result: any) => {
+        this.subscriptions.push(this.questionDyalogRef?.onClose.subscribe((result: any) => {
             if (result == 'next') {
                 if (index >= this.questions.length) {
                     // this.questionDyalogRef?.close();
@@ -151,7 +147,7 @@ export class LessonComponent implements OnInit {
                     this.showQuestionDialog(this.questions[index - 1], index - 1);
                 }
             }
-        });
+        }));
 
     }
 
@@ -169,10 +165,7 @@ export class LessonComponent implements OnInit {
         }
         this._router.navigate([`/learning/${this.lesson.course_id}`], { queryParams: { chapter_id: this.chapter_id, lesson_id: this.lesson._id } });
     }
-    ngOnDestroy(): void {
-        console.log('destroy');
-        this.questionDyalogRef?.close();
-    }
+
 
     checkQuestion(question: Question) {
         return this.exercises.some(exercise => exercise.question_id == question._id);
@@ -183,5 +176,13 @@ export class LessonComponent implements OnInit {
             return null;
         }
         return exercise.status;
+    }
+
+    ngOnDestroy(): void {
+        console.log('destroy');
+        this.questionDyalogRef?.close();
+        this.subscriptions.forEach(sub => {
+            sub.unsubscribe()
+        });
     }
 }

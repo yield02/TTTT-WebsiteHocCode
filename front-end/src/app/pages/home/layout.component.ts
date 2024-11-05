@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { CourseSearch } from '../../models/Course';
 import { CourseService } from '../../services/course.service';
 import { CommonModule } from '@angular/common';
@@ -32,12 +32,14 @@ import { SearchCourseItemComponent } from './components/search-course-item/searc
   changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
-export class LayOutComponent {
+export class LayOutComponent implements OnDestroy {
   sidebarVisible: boolean = false;
 
 
   courseSearch$: BehaviorSubject<CourseSearch[]> = new BehaviorSubject<CourseSearch[]>([]);
 
+
+  subscriptions: Subscription[] = [];
 
   constructor(private _courseService: CourseService) {
 
@@ -48,11 +50,13 @@ export class LayOutComponent {
   }
 
   searchCourse(course_name: string) {
-    this._courseService.searchCourseWithCourseName(course_name).subscribe(result => {
+    this.subscriptions.push(this._courseService.searchCourseWithCourseName(course_name).subscribe(result => {
       this.courseSearch$.next(result);
-    })
+    }));
   }
 
-
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 
 }

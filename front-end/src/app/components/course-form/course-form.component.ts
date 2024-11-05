@@ -17,7 +17,7 @@ import { Add, UpdateCourseManager } from '../../store/mycoursemanager/mycoursema
 import { Store } from '@ngrx/store';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { Observable, of, switchMap, take, tap } from 'rxjs';
+import { Observable, of, Subscription, switchMap, take, tap } from 'rxjs';
 import { ChapterService } from '../../services/chapter.service';
 import { Router } from '@angular/router';
 import { AppState } from '../../store/reducer';
@@ -84,6 +84,8 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
   fetched: Boolean = false;
   subjects!: Observable<Subject[]>;
 
+  subscriptions: Subscription[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -137,7 +139,7 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
         course_id: this.course?._id
       }
     },);
-    this.lessonFormRef.onClose.pipe(switchMap((lesson) => {
+    this.subscriptions.push(this.lessonFormRef.onClose.pipe(switchMap((lesson) => {
       if (lesson) {
         const data: CreateLessonInterface = {
           chapter_id: lesson.chapter_id,
@@ -149,13 +151,13 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
         this.store.dispatch(CreateLesson({ createLesson: data }))
       }
       return of(null);
-    })).subscribe();
+    })).subscribe());
 
   }
 
   showChapterForm() {
     this.chapterFormRef = this.dialogService.open(ChapterFormComponent, { header: 'Thêm chương' });
-    this.chapterFormRef.onClose.pipe(switchMap((chapterTitle: String) => {
+    this.subscriptions.push(this.chapterFormRef.onClose.pipe(switchMap((chapterTitle: String) => {
       if (chapterTitle) {
         const data = {
           course_id: this.course!._id!,
@@ -164,7 +166,7 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
         this.store.dispatch(CreateChapter({ createChapter: data }));
       }
       return of(null);
-    })).subscribe();
+    })).subscribe());
   }
 
 
@@ -176,6 +178,8 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
     if (this.chapterFormRef) {
       this.chapterFormRef.close();
     }
+
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
   upLoadImage(event: any) {
     const file = event.currentFiles?.[0];
@@ -192,24 +196,24 @@ export class CourseFormComponent implements OnInit, OnDestroy, OnChanges {
     console.log(this.form.value.subject_id);
     // create course
     if (!this.course?._id) {
-      this.courseManagerService.createCourse(fb).subscribe(({ course }) => {
+      this.subscriptions.push(this.courseManagerService.createCourse(fb).subscribe(({ course }) => {
         this.store.dispatch(Add({ courses: [course] }))
         this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Tạo khóa học thành công' })
         setTimeout(() => { this.router.navigate([`/myactivities/mycourses/edit/${course._id}`]); }, 500);
       }, (error) => {
         this.messageService.add({ severity: 'error', summary: 'Thất bại', detail: 'Tạo khóa học thất bại' })
-      });
+      }));
     }
     // update course  if have _id  in course object  else create new course  in store  and courseManagerService  for update course in database  and store in local storage  and state management  in ngrx/store  and firestore/firebase  or mongodb  or any other database  or local storage  or memory  or any other data storage solution  or any other data storage solution  or any other data storage solution  or any other data storage solution
     else {
       fb.append('_id', this.course._id.toString());
-      this.courseManagerService.updateCourse(fb).subscribe(({ course }) => {
+      this.subscriptions.push(this.courseManagerService.updateCourse(fb).subscribe(({ course }) => {
         this.course = { ...course };
         this.store.dispatch(UpdateCourseManager({ course: course }))
         this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật khóa học thành công' })
       }, (error) => {
         this.messageService.add({ severity: 'error', summary: 'Thất bại', detail: 'Cập nhật khóa học thất bại' })
-      });
+      }));
     }
   }
 

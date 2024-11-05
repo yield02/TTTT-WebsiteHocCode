@@ -1,7 +1,11 @@
 
 export interface Course {
     _id?: String,
-    author_id?: String,
+    author_id?: {
+        _id: string;
+        username: string;
+        fullname?: string;
+    },
     course_name: String,
     image?: {
         contentType: String,

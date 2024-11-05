@@ -69,8 +69,6 @@ exports.getAllLearningOfUser = async (user_id) => {
       user_id,
     }).populate("total_lesson");
 
-    console.log(learnings.total_lesson);
-
     return learnings;
   } catch (error) {
     throw new ApiError(error.statusCode, error.message);

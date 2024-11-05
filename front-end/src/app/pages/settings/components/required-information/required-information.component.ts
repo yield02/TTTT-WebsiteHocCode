@@ -8,7 +8,7 @@ import { usernameValidation } from '../../../../tools/Validator/usernameValidati
 import { AuthService } from '../../../../services/auth.service';
 import { AppState } from '../../../../store/reducer';
 import { Store } from '@ngrx/store';
-import { catchError, map, of, tap } from 'rxjs';
+import { catchError, map, of, Subscription, tap } from 'rxjs';
 import { Update } from '../../../../store/user/user.actions';
 import { Router } from '@angular/router';
 
@@ -29,6 +29,7 @@ export class RequiredInformationComponent {
 
     requiredInformationForm: FormGroup;
 
+    subscriptions: Subscription[] = [];
 
     constructor(private _fb: FormBuilder, private _authService: AuthService, private _store: Store<AppState>, private _router: Router) {
         this.requiredInformationForm = this._fb.group({
@@ -39,7 +40,7 @@ export class RequiredInformationComponent {
     }
 
     onSubmit() {
-        this._authService.updateRequiredInformation(this.requiredInformationForm.value.username, this.requiredInformationForm.value.password).pipe(
+        this.subscriptions.push(this._authService.updateRequiredInformation(this.requiredInformationForm.value.username, this.requiredInformationForm.value.password).pipe(
             tap(data => {
                 this._store.dispatch(Update({ updateValue: data }));
                 this._router.navigate(['/home']);
@@ -50,6 +51,6 @@ export class RequiredInformationComponent {
                 }
                 return of(error);
             })
-        ).subscribe();
+        ).subscribe());
     }
 }

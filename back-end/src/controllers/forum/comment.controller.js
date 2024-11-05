@@ -67,7 +67,6 @@ exports.interactWithComment = async (req, res, next) => {
 
 exports.getRepliesWithCommentId = async (req, res, next) => {
   try {
-    console.log("vo comment");
     const replies = await CommentService.getRepliesWithCommentId(
       req.params.comment_id
     );

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TopicPostComponent } from '../../components/topics/topic/post/post.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
@@ -12,7 +12,7 @@ import { Filter } from '../../../../models/forum/Filter';
 import { AppState } from '../../../../store/reducer';
 import { Store } from '@ngrx/store';
 import { Hashtag } from '../../../../models/forum/Hashtag';
-import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription, switchMap } from 'rxjs';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Post } from '../../../../models/forum/Post';
 import { PostService } from '../../../../services/forum/post.service';
@@ -59,7 +59,7 @@ interface DropDownInterface {
     styleUrl: './forum-topic-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForumTopicPageComponent implements OnInit {
+export class ForumTopicPageComponent implements OnInit, OnDestroy {
 
 
     topic_id!: string;
@@ -85,7 +85,7 @@ export class ForumTopicPageComponent implements OnInit {
     hashtags$: Observable<Hashtag[]> = this._store.select(state => state.hashtag);
     posts$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
 
-
+    listenRoute!: Subscription | undefined;
 
     constructor(private _activatedRoute: ActivatedRoute, private _confirmationService: ConfirmationService, private _router: Router, private _store: Store<AppState>, private _postService: PostService) {
         this.topic_id = this._activatedRoute.snapshot.params['topicId'];
@@ -93,7 +93,7 @@ export class ForumTopicPageComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this._activatedRoute.queryParamMap.pipe(switchMap(() => this._postService.getPostsWithTopicId(this.topic_id, this.filterPost))).subscribe(
+        this.listenRoute = this._activatedRoute.queryParamMap.pipe(switchMap(() => this._postService.getPostsWithTopicId(this.topic_id, this.filterPost))).subscribe(
             (data) => {
                 this.posts$.next(data.data);
 
@@ -139,6 +139,10 @@ export class ForumTopicPageComponent implements OnInit {
         this.filterPost = { ...this.filterPost, page: ++event.page };
         console.log(this.filterPost);
         this._router.navigate(['/forum/topic/' + this.topic_id], { queryParams: { ...this.filterPost } });
+    }
+
+    ngOnDestroy(): void {
+        this.listenRoute?.unsubscribe();
     }
 
 }

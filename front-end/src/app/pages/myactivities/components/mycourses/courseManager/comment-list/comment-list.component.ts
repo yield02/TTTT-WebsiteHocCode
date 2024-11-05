@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommentComponent } from '../../../../../../components/comment/comment.component';
 import { Paginator } from '../../../../../../models/Paginator';
 import { PaginatorModule } from 'primeng/paginator';
@@ -7,7 +7,7 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../../../../store/reducer';
 import { ActivatedRoute } from '@angular/router';
 import { selectDiscussFromCourseId } from '../../../../../../store/discuss/discuss.selectors';
-import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { Discuss } from '../../../../../../models/Discuss';
 import { DeleteDiscussByAuthorCourse, FetchingDiscussesFromCourseId } from '../../../../../../store/discuss/discuss.actions';
 import { DeleteReplyDiscussByAuthorCourse } from '../../../../../../store/reply-discuss/reply-discuss.actions';
@@ -34,7 +34,7 @@ import { AuthUser } from '../../../../../../models/User';
   styleUrl: './comment-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentListComponent implements OnInit {
+export class CommentListComponent implements OnInit, OnDestroy {
   paginator: Paginator;
   fetched: boolean = false;
 
@@ -48,6 +48,8 @@ export class CommentListComponent implements OnInit {
 
   isFetchLesson: boolean = false;
 
+
+  subscriptions: Subscription[] = [];
   constructor(private _store: Store<AppState>, private _route: ActivatedRoute) {
     this.paginator = {
       pageIndex: 0,
@@ -59,7 +61,7 @@ export class CommentListComponent implements OnInit {
   ngOnInit(): void {
     const courseId = this._route.snapshot.paramMap.get('courseId');
 
-    this._store.select(selectDiscussFromCourseId(courseId!)).pipe(
+    this.subscriptions.push(this._store.select(selectDiscussFromCourseId(courseId!)).pipe(
       tap(discusses => {
         if (discusses.length <= 0 && !this.fetched) {
           this._store.dispatch(FetchingDiscussesFromCourseId({ course_id: courseId! }));
@@ -68,27 +70,27 @@ export class CommentListComponent implements OnInit {
         this.paginator.totalRecord = discusses.length;
         this.discusses$.next(discusses);
       })
-    ).subscribe();
+    ).subscribe());
 
     if (!this.isFetchLesson) {
       this._store.dispatch(FetchingLessonsByCourseId({ course_id: courseId! }));
       this.isFetchLesson = true;
     }
 
-    this._store.pipe(select(selectLessonFromCourseId(courseId as string))).subscribe(lessons => {
+    this.subscriptions.push(this._store.pipe(select(selectLessonFromCourseId(courseId as string))).subscribe(lessons => {
       this.lessons$.next([{ _id: 'all', title: 'Tất cả' }, ...lessons]);
-    });
+    }));
 
-    this.filterValue.valueChanges.pipe(tap(lesson_id => {
+    this.subscriptions.push(this.filterValue.valueChanges.pipe(tap(lesson_id => {
       this._store.dispatch(FetchingDiscussesFromCourseId({ course_id: courseId!, lesson_id }));
-    })).subscribe();
+    })).subscribe());
 
-    this._store.select(selectDiscussFromCourseId(courseId!)).pipe(
+    this.subscriptions.push(this._store.select(selectDiscussFromCourseId(courseId!)).pipe(
       tap(discusses => {
         this.paginator.totalRecord = discusses.length;
         this.discusses$.next(discusses || []);
       })
-    ).subscribe();
+    ).subscribe());
 
   }
 
@@ -105,5 +107,10 @@ export class CommentListComponent implements OnInit {
     this.paginator.pageSize = event.rows;
   }
 
+  ngOnDestroy(): void {
+
+    this.discusses$.complete();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 
 }

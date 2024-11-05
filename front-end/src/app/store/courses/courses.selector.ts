@@ -3,7 +3,7 @@ import { AppState } from "../reducer";
 import { Course } from "../../models/Course";
 import { Chapter } from "../../models/Chapter";
 import { Lesson } from "../../models/Lesson";
-
+import * as lodash from "lodash";
 
 
 const selectCoursesState = (state: AppState) => state.courses;
@@ -34,7 +34,7 @@ export const checkUserEnroll = (course_id: String) => createSelector(
         if (!course || !user) {
             return false;
         }
-        if (course.enroll?.includes(user._id) || course.author_id === user._id) {
+        if (course.enroll?.includes(user._id) || course.author_id?._id === user._id) {
             return true;
         }
         else {
@@ -73,3 +73,18 @@ export const selectCoursesFromCourseId = (courseId: String[]) => createSelector(
         return courses.filter(c => courseId.includes(c._id!));
     }
 )
+
+export interface FilterCourseHomePage {
+    search: string,
+    subject: string,
+    filter: { type: 'asc' | 'desc', field: string }
+}
+
+export const selectCourseWithFilter = (filter: FilterCourseHomePage) => createSelector(selectCoursesState, (courses: Course[]) => {
+    let coursesSort = courses.filter(c => c.course_name.toLowerCase().includes(filter.search.toLowerCase()) || filter.search === '' || filter.search === 'all');
+
+    let coursesWithSubject = coursesSort.filter(c => c.subject_id === filter.subject || filter.subject === 'all');
+
+    let result = lodash.orderBy(coursesWithSubject, filter.filter.field, filter.filter.type);
+    return result;
+})

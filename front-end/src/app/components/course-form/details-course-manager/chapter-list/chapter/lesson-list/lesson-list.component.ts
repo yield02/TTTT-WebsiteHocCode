@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { LessonComponent } from './lesson/lesson.component';
 import { PaginatorModule } from 'primeng/paginator';
-import { BehaviorSubject, combineLatest, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, of, Subscription, switchMap, take, tap } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService } from 'primeng/api';
@@ -49,7 +49,7 @@ interface Actions {
     styleUrl: './lesson-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LessonListComponent implements OnInit {
+export class LessonListComponent implements OnInit, OnDestroy {
     @Input() chapter!: Chapter;
 
     filter: Filter = {
@@ -76,12 +76,14 @@ export class LessonListComponent implements OnInit {
 
     checkAll: boolean = false;
 
+    subscriptions: Subscription[] = [];
+
     constructor(private _store: Store<AppState>, private _confirmationService: ConfirmationService) {
 
     }
 
     ngOnInit(): void {
-        this._store.pipe(select(selectLessonsFromChapterId(this.chapter._id)),
+        this.subscriptions.push(this._store.pipe(select(selectLessonsFromChapterId(this.chapter._id)),
             switchMap(lessons => {
                 if (lessons.length > 0) {
                     this.Lesson$.next(lessons);
@@ -108,7 +110,7 @@ export class LessonListComponent implements OnInit {
                     this._store.dispatch(getQuestionsFromLessionIds({ lesson_ids: data.lesson_ids }));
                     this.fetchedQuestion = true;
                 }
-            })).subscribe();
+            })).subscribe());
     }
 
 
@@ -180,6 +182,11 @@ export class LessonListComponent implements OnInit {
                 console.log('hủy')
             },
         });
+    }
+
+    ngOnDestroy() {
+        this.Lesson$.unsubscribe();
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
 }

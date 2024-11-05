@@ -12,8 +12,8 @@ export class CourseService {
   constructor(private http: HttpClient) {
   }
 
-  getCoursesBySubjectId(subjectId: String): Observable<{ courses: Course[] }> {
-    return this.http.get<{ courses: Course[] }>(`${environment.apiUrl}course?subject_id=${subjectId}`);
+  getCoursesBySubjectIds(subjectIds: string[]): Observable<{ courses: Course[] }> {
+    return this.http.get<{ courses: Course[] }>(`${environment.apiUrl}course?subject_id=${JSON.stringify(subjectIds)}`);
   }
 
   getCourseFromCourseId(courseId: String): Observable<Course> {

@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -42,7 +43,7 @@ import { SearchPostItemComponent } from './components/search-post-item/search-po
   styleUrl: './forum.layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForumComponent implements OnInit {
+export class ForumComponent implements OnInit, OnDestroy {
 
   sidebar: boolean = false;
 
@@ -76,6 +77,10 @@ export class ForumComponent implements OnInit {
     this._postService.searchPostWithTitle(title).subscribe(data => {
       this.postSearch$.next(data);
     })
+  }
+
+  ngOnDestroy(): void {
+    this.postSearch$.unsubscribe();
   }
 
 }

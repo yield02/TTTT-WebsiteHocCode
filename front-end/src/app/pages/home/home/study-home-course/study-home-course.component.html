@@ -1,0 +1,57 @@
+<div class="course-container">
+  <div class="image-container flex items-center justify-center">
+    <img
+      class="img"
+      [src]="
+        'data:' +
+        (course?.image)!.contentType! +
+        ';base64,' +
+        (course?.image)!.buffer
+      "
+    />
+  </div>
+  <div class="infor-container px-2">
+    <div class="tag">
+      @if(subject$ | async; as subject) {
+      <span class="tag-item">
+        {{ subject?.title }}
+      </span>
+      }
+    </div>
+    <h4 class="title font-bold truncate">{{ course.course_name }}</h4>
+    <span class="author-name text-gray-400 text-sm italic">{{
+      course.author_id?.fullname || course.author_id?.username
+    }}</span>
+    <div class="action flex justify-between items-center gap-4">
+      <div class="progress flex gap-2 flex-1">
+        @if(!learning) {
+        <div class="text flex gap-2 justify-center">
+          <img src="../../../../../assets/images/user-icon-study.png" />
+          <span class="text-sm font-bold">{{ course.enroll?.length }}</span>
+        </div>
+        <span class="text text-sm text-gray-400">Chưa học</span>
+        } @if(learning) {
+        <div class="w-full">
+          <span class="text-sm"
+            >Tiến độ: <span class="font-bold">{{ progress }}%</span></span
+          >
+          <p-progressBar
+            class="progress-bar"
+            [value]="progress"
+          ></p-progressBar>
+        </div>
+        }
+      </div>
+      <p-button
+        [routerLink]="
+          learning ? '/learning/' + course._id : 'course/' + course._id
+        "
+        [label]="!learning ? 'Xem khóa học' : 'Tiếp tục'"
+        [outlined]="true"
+        size="small"
+        severity="secondary"
+        [rounded]="true"
+      />
+    </div>
+  </div>
+</div>

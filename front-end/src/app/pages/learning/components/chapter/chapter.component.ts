@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronDown, heroChevronRight } from '@ng-icons/heroicons/outline';
 import { LessonComponent } from '../lesson/lesson.component';
 import { Chapter } from '../../../../models/Chapter';
 import { Lesson } from '../../../../models/Lesson';
-import { BehaviorSubject, combineLatest, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { AppState } from '../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
 import { selectLessonsFromChapterId } from '../../../../store/lessons/lessons.selectors';
@@ -33,7 +33,7 @@ import { selectExercisesByChapterId } from '../../../../store/exercise/exercise.
     styleUrl: './chapter.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChapterComponent implements OnInit {
+export class ChapterComponent implements OnInit, OnDestroy {
     @Input() chapter!: Chapter;
     @Input() index!: number;
 
@@ -47,6 +47,8 @@ export class ChapterComponent implements OnInit {
 
     lessonFetching$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
+    subscriptions: Subscription[] = [];
+
     constructor(private _router: Router, private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private cdr: ChangeDetectorRef) {
 
     }
@@ -55,14 +57,14 @@ export class ChapterComponent implements OnInit {
         const course_id = this._activatedRoute.snapshot.paramMap.get("courseId")!;
 
 
-        this._store.pipe(select(selectLearningFromCourseId(course_id))).subscribe(learning => {
+        this.subscriptions.push(this._store.pipe(select(selectLearningFromCourseId(course_id))).subscribe(learning => {
             if (!learning && this.index == 1) {
                 this.isCollapsed = false;
                 this.lessonFetching$.next(this.isCollapsed);
             }
-        })
+        }));
 
-        this.lessonFetching$.pipe(
+        this.subscriptions.push(this.lessonFetching$.pipe(
             switchMap(isCollapsed => {
                 return this._store.pipe(select(selectLessonsFromChapterId(this.chapter._id)),
                     switchMap(lessons => {
@@ -104,9 +106,9 @@ export class ChapterComponent implements OnInit {
                     })
                 )
             })
-        ).subscribe();
+        ).subscribe());
 
-        this._activatedRoute.queryParams.pipe<Params>(
+        this.subscriptions.push(this._activatedRoute.queryParams.pipe<Params>(
             tap((params) => {
                 if (params['chapter_id'] == this.chapter._id) {
                     this.isCollapsed = false;
@@ -115,7 +117,7 @@ export class ChapterComponent implements OnInit {
                     return;
                 }
             })
-        ).subscribe();
+        ).subscribe());
     }
 
 
@@ -124,5 +126,9 @@ export class ChapterComponent implements OnInit {
     toggleCollapse() {
         this.isCollapsed = !this.isCollapsed;
         this.lessonFetching$.next(this.isCollapsed);
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 }

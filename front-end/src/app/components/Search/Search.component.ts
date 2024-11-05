@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionSearchOutline } from '@ng-icons/ionicons';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -14,7 +14,7 @@ import { debounceTime } from 'rxjs';
   styleUrl: './Search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent implements OnInit, AfterViewInit {
+export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('searchResult') searchResultContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('searchContainer') searchContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
@@ -22,6 +22,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
   @Output() search = new EventEmitter<string>();
 
   searchControl: FormControl = new FormControl('');
+
+  listenChangeSubscription: Subscription | undefined;
 
   constructor(private renderer: Renderer2) {
     this.renderer.listen('window', 'click', (e: Event) => {
@@ -39,7 +41,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
   }
   ngOnInit(): void {
-    this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe((result) => {
+    this.listenChangeSubscription = this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe((result) => {
       this.search.emit(result);
     });
   }
@@ -47,6 +49,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
     if (this.searchResultContainer) {
       this.searchResultContainer.nativeElement.hidden = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.listenChangeSubscription?.unsubscribe();
   }
 
 }

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DoCheck, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DoCheck, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LearningHeaderComponent } from './components/learning-header/learning-header.component';
 import { LessonComponent } from './components/lesson-content/lesson-content.component';
 import { SidebarModule } from 'primeng/sidebar';
 import { ChapterlistComponent } from './components/chapterlist/chapterlist.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from '../../models/Course';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import { Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../store/reducer';
 import { selectCourseFromCourseId, selectFirstChapterAndLesson } from '../../store/courses/courses.selector';
@@ -30,7 +30,7 @@ import { LearningInterFace } from '../../models/Learning';
   styleUrl: './learning.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LearningComponent implements OnInit {
+export class LearningComponent implements OnInit, OnDestroy {
 
   @ViewChild('content') content!: ElementRef<HTMLDivElement>;
   @ViewChild('lessonBar') lessonBar!: ElementRef<HTMLDivElement>;
@@ -39,6 +39,8 @@ export class LearningComponent implements OnInit {
   sidebarVisible: boolean = false;
   course$!: Observable<Course | undefined>;
   isFetched: boolean = false;
+
+  subcriptions: Subscription[] = [];
 
 
 
@@ -60,29 +62,31 @@ export class LearningComponent implements OnInit {
       }
     }));
 
-    this._store.pipe(select(selectLearningFromCourseId(course_id!)), tap(learning => {
-      if (learning) {
-        return;
-      }
-      return this._store.dispatch(fetchLearning({ course_id: course_id! }));
-    })).subscribe();
-
-    this._store.pipe(
-      select(selectLearningFromCourseId(this._activatedRoute.snapshot.params['courseId'])),
-      switchMap((learning: LearningInterFace | undefined) => {
+    this.subcriptions.push(
+      this._store.pipe(select(selectLearningFromCourseId(course_id!)), tap(learning => {
         if (learning) {
-          this._router.navigate([`/learning/${this._activatedRoute.snapshot.params['courseId']}`], { queryParams: { chapter_id: learning.current_chapter, lesson_id: learning.current_lesson } });
-          return of(undefined);
+          return;
         }
-        return this._store.pipe(select(selectFirstChapterAndLesson(this._activatedRoute.snapshot.params['courseId'])))
+        return this._store.dispatch(fetchLearning({ course_id: course_id! }));
+      })).subscribe());
 
-      }), tap(data => {
-        if (!data) return;
+    this.subcriptions.push(
+      this._store.pipe(
+        select(selectLearningFromCourseId(this._activatedRoute.snapshot.params['courseId'])),
+        switchMap((learning: LearningInterFace | undefined) => {
+          if (learning) {
+            this._router.navigate([`/learning/${this._activatedRoute.snapshot.params['courseId']}`], { queryParams: { chapter_id: learning.current_chapter, lesson_id: learning.current_lesson } });
+            return of(undefined);
+          }
+          return this._store.pipe(select(selectFirstChapterAndLesson(this._activatedRoute.snapshot.params['courseId'])))
 
-        console.log('vo mac dinh');
-        this._router.navigate([`/learning/${course_id}`], { queryParams: { chapter_id: data.chapter._id, lesson_id: data.lesson._id } });
-      })
-    ).subscribe();
+        }), tap(data => {
+          if (!data) return;
+
+          this._router.navigate([`/learning/${course_id}`], { queryParams: { chapter_id: data.chapter._id, lesson_id: data.lesson._id } });
+        })
+      ).subscribe()
+    );
 
   }
 
@@ -99,5 +103,9 @@ export class LearningComponent implements OnInit {
   }
   toggleLessonSideBar(): void {
     this.sidebarVisible = !this.sidebarVisible;
+  }
+
+  ngOnDestroy(): void {
+    this.subcriptions.forEach(sub => sub.unsubscribe());
   }
 }

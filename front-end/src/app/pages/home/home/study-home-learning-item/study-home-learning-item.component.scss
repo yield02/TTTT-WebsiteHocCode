@@ -1,0 +1,72 @@
+.learning-item {
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+    rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+  border-radius: 8px;
+  padding: 8px 12px;
+
+  .image-container {
+    .img {
+      width: 180px;
+      height: 120px;
+      border-radius: 8px;
+      box-shadow: rgba(14, 63, 126, 0.04) 0px 0px 0px 1px,
+        rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px,
+        rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px,
+        rgba(42, 51, 70, 0.04) 0px 6px 6px -3px,
+        rgba(14, 63, 126, 0.04) 0px 12px 12px -6px,
+        rgba(14, 63, 126, 0.04) 0px 24px 24px -12px;
+    }
+  }
+  .information-container {
+    min-height: 120px;
+    .title {
+      text-shadow: 1px 1px 0px #ffffff, 3px 2px 0px rgba(0, 0, 0, 0.15);
+    }
+    .tag {
+      .tag-item {
+        color: #ba53de;
+        font-weight: 900;
+        font-size: 14px;
+        animation: text-shadow 3s linear infinite;
+      }
+    }
+    .progress-container {
+      .progress {
+        .progress-bar {
+          .p-progressbar {
+            height: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes text-shadow {
+  0% {
+  }
+  25% {
+    text-shadow: 0px 1px 2px rgba(186, 83, 222, 0.6);
+  }
+  50% {
+    text-shadow: 0px -1px 2px rgba(186, 83, 222, 0.6);
+  }
+  75% {
+    text-shadow: 1px 0px 2px rgba(186, 83, 222, 0.6);
+  }
+  100% {
+    text-shadow: -1px 0px 2px rgba(186, 83, 222, 0.6);
+  }
+}
+
+::ng-deep .learning-item {
+  .progress-container {
+    .progress {
+      .progress-bar {
+        .p-progressbar {
+          height: 0.5rem;
+        }
+      }
+    }
+  }
+}

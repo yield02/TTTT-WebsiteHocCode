@@ -1,0 +1,82 @@
+.course-container {
+  padding: 8px 8px;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+
+  .image-container {
+    .img {
+      border-radius: 8px;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .infor-container {
+    .tag {
+      margin: 4px 0px;
+      .tag-item {
+        color: #ba53de;
+        font-weight: 900;
+        font-size: 14px;
+        animation: text-shadow 3s linear infinite;
+      }
+    }
+    .title {
+      font-size: 16px;
+      text-shadow: 1px 1px 0px #ffffff, 3px 2px 0px rgba(0, 0, 0, 0.15);
+    }
+    .action {
+      margin-top: 8px;
+      .progress {
+        .progress-bar {
+        }
+        .text {
+          padding: 4px 8px;
+          border-radius: 20px;
+          background: rgba(0, 0, 0, 0.05);
+          img {
+            width: 18px;
+            height: 18px;
+          }
+        }
+        span {
+        }
+      }
+    }
+  }
+}
+
+@keyframes text-shadow {
+  0% {
+  }
+  25% {
+    text-shadow: 0px 1px 2px rgba(186, 83, 222, 0.6);
+  }
+  50% {
+    text-shadow: 0px -1px 2px rgba(186, 83, 222, 0.6);
+  }
+  75% {
+    text-shadow: 1px 0px 2px rgba(186, 83, 222, 0.6);
+  }
+  100% {
+    text-shadow: -1px 0px 2px rgba(186, 83, 222, 0.6);
+  }
+}
+
+::ng-deep {
+  .course-container {
+    .action {
+      .progress {
+        .progress-bar {
+          .p-progressbar {
+            height: 0.5rem;
+          }
+          .p-progressbar-label {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

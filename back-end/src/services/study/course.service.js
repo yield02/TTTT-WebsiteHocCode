@@ -99,6 +99,10 @@ exports.getById = async (courseId) => {
     const courseData = await Course.findOne({
       _id: courseId,
       "status.state": "active",
+    }).populate({
+      path: "author_id",
+      model: "User",
+      select: "username fullname",
     });
     if (!courseData) {
       throw new apiError(404, "Course not found");
@@ -132,6 +136,10 @@ exports.getCoursesById = async (coursesId) => {
   try {
     const courses = await Course.find({
       _id: { $in: coursesId.split(",") },
+    }).populate({
+      path: "author_id",
+      model: "User",
+      select: "username fullname",
     });
 
     return courses;
@@ -142,7 +150,11 @@ exports.getCoursesById = async (coursesId) => {
 
 exports.getByAuthor = async (authorId) => {
   try {
-    const courses = await Course.find({ author_id: authorId });
+    const courses = await Course.find({ author_id: authorId }).populate({
+      path: "author_id",
+      model: "User",
+      select: "username fullname",
+    });
 
     const result = await Promise.all(
       courses.map(async (course) => {
@@ -185,11 +197,15 @@ exports.getByAuthor = async (authorId) => {
   }
 };
 
-exports.getBySubjectId = async (subjectId) => {
+exports.getBySubjectId = async (subjectIds) => {
   try {
     const courses = await Course.find({
-      subject_id: subjectId,
+      subject_id: { $in: subjectIds },
       "status.state": "active",
+    }).populate({
+      path: "author_id",
+      model: "User",
+      select: "username fullname",
     });
 
     const result = await Promise.all(

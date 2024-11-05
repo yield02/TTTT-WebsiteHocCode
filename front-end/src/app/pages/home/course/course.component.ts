@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { bootstrapPersonVideo } from '@ng-icons/bootstrap-icons';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionDocumentTextOutline } from '@ng-icons/ionicons';
@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { RatingModule } from 'primeng/rating';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { Course } from '../../../models/Course';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducer';
@@ -44,7 +44,7 @@ import { RatingItemComponent } from '../../myactivities/components/mycourses/cou
   styleUrl: './course.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CourseComponent implements OnInit {
+export class CourseComponent implements OnInit, OnDestroy {
 
   rating: number = 0;
   chapters$: BehaviorSubject<Chapter[]> = new BehaviorSubject<Chapter[]>([]);;
@@ -60,7 +60,7 @@ export class CourseComponent implements OnInit {
   fetchedChapters: boolean = false;
   isFetchRating: boolean = false;
 
-
+  listenerRouteSubscription: Subscription | undefined;
 
   constructor(private _route: ActivatedRoute, private _store: Store<AppState>) {
   }
@@ -68,45 +68,12 @@ export class CourseComponent implements OnInit {
   ngOnInit(): void {
 
 
-    this._route.params.pipe(switchMap((params: any) => {
+    this.listenerRouteSubscription = this._route.params.pipe(switchMap((params: any) => {
       this.isShowRating = false;
       this.isCollapseAll = true;
       this.fetchedCourse = false;
       this.fetchedChapters = false;
       this.isFetchRating = false;
-
-      // this.course$ = this._store.pipe(select(selectCourseFromCourseId(params.courseId!))).pipe(tap(course => {
-      //   if (!course && !this.fetchedCourse) {
-      //     this._store.dispatch(FetchingCourseFromCourseId({ course_id: params.courseId! }));
-      //   }
-      // }));
-
-      // this.chapters$ = this._store.pipe(select(selectChaptersFromCourseId(params.courseId!))).pipe(tap(chapters => {
-      //   if (chapters.length <= 0 && !this.fetchedChapters) {
-      //     this._store.dispatch(FetchingChapters({ course_id: params.courseId! }));
-      //     this.fetchedChapters = true;
-      //   }
-      // }));
-
-      // this._store.select((selectRatingOfCourse(params.courseId!))).pipe(
-      //   switchMap((ratings) => {
-      //     if (ratings.length <= 0 && !this.isFetchRating) {
-      //       this._store.dispatch(getRatingByCourseId({ courseId: params.courseId! }));
-      //       this.isFetchRating = true;
-      //     }
-      //     if (ratings.length > 0) {
-      //       let userList = ratings.map(rating => rating.author_id!) || [];
-      //       this.ratings$.next(ratings);
-      //       return this._store.select(selectUsersAndFetchingUsers(userList));
-      //     }
-      //     return of();
-      //   }),
-      //   tap((data) => {
-      //     if (data.fetchUsers && data.fetchUsers.length > 0) {
-      //       this._store.dispatch(FetchUsers({ users_id: data.fetchUsers }));
-      //     }
-      //   })
-      // )
 
       return combineLatest([
         this._store.pipe(select(selectCourseFromCourseId(params.courseId!))).pipe(tap(course => {
@@ -147,7 +114,6 @@ export class CourseComponent implements OnInit {
         )
       ]);
     })).subscribe();
-
   }
 
   toggleRating(): void {
@@ -161,5 +127,9 @@ export class CourseComponent implements OnInit {
 
   enroll(course_id: String) {
     this._store.dispatch(UserEnrollCourse({ course_id: course_id }));
+  }
+
+  ngOnDestroy(): void {
+    this.listenerRouteSubscription?.unsubscribe();
   }
 }

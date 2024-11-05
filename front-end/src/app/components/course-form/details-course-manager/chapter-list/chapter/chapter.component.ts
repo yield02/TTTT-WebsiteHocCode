@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronDownSolid, heroChevronUpSolid } from '@ng-icons/heroicons/solid';
 import { ConfirmationService, MenuItem } from 'primeng/api';
@@ -18,6 +18,7 @@ import { CreateLesson } from '../../../../../store/lessons/lessons.actions';
 import { sortChapterDown, sortChapterUp } from '../../../../../store/mycoursemanager/mycoursemanager.actions';
 import { selectChapterFromId } from '../../../../../store/chapters/chapters.selectors';
 import { LessonListComponent } from './lesson-list/lesson-list.component';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'study-chapter',
@@ -39,7 +40,7 @@ import { LessonListComponent } from './lesson-list/lesson-list.component';
     styleUrl: './chapter.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChapterComponent implements OnInit {
+export class ChapterComponent implements OnInit, OnDestroy {
 
     @Input() index: number = 0;
     @Input() chapter_id!: String;
@@ -135,19 +136,21 @@ export class ChapterComponent implements OnInit {
 
     createLessonForm: DynamicDialogRef | undefined;
 
+    subscriptions: Subscription[] = [];
+
 
     constructor(private _dialogSerice: DialogService, private _confirmationService: ConfirmationService, private _store: Store<AppState>, private ref: ChangeDetectorRef) {
 
     }
 
     ngOnInit(): void {
-        this._store.pipe(select(selectChapterFromId(this.chapter_id))).subscribe(chapter => {
+        this.subscriptions.push(this._store.pipe(select(selectChapterFromId(this.chapter_id))).subscribe(chapter => {
             if (chapter) {
                 this.chapter = chapter;
                 this.ref.detectChanges();
             }
 
-        });
+        }));
     }
 
 
@@ -172,5 +175,9 @@ export class ChapterComponent implements OnInit {
     saveSort() {
         this.sorting = !this.sorting;
         this.saveSortEvent.emit();
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 }

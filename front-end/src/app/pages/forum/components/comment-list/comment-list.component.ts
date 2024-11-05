@@ -41,7 +41,6 @@ interface PageEvent {
 })
 export class CommentListComponent implements OnInit, OnDestroy {
 
-    private subs: Subscription[] = [];
 
     comments$: BehaviorSubject<Comment[]> = new BehaviorSubject<Comment[]>([]);
     fetchedComment: boolean = false;
@@ -64,6 +63,8 @@ export class CommentListComponent implements OnInit, OnDestroy {
         pageCount: 10,
         total: 0
     };
+
+    selectCommentSubscription: Subscription | undefined;
 
     constructor(private _activatedRoute: ActivatedRoute, private _commentService: CommentService, private _store: Store<AppState>, private ref: ChangeDetectorRef) {
         this.filterChoice = [
@@ -89,7 +90,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
 
 
-        this._store.pipe(select(selectCommentsWithPostId(this._activatedRoute.snapshot.params['postId'], this.filter))).pipe(
+        this.selectCommentSubscription = this._store.pipe(select(selectCommentsWithPostId(this._activatedRoute.snapshot.params['postId'], this.filter))).pipe(
             switchMap((data: { comments: Comment[], totalComments: number }) => {
                 if (data.comments.length <= 0 && !this.fetchedComment) {
                     this._store.dispatch(getCommentsByPostId({ post_id: this._activatedRoute.snapshot.params['postId'] }));
@@ -124,7 +125,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
 
     ngOnDestroy(): void {
-        this.subs.forEach(sub => sub.unsubscribe());
+        this.selectCommentSubscription?.unsubscribe();
     }
 
 

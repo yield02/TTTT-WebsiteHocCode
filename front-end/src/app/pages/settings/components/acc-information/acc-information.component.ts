@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -12,7 +12,7 @@ import { heroCake, heroDevicePhoneMobile, heroHome } from '@ng-icons/heroicons/o
 import { FileUploadModule } from 'primeng/fileupload';
 import { HttpClientModule } from '@angular/common/http';
 import { AvatarModule } from 'primeng/avatar';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthUser, User } from '../../../../models/User';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/reducer';
@@ -49,7 +49,7 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './acc-information.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccInformationComponent implements OnInit {
+export class AccInformationComponent implements OnInit, OnDestroy {
 
   InformationForm: FormGroup;
   avatar?: {
@@ -70,6 +70,8 @@ export class AccInformationComponent implements OnInit {
 
   user$: Observable<AuthUser> = this._store.select(state => state.user);
 
+
+  subscriptions: Subscription[] = [];
   constructor(private fb: FormBuilder, private _store: Store<AppState>, private _authService: AuthService, private _messageService: MessageService) {
     this.InformationForm = fb.group({
       fullname: ['', Validators.compose([Validators.required])],
@@ -90,7 +92,7 @@ export class AccInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.user$.subscribe(user => {
+    this.subscriptions.push(this.user$.subscribe(user => {
       if (user) {
         this.user = user;
         this.InformationForm.patchValue({
@@ -112,7 +114,7 @@ export class AccInformationComponent implements OnInit {
           this.InformationForm.get('email')?.get('data')?.disable();
         }
       }
-    })
+    }))
 
   }
 
@@ -141,14 +143,14 @@ export class AccInformationComponent implements OnInit {
         hidden: !this.InformationForm.value.phone.hidden
       }
     }
-    this._authService.updateInformation(submitValue).subscribe(data => {
+    this.subscriptions.push(this._authService.updateInformation(submitValue).subscribe(data => {
       this._messageService.add({ severity: 'success', summary: 'Success', detail: 'Cập nhật thông tin thành công' });
     }, error => {
       if (error.status == 409) {
         this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Email đã tồn tại' });
         this.InformationForm.get('email')?.get('data')?.setErrors({ emailExist: true });
       }
-    });
+    }));
   }
 
 
@@ -166,18 +168,24 @@ export class AccInformationComponent implements OnInit {
     }
     let form = new FormData();
     form.append('avatar', this.fileAvatar!);
-    this._authService.updateAvatar(form).subscribe((data: any) => {
+    this.subscriptions.push(this._authService.updateAvatar(form).subscribe((data: any) => {
       this._messageService.add({ severity: 'success', summary: 'Success', detail: 'Tải ảnh đại diện thành công' });
       this._authService.updateAvatar(data.url);
     }, (error: any) => {
       console.log(error);
       this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Tải ảnh đại diện thất bại' });
-    });
+    }));
   }
 
   cancelUploadAvatar() {
     this.avatar = undefined;
   }
 
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 
 }

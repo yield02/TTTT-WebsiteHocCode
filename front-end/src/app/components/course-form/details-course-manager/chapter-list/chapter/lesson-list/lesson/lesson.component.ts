@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronDownSolid, heroChevronUpSolid } from '@ng-icons/heroicons/solid';
@@ -19,7 +19,7 @@ import { SortDownLesson, SortUpLesson } from '../../../../../../../store/chapter
 import { ShowLessonContentComponent } from '../../../../../show-lesson-content/show-lesson-content.component';
 import { ExerciseManagerComponent } from '../../../../exercise-manager/exercise-manager.component';
 import { selectQuestionFromQuestionId, selectQuestionsFromLessonId } from '../../../../../../../store/question/question.selectors';
-import { tap } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { createQuestions } from '../../../../../../../store/question/question.actions';
 import { Question } from '../../../../../../../models/Question';
 
@@ -44,7 +44,7 @@ import { Question } from '../../../../../../../models/Question';
     styleUrl: './lesson.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LessonComponent implements OnInit {
+export class LessonComponent implements OnInit, OnDestroy {
     @Input() checked: boolean = false;
     @Input() lesson!: Lesson;
     @Input() index!: number;
@@ -130,6 +130,8 @@ export class LessonComponent implements OnInit {
         ]
     }];
 
+    subscriptions: Subscription[] = [];
+
     constructor(private _dialogSerive: DialogService, private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private _confirmationService: ConfirmationService, private _changeDetector: ChangeDetectorRef) {
     }
 
@@ -148,7 +150,7 @@ export class LessonComponent implements OnInit {
             }
         });
 
-        this._store.pipe(select(selectQuestionsFromLessonId(this.lesson._id as string))).pipe(
+        this.subscriptions.push(this._store.pipe(select(selectQuestionsFromLessonId(this.lesson._id as string))).pipe(
             tap((questions) => {
                 if (questions?.length > 0) {
                     this.numberQuestion = questions.length;
@@ -156,7 +158,7 @@ export class LessonComponent implements OnInit {
 
                 }
             })
-        ).subscribe();
+        ).subscribe());
     }
 
     toggleSorting(): void {
@@ -200,7 +202,7 @@ export class LessonComponent implements OnInit {
             closable: false,
         })
 
-        this.exerciseRef.onClose.subscribe(
+        this.subscriptions.push(this.exerciseRef.onClose.subscribe(
             (questions) => {
                 if (questions.length > 0) {
                     const questionsData = questions.map((question: Question) => {
@@ -214,7 +216,7 @@ export class LessonComponent implements OnInit {
                     this._store.dispatch(createQuestions({ questions: questionsData }));
                 }
             }
-        )
+        ));
     }
 
 
@@ -222,5 +224,9 @@ export class LessonComponent implements OnInit {
 
     checkEmit() {
         this.checkEvent.emit({ _id: this.lesson._id as string, state: this.checked });
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, NgZone, OnChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, NgZone, OnChanges, OnDestroy } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionCheckmark, ionCheckmarkCircle, ionCloseOutline } from '@ng-icons/ionicons';
 import { ButtonModule } from 'primeng/button';
@@ -13,7 +13,7 @@ import { comparePassword } from '../../../../tools/Validator/comparePasswordVali
 import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
 import { AuthService } from '../../../../services/auth.service';
-import { Observable, Observer, throttleTime } from 'rxjs';
+import { Observable, Observer, Subscription, throttleTime } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/reducer';
 import { AuthUser } from '../../../../models/User';
@@ -41,7 +41,7 @@ import { AuthUser } from '../../../../models/User';
   styleUrl: './secure.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SecureComponent implements AfterViewInit, OnChanges {
+export class SecureComponent implements AfterViewInit, OnChanges, OnDestroy {
   isVerifiedEmail: boolean = false;
   isUnverifiedEmail: boolean = false;
 
@@ -53,6 +53,7 @@ export class SecureComponent implements AfterViewInit, OnChanges {
 
   formChangePassword: FormGroup
 
+  subscriptions: Subscription[] = [];
 
   constructor(private _store: Store<AppState>, private messageService: MessageService, private fb: FormBuilder, private _authService: AuthService, private _ngZone: NgZone, private cdr: ChangeDetectorRef) {
     this.formChangePassword = this.fb.group({
@@ -126,26 +127,30 @@ export class SecureComponent implements AfterViewInit, OnChanges {
   }
 
   sendVerifyEmail() {
-    this._authService.sendVerifyEmail().subscribe(
+    this.subscriptions.push(this._authService.sendVerifyEmail().subscribe(
       (data) => {
         this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Gửi email xác thực thành công' });
       },
       (error) => {
         console.log(error)
       }
-    )
+    ))
     this.waitTimeVerify = 60;
   }
 
   sendUnverifyEmail() {
-    this._authService.sendUnverifyEmail().subscribe(
+    this.subscriptions.push(this._authService.sendUnverifyEmail().subscribe(
       (data) => {
         this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Gửi email hủy xác thực thành công' });
       },
       (error) => {
         console.log(error)
       }
-    )
+    ))
     this.waitTimeVerify = 60;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
