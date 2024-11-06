@@ -1,5 +1,15 @@
 <div class="course-container">
-  <h1 class="heading-text">Nội dung khóa học</h1>
+  <div class="flex justify-between items-center">
+    <h1 class="heading-text">Nội dung khóa học</h1>
+    <div class="flex justify-center items-center">
+      <p-button
+        (onClick)="menu.toggle($event)"
+        icon="pi pi-ellipsis-v"
+        [rounded]="true"
+        [text]="true"
+      />
+    </div>
+  </div>
   <div class="content-container">
     <div class="switch-content flex flex-grow">
       <ng-container *ngFor="let item of switchContent">
@@ -19,3 +29,5 @@
     </div>
   </div>
 </div>
+
+<p-menu #menu [model]="moreActions" [popup]="true"></p-menu>

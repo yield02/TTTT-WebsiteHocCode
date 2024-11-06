@@ -13,8 +13,8 @@ router.get("/", courseController.getCoursesFromSubjectId);
 
 router.post("/create", upload.single("image"), courseController.create);
 
+router.patch("/publish/:course_id", courseController.toggleUpdatePublish);
 router.patch("/update", upload.single("image"), courseController.updateCourse);
-
 // For Author
 router.patch("/enroll/accept/:course_id", courseController.acceptEnroll);
 // For Author

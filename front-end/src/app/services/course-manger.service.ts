@@ -83,6 +83,12 @@ export class CourseManagerService {
     });
   }
 
+  toggleUpdatePublishCourse(course_id: string, state: string) {
+    return this.http.patch<Course>(`${environment.apiUrl}course/publish/${course_id}`, { state }, {
+      withCredentials: true,
+    });
+  }
+
 
 
 

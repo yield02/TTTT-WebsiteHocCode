@@ -63,6 +63,27 @@
         [cancel]="false"
       />
     </div>
+    <div class="author flex items-center justify-center flex-col">
+      <span class="text-sm text-gray-400 italic">Tác giả</span>
+      <div class="flex flex-col items-center justify-center">
+        <img
+          class="avatar"
+          [src]="
+            (course.author_id?.avatar?.contentType == 'url' &&
+              course.author_id?.avatar?.url?.toString()) ||
+            (course.author_id?.avatar?.buffer &&
+              'data:' +
+                course.author_id?.avatar?.contentType +
+                ';base64,' +
+                course.author_id?.avatar?.buffer) ||
+            'assets/images/avatar-user-default.png'
+          "
+        />
+        <h4 class="author-name mt-2 font-bold">
+          {{ course.author_id?.fullname }}
+        </h4>
+      </div>
+    </div>
     <div class="flex justify-center mt-10">
       @if(user$ | async; as user) { @if( course?.enroll?.includes(user._id) ||
       course?.author_id?._id == user._id) {

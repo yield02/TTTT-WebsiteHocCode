@@ -10,6 +10,8 @@ export const Create = createAction('[mycoursemanager Component] Create', props<{
 export const Add = createAction('[mycoursemanager Component] Add', props<{ courses: Course[] }>());
 export const DeleteCourseManager = createAction('[mycoursemanager Component] Delete', props<{ course_id: String }>());
 export const SortChapter = createAction('[mycoursemanager Component] SortChapter', props<{ course_id: String, chapters_id: String[] }>());
+export const toggleUpdatePublishCourse = createAction('[mycoursemanager Component] ToggleUpdatePublishCourse', props<{ course_id: string, state: 'publish' | 'hidden' }>());
+
 
 export const UpdateCourseManager = createAction('[mycoursemanager Component] Update', props<{ course: Course }>());
 

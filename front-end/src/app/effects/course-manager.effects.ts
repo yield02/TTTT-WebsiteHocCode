@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { CourseManagerService } from "../services/course-manger.service";
-import { AcceptEnroll, Add, DeleteUserEnrollFromAuth, FetchCourseManager, fetchUsersInCourse, RejectEnroll, UpdateCourseManager } from "../store/mycoursemanager/mycoursemanager.actions";
+import { AcceptEnroll, Add, DeleteUserEnrollFromAuth, FetchCourseManager, fetchUsersInCourse, RejectEnroll, toggleUpdatePublishCourse, UpdateCourseManager } from "../store/mycoursemanager/mycoursemanager.actions";
 import { catchError, debounceTime, map, of, switchMap, take, tap, throttleTime, timer } from "rxjs";
 import { fetchUsersSuccess } from "../store/users/users.actions";
 
@@ -67,4 +67,14 @@ export class CoursesManagerEffects {
             )
         )
     ));
+
+    toggleUpdatePublishCourse$ = createEffect(() => this.actions$.pipe(
+        ofType(toggleUpdatePublishCourse),
+        debounceTime(1000),
+        switchMap(_action => this._courseManagerService.toggleUpdatePublishCourse(_action.course_id, _action.state)
+            .pipe(
+                map((course) => UpdateCourseManager({ course })),
+                catchError((error) => of())
+            ))
+    ))
 }   

@@ -1,28 +1,27 @@
 <div class="container home-container">
-  <div class="my-learning">
+  @if(learnings$ | async; as learnings) {
+  <div class="my-learning" *ngIf="calculateLengthOfLearnings(learnings) > 0">
     <h1 class="text-start text-2xl font-semibold mb-8">Tiếp tục bài học</h1>
-    <ng-container *ngIf="learnings$ | async as learnings">
-      <div
-        class="learning-box grid max-xl:grid-cols-2 max-lg:grid-cols-1 grid-cols-3 gap-4"
+    <div
+      class="learning-box grid max-xl:grid-cols-2 max-lg:grid-cols-1 grid-cols-3 gap-4"
+    >
+      <ng-container
+        *ngFor="let learning of learnings | keyvalue | slice : 0 : 5"
       >
-        @if(calculateLengthOfLearnings(learnings) > 0) {
-        <ng-container
-          *ngFor="let learning of learnings | keyvalue | slice : 0 : 5"
-        >
-          <study-home-learning-item
-            [learning]="learning.value"
-          ></study-home-learning-item>
-        </ng-container>
-        }
-      </div>
-      @if(calculateLengthOfLearnings(learnings) >= 5) {
+        <study-home-learning-item
+          [learning]="learning.value"
+        ></study-home-learning-item>
+      </ng-container>
+    </div>
+    @if(calculateLengthOfLearnings(learnings) >= 5) {
 
-      <div class="flex justify-end items-center">
-        <p-button label="Xem thêm" [text]="true" size="small" />
-      </div>
-      }
-    </ng-container>
+    <div class="flex justify-end items-center">
+      <p-button label="Xem thêm" [text]="true" size="small" />
+    </div>
+    }
   </div>
+  }
+
   <div class="course mt-12">
     <div class="course-header flex justify-between items-center">
       <div class="drop-down-course">

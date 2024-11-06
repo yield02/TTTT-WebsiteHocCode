@@ -99,10 +99,11 @@ exports.getById = async (courseId) => {
     const courseData = await Course.findOne({
       _id: courseId,
       "status.state": "active",
+      "manager.publish": true,
     }).populate({
       path: "author_id",
       model: "User",
-      select: "username fullname",
+      select: "username fullname avatar",
     });
     if (!courseData) {
       throw new apiError(404, "Course not found");
@@ -135,11 +136,11 @@ exports.getById = async (courseId) => {
 exports.getCoursesById = async (coursesId) => {
   try {
     const courses = await Course.find({
-      _id: { $in: coursesId.split(",") },
+      _id: { $in: coursesId.split(","), "manager.publish": true },
     }).populate({
       path: "author_id",
       model: "User",
-      select: "username fullname",
+      select: "username fullname avatar",
     });
 
     return courses;
@@ -153,7 +154,7 @@ exports.getByAuthor = async (authorId) => {
     const courses = await Course.find({ author_id: authorId }).populate({
       path: "author_id",
       model: "User",
-      select: "username fullname",
+      select: "username fullname avatar",
     });
 
     const result = await Promise.all(
@@ -202,10 +203,11 @@ exports.getBySubjectId = async (subjectIds) => {
     const courses = await Course.find({
       subject_id: { $in: subjectIds },
       "status.state": "active",
+      "manager.publish": true,
     }).populate({
       path: "author_id",
       model: "User",
-      select: "username fullname",
+      select: "username fullname avatar",
     });
 
     const result = await Promise.all(
@@ -356,13 +358,50 @@ exports.searchCourseWithCourseName = async (course_name) => {
       {
         course_name: { $regex: course_name, $options: "i" },
         "status.state": "active",
+        "manager.publish": true,
       },
       "course_name image createdAt course_id"
     ).populate({
       path: "author_id",
-      select: "username fullname user_id",
+      select: "username fullname avatar",
     });
     return courses;
+  } catch (error) {
+    throw new apiError(500, error.message);
+  }
+};
+
+exports.toggleUpdatePublish = async (course_id, state, author_id) => {
+  try {
+    if (
+      state != "" &&
+      state != "publish" &&
+      state != "hidden" &&
+      state != undefined
+    ) {
+      throw new apiError(400, "Trạng thái phải là 'publish' hoặc 'hidden'");
+    }
+
+    const lessons = await Lesson.find({
+      course_id: course_id,
+      "manager.publish": true,
+    });
+
+    if (lessons.length <= 0 && state == "publish") {
+      throw new apiError(
+        404,
+        "Bạn phải công khai ít nhất một bài học để công khai khóa học"
+      );
+    }
+
+    const course = await Course.findOneAndUpdate(
+      { _id: course_id, author_id },
+      {
+        "manager.publish": state === "publish",
+      },
+      { new: true }
+    );
+    return course;
   } catch (error) {
     throw new apiError(500, error.message);
   }

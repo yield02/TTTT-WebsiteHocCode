@@ -39,6 +39,13 @@ const courseSchema = new mongoose.Schema(
       },
     ],
     rating: [{ type: mongoose.Schema.ObjectId, ref: "Rating" }],
+    manager: {
+      type: Map,
+      of: Boolean,
+      default: {
+        publish: false,
+      },
+    },
   },
   {
     timestamps: true,

@@ -8,6 +8,8 @@
   </app-search>
 </app-header>
 <app-sidebar [sidebarVisible]="sidebarVisible">
-  <router-outlet class="w-full"></router-outlet>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
 </app-sidebar>
 <app-footer></app-footer>

@@ -5,6 +5,7 @@ export interface Course {
         _id: string;
         username: string;
         fullname?: string;
+        avatar: any;
     },
     course_name: String,
     image?: {
@@ -23,6 +24,9 @@ export interface Course {
     averageRating?: Number,
     totalQuestion?: Number,
     totalLesson?: Number,
+    manager?: {
+        publish: boolean;
+    }
 }
 
 
@@ -49,4 +53,7 @@ export interface CourseSearch {
     updatedAt?: String,
     subject_id?: String,
     averageRating?: Number,
+    manager?: {
+        publish: boolean;
+    }
 }
