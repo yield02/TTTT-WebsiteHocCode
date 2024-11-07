@@ -85,6 +85,57 @@ const userSchema = new mongoose.Schema(
       ],
     } /* member: Thành Viên Chính Thức, dynamic Thành Viên Năng Động, old: Thành Viên Lâu Năm, admin */,
     learning: [{ type: mongoose.Schema.ObjectId, ref: "Course" }],
+    announcement: [
+      {
+        type: new mongoose.Schema(
+          {
+            course_id: {
+              type: mongoose.Schema.ObjectId,
+              ref: "Course",
+              require: false,
+            },
+            lesson_id: {
+              type: mongoose.Schema.ObjectId,
+              ref: "Lesson",
+              require: false,
+            },
+            announcer: {
+              type: mongoose.Schema.ObjectId,
+              ref: "User",
+              require: false,
+            },
+            post_id: {
+              type: mongoose.Schema.ObjectId,
+              ref: "Post",
+              require: false,
+            },
+            comment_id: {
+              type: mongoose.Schema.ObjectId,
+              ref: "Comment",
+              require: false,
+            },
+            typeAnnouncement: {
+              type: String,
+              enum: [
+                "like_post",
+                "comment",
+                "like_comment",
+                "reply_comment",
+                "course_announcement",
+              ],
+              require: false,
+            },
+            content: { type: String, require: false },
+            state: {
+              type: String,
+              enum: ["unread", "read"],
+              default: "unread",
+            },
+          },
+          { timestamps: true }
+        ),
+      },
+    ],
   },
   { timestamps: true, toJSON: { getters: true } }
 );

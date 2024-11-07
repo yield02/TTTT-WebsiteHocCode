@@ -51,6 +51,7 @@ export interface AuthUser {
     birthday?: String,
     createdAt?: string,
     updatedAt?: string,
+    announcement: Announcement[];
 }
 
 
@@ -69,4 +70,17 @@ export interface UpdateUserInformationInteraface {
     birthday: String,
     gender: String,
     address: String,
+}
+
+export interface Announcement {
+    _id: string,
+    course_id: any,
+    lesson_id: any,
+    announcer: any,
+    post_id: any,
+    comment_id: any,
+    typeAnnouncement: any,
+    createdAt: string,
+    updatedAt: string,
+    state: 'read' | 'unread';
 }

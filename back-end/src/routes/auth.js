@@ -5,6 +5,7 @@ const upload = require("../middleware/uploadMiddleware");
 
 router.get("/userinfor", authController.getUserinfor);
 router.get("/logout", authController.logout);
+router.get("/announcement", authController.getAnnouncements);
 
 router.get("/send-verify-email", authController.sendVerifyEmail);
 router.get("/verify-email", authController.verifyEmail);
@@ -21,5 +22,15 @@ router.post(
 );
 router.post("/update-information", authController.updateInformation);
 router.post("/change-password", authController.changePassword);
+
+router.patch(
+  "/announcement/statechange/:announcement_ids",
+  authController.changeStateOfAnnouncements
+);
+
+router.delete(
+  "/announcement/:announcement_ids",
+  authController.deleteAnnouncements
+);
 
 module.exports = router;

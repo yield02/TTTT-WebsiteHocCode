@@ -54,8 +54,28 @@ exports.login = async (data) => {
   }
 };
 
+exports.getUserById = async (user_id) => {
+  const user = await User.findById(user_id).select([
+    "-password",
+    "-announcement",
+  ]);
+  if (!user) {
+    throw new apiError(404, "Tài khoản không tồn tại");
+  } else {
+    return {
+      user: {
+        ...user._doc,
+        email: user.get("email", null, { getters: false }),
+      },
+    };
+  }
+};
+
 exports.getUserInfor = async (username) => {
-  const user = await User.findOne({ username: username });
+  const user = await User.findOne({ username: username }).select([
+    "-password",
+    "-announcement",
+  ]);
   if (!user) {
     throw new apiError(404, "Tài khoản không tồn tại");
   } else {
@@ -109,6 +129,7 @@ exports.updateInformation = async (user_id, data) => {
       return {
         user: {
           ...user._doc,
+          announcement: [],
           password: "",
         },
       };
@@ -136,6 +157,7 @@ exports.updateInformation = async (user_id, data) => {
     return {
       user: {
         ...user._doc,
+        announcement: [],
         password: "",
       },
     };
@@ -315,11 +337,87 @@ exports.updateAvatar = async (user_id, file) => {
       user: {
         ...newInforUser._doc,
         password: "",
+        announcement: [],
         avatar: {
           contentType: file?.mimetype,
           buffer: resizeBuffer.toString("base64"),
         },
       },
+    };
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+exports.getAnnouncements = async (userId) => {
+  try {
+    const announcement = await User.findOne({ _id: userId }, [
+      "announcement",
+    ]).populate([
+      {
+        path: "announcement.announcer",
+        model: "User",
+        select: "_id username fullname avatar",
+      },
+      {
+        path: "announcement.post_id",
+        model: "Post",
+        select: "_id title post_id",
+      },
+      {
+        path: "announcement.course_id",
+        model: "Course",
+        select: "_id course_name course_id",
+      },
+    ]);
+    return announcement;
+  } catch (error) {
+    throw new apiError("Server Error", error.message);
+  }
+};
+
+exports.changeStateOfAnnouncements = async (
+  announcement_ids,
+  state,
+  user_id
+) => {
+  try {
+    const user = await User.findById(user_id);
+
+    if (!user) {
+      throw new apiError(404, "Tài khoản không tồn tại");
+    }
+
+    user.announcement = user.announcement?.map((item) => {
+      if (announcement_ids.includes(item._id.toString())) {
+        item.state = state;
+      }
+      return item;
+    });
+    await user.save();
+    return {
+      message: "Thay đổi trạng thái thông báo thành công",
+    };
+  } catch (error) {
+    throw new apiError(error.statusCode, error.message);
+  }
+};
+
+exports.deleteAnnouncements = async (announcement_ids, user_id) => {
+  try {
+    const user = await User.findById(user_id);
+
+    if (!user) {
+      throw new apiError(404, "Tài khoản không tồn tại");
+    }
+
+    user.announcement = user.announcement.filter(
+      (item) => !announcement_ids.includes(item._id.toString())
+    );
+
+    await user.save();
+
+    return {
+      message: "Xóa thông báo thành công",
     };
   } catch (error) {
     throw new apiError(error.statusCode, error.message);

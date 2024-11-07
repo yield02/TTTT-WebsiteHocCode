@@ -1,0 +1,91 @@
+<div
+  class="scroll-item flex justify-start items-center"
+  [class.new]="announcement.state == 'unread'"
+>
+  <div class="flex justify-start items-center" (click)="toggleAnnouncements()">
+    <img
+      class="avatar"
+      [src]="
+        (announcement.announcer?.avatar?.contentType == 'url' &&
+          announcement.announcer?.avatar?.url?.toString()) ||
+        (announcement.announcer?.avatar?.buffer &&
+          'data:' +
+            announcement.announcer?.avatar?.contentType +
+            ';base64,' +
+            announcement.announcer?.avatar?.buffer) ||
+        'assets/images/avatar-user-default.png'
+      "
+    />
+    <div class="content-box">
+      @if(announcement.typeAnnouncement == 'like_post') {
+      <p class="content">
+        <span class="highlight">{{
+          announcement?.announcer?.fullname || announcement?.announcer?.username
+        }}</span>
+        đã thích bài viết
+        <span
+          class="highlight hover"
+          [routerLink]="['/forum/post', announcement?.post_id?.post_id]"
+          >{{ announcement?.post_id?.title }}</span
+        >
+        của bạn
+      </p>
+      } @if(announcement.typeAnnouncement == 'comment') {
+      <p class="content">
+        <span class="highlight">{{
+          announcement?.announcer?.fullname || announcement?.announcer?.username
+        }}</span>
+        đã bình luận về bài viết
+        <span
+          class="highlight hover"
+          [routerLink]="['/forum/post', announcement?.post_id?.post_id]"
+          >{{ announcement?.post_id?.title }}</span
+        >
+        của bạn
+      </p>
+      } @if(announcement.typeAnnouncement == 'like_comment') {
+      <p class="content">
+        <span class="highlight">
+          {{
+            announcement?.announcer.fullname ||
+              announcement?.announcer?.username
+          }}
+        </span>
+        đã thích bình luận của bạn tại bài viết
+        <span
+          class="highlight hover"
+          [routerLink]="['/forum/post', announcement?.post_id?.post_id]"
+          >{{ announcement.post_id.title }}</span
+        >
+      </p>
+      } @if(announcement.typeAnnouncement == 'reply_comment') {
+      <p class="content">
+        <span class="highlight">
+          {{
+            announcement?.announcer?.fullname ||
+              announcement?.announcer?.username
+          }}
+        </span>
+        đã trả lời bình luận của bạn tại bài viết
+        <span
+          class="highlight hover"
+          [routerLink]="['/forum/post', announcement?.post_id?.post_id]"
+          >{{ announcement?.post_id?.title }}</span
+        >
+      </p>
+      }
+
+      <span class="time">{{ announcement.createdAt | FromNowTime }}</span>
+    </div>
+  </div>
+  <div class="more-action">
+    <p-button
+      (onClick)="deleteAnnouncement()"
+      icon="pi pi-trash"
+      [rounded]="true"
+      [text]="true"
+      size="small"
+      severity="danger"
+    />
+  </div>
+</div>

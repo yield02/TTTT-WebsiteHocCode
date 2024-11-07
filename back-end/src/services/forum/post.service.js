@@ -1,5 +1,6 @@
 const Post = require("../../models/Post");
 const ApiError = require("../../utils/apiError");
+const Announcement = require("../announcement");
 
 exports.createPost = async (body, author_id) => {
   try {
@@ -129,9 +130,12 @@ exports.interactWithPost = async (post_id, user_id) => {
     if (!post) {
       throw new ApiError(404, "Post not found");
     }
+
+    const announcement = new Announcement(user_id, post.author_id);
     const userIndex = post.like.indexOf(user_id);
     if (userIndex === -1) {
       post.like.push(user_id);
+      await announcement.LikePost(post._id);
     } else {
       post.like.splice(userIndex, 1);
     }

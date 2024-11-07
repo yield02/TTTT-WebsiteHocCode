@@ -2,6 +2,7 @@ const { request } = require("express");
 const Comment = require("../../models/Comment");
 const ApiError = require("../../utils/apiError");
 const Post = require("../../models/Post");
+const Announcement = require("../announcement");
 
 exports.createComment = async (data, author_id) => {
   try {
@@ -25,6 +26,9 @@ exports.createComment = async (data, author_id) => {
     });
     await comment.save();
 
+    let announcement = new Announcement(author_id, post.author_id);
+    await announcement.CommentPost(post._id);
+
     if (data?.reply_id) {
       const parentComment = await Comment.findByIdAndUpdate(
         data?.reply_id,
@@ -34,6 +38,8 @@ exports.createComment = async (data, author_id) => {
       if (!parentComment) {
         throw new ApiError(404, "Parent comment not found");
       }
+      let announcement = new Announcement(author_id, parentComment.author_id);
+      await announcement.ReplyComment(parentComment._id, post._id);
     }
     return comment;
   } catch (error) {
@@ -136,6 +142,8 @@ exports.interactWithComment = async (comment_id, user_id) => {
     const userIndex = comment.like.indexOf(user_id);
     if (userIndex === -1) {
       comment.like.push(user_id);
+      let announcement = new Announcement(user_id, comment.author_id);
+      await announcement.LikeComment(comment_id, comment.post);
     } else {
       comment.like.splice(userIndex, 1);
     }

@@ -1,3 +1,5 @@
+import { AuthService } from "../services/auth.service";
+import { AuthEffects } from "./auth.effects";
 import { ChapterEffects } from "./chapter.effects"
 import { CoursesManagerEffects } from "./course-manager.effects";
 import { CourseEffects } from "./course.effect";
@@ -33,6 +35,7 @@ const effects: Array<any> = [
     CommentEffects,
     QuesionEffects,
     ExerciseEffects,
+    AuthEffects,
 ];
 
 export default effects;

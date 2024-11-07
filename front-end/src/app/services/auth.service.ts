@@ -151,5 +151,18 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}auth/update-avatar`, data, { withCredentials: true });
   }
 
+
+  getAnnouncement(): Observable<{ announcement: any }> {
+    return this.http.get<{ announcement: any }>(`${environment.apiUrl}auth/announcement`, { withCredentials: true });
+  }
+
+  stateChangeAnnouncement(announcement_ids: string[], state: 'read' | 'unread') {
+    return this.http.patch(`${environment.apiUrl}auth/announcement/statechange/${JSON.stringify(announcement_ids)}`, { state }, { withCredentials: true });
+  }
+
+  deleteAnnouncement(announcement_ids: string[]) {
+    return this.http.delete(`${environment.apiUrl}auth/announcement/${JSON.stringify(announcement_ids)}`, { withCredentials: true });
+  }
+
 }
 

@@ -27,152 +27,29 @@
   <div class="menu-notify" xPosition="before" #notifyMenu>
     <div class="notify-header flex justify-between items-center">
       <h1 class="notify-headingText">Thông báo</h1>
-      <button mat-button color="warn">Đánh dấu đã đọc</button>
+      <div class="more-action">
+        <p-button
+          (onClick)="menu.toggle($event)"
+          icon="pi pi-ellipsis-v"
+          [text]="true"
+          size="small"
+        />
+        <p-menu
+          class="moreMenu"
+          #menu
+          [model]="actionItems"
+          popup="true"
+        ></p-menu>
+      </div>
     </div>
     <div class="notify-scroll flex-col">
-      <div class="scroll-item new flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item new flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
-      <div class="scroll-item flex justify-start items-center">
-        <img
-          class="avatar"
-          src="https://thcsbinhchanh.edu.vn/wp-content/uploads/2023/08/tai-anh-anime-ve-lam-avatar10.jpg"
-        />
-        <div class="content-box">
-          <p class="content">
-            Bài học <span class="highlight">Tham gia cộng đồng</span> mới được
-            thêm vào
-          </p>
-          <span class="time">2 tháng trước</span>
-        </div>
-      </div>
+      @if(announcements$ | async; as announcements) {
+      <ng-container *ngFor="let announcement of announcements">
+        <app-announcement-item
+          [announcement]="announcement"
+        ></app-announcement-item>
+      </ng-container>
+      }
     </div>
   </div>
 </ng-template>

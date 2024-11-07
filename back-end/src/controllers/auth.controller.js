@@ -35,7 +35,7 @@ exports.getUserinfor = async (req, res, next) => {
 
     var userInfor = await jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-    const user = await authService.getUserInfor(userInfor.username);
+    const user = await authService.getUserById(userInfor._id);
     res.status(200).json(user);
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));
@@ -127,6 +127,46 @@ exports.updateAvatar = async (req, res, next) => {
     const token = req.cookies.token;
     var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
     const result = await authService.updateAvatar(userInfor._id, req?.file);
+    res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.getAnnouncements = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await authService.getAnnouncements(userInfor._id);
+    res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.changeStateOfAnnouncements = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await authService.changeStateOfAnnouncements(
+      req.params.announcement_ids,
+      req.body.state,
+      userInfor._id
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};
+
+exports.deleteAnnouncements = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const result = await authService.deleteAnnouncements(
+      req.params.announcement_ids,
+      userInfor._id
+    );
     res.status(200).json(result);
   } catch (error) {
     return next(new ApiError(error.statusCode, error.message));
