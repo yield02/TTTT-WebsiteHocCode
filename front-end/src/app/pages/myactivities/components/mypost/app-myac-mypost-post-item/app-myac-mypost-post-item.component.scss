@@ -1,0 +1,20 @@
+.post-container {
+  padding: 8px 0px;
+  &.even {
+    background: #f0f0f0;
+  }
+
+  .status {
+    padding-left: 8px;
+    border-left: 4px solid transparent;
+    &.waiting {
+      border-color: #ffd615;
+    }
+    &.allow {
+      border-color: #83e85a;
+    }
+    &.block {
+      border-color: #e41749;
+    }
+  }
+}

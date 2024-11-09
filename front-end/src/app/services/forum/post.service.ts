@@ -72,6 +72,11 @@ export class PostService {
     return this.http.get<PostSearch[]>(`${environment.apiUrl}post/search/?${queryParams.toString()}`);
   }
 
+
+  getAllPostOfAuthor(): Observable<Post[]> {
+    return this.http.get<Post[]>(`${environment.apiUrl}post/author`, { withCredentials: true });
+  }
+
 }
 
 

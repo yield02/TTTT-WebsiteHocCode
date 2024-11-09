@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -68,16 +68,19 @@ export class AnnouncementComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ];
 
-  constructor(private renderer: Renderer2, private _store: Store<AppState>) {
-    this.renderer.listen('window', 'click', (e: Event) => {
-      const isClickInside: boolean = this.notifyContainer.nativeElement.contains(e.target as Node);
-      if (!isClickInside) {
-        if (this.notifyMenu.nativeElement.hidden == false) {
-          this.notifyMenu.nativeElement.hidden = true;
-        }
-      }
-    })
+  constructor(private _store: Store<AppState>) {
+
   }
+
+  @HostListener('document:click', ['$event'])
+  onGlabalClick(event: MouseEvent) {
+    if (!this.notifyContainer.nativeElement.contains(event.target as Node)) {
+      if (this.notifyMenu.nativeElement.hidden == false) {
+        this.notifyMenu.nativeElement.hidden = true;
+      }
+    }
+  }
+
 
   ngOnInit(): void {
     this._store.dispatch(getAnnouncements())
@@ -105,7 +108,7 @@ export class AnnouncementComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.renderer.destroy();
+    // this.renderer.destroy();
   }
 
 }

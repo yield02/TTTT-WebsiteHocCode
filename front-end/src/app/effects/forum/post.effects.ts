@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, of, switchMap } from "rxjs";
-import { addPost, createPost, deletePost, editContentPost, interactWithPost, loadPostWithId, removePost, toggleBlockComment, toggleHiddenPost, updatePost } from "../../store/forum/post/post.actions";
+import { addPost, addPosts, createPost, deletePost, editContentPost, getAllPostOfAuthor, interactWithPost, loadPostWithId, removePost, toggleBlockComment, toggleHiddenPost, updatePost } from "../../store/forum/post/post.actions";
 import { PostService } from "../../services/forum/post.service";
 import { Router } from "@angular/router";
 
@@ -85,6 +85,17 @@ export class PostEffects {
                 .pipe(
                     map((post) => updatePost({ post })),
                     catchError(error => { console.log(error); return of() })))
+    ));
+
+    getAllPostOfAuthor$ = createEffect(() => this.actions$.pipe(
+        ofType(getAllPostOfAuthor),
+        switchMap(() =>
+            this._postService.getAllPostOfAuthor()
+                .pipe(
+                    map(posts => addPosts({ posts })),
+                    catchError(error => { console.log(error); return of() })
+                )
+        )
     ))
 
 }

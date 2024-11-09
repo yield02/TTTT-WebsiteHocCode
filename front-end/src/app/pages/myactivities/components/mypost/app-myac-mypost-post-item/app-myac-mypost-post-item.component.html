@@ -1,0 +1,82 @@
+<div
+  class="post-container grid grid-cols-12 gap-4"
+  [class.even]="index % 2 == 0"
+>
+  <div class="col-span-4 grid grid-cols-7 gap-4">
+    <h4 class="col-span-1 text-center font-bold">{{ index }}</h4>
+    <h4
+      class="col-span-6 text-blue-600 underline cursor-pointer"
+      [routerLink]="['/forum/post', post.post_id]"
+    >
+      {{ post.title }}
+    </h4>
+  </div>
+  <h4 class="col-span-2">
+    @if(topic$ | async; as topic) {
+    {{ topic.title }}
+    }
+  </h4>
+  <h4 class="col-span-2">{{ formatMyTime(post.createdAt) }}</h4>
+  <div class="col-span-4 grid grid-cols-4 gap-4">
+    <h4
+      class="status col-span-1 flex items-center"
+      [class.waiting]="post.status == 'waiting'"
+      [class.allow]="post.status == 'allow'"
+      [class.block]="post.status == 'block'"
+    >
+      {{ showStatus(post.status || "") }}
+    </h4>
+    <div class="col-span-3 flex justify-between">
+      <div class="flex flex-row gap-4">
+        <div class="flex justify-center items-center gap-1">
+          <ng-icon
+            class="text-2xl text-purple-600"
+            name="ionEyeOutline"
+          ></ng-icon
+          ><span class="font-semibold">{{ post.views }}</span>
+        </div>
+        <div class="flex justify-center items-center gap-1">
+          <ng-icon
+            class="text-2xl text-purple-600"
+            name="ionHeartOutline"
+          ></ng-icon
+          ><span class="font-semibold">{{ post.like?.length }}</span>
+        </div>
+      </div>
+      <div>
+        <p-button
+          icon="pi pi-eye"
+          [rounded]="true"
+          [text]="true"
+          severity="info"
+          (onClick)="showPostDialog()"
+        />
+
+        <p-button
+          [routerLink]="['/forum/post', post.post_id, 'edit']"
+          icon="pi pi-pencil"
+          [rounded]="true"
+          [text]="true"
+          severity="warning"
+          [outlined]="true"
+        />
+        <p-button
+          icon="pi pi-trash"
+          [rounded]="true"
+          [text]="true"
+          severity="danger"
+          [outlined]="true"
+          (onClick)="confirmDelete($event)"
+        />
+        <p-button
+          icon="pi pi-ellipsis-v"
+          [text]="true"
+          [outlined]="true"
+          (onClick)="menu.toggle($event)"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog />
+<p-menu #menu [model]="moreActions" popup="true"></p-menu>

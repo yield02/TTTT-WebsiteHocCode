@@ -205,3 +205,12 @@ exports.searchPostsWithTitle = async (title) => {
     throw new ApiError(500, error.message);
   }
 };
+
+exports.getPostsOfAuthor = async (author_id) => {
+  try {
+    const posts = await Post.find({ author_id: author_id });
+    return posts;
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};

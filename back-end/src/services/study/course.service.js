@@ -136,14 +136,50 @@ exports.getById = async (courseId) => {
 exports.getCoursesById = async (coursesId) => {
   try {
     const courses = await Course.find({
-      _id: { $in: coursesId.split(","), "manager.publish": true },
+      _id: { $in: coursesId.split(",") },
+      "status.state": "active",
+      "manager.publish": true,
     }).populate({
       path: "author_id",
       model: "User",
       select: "username fullname avatar",
     });
 
-    return courses;
+    const result = await Promise.all(
+      courses.map(async (course) => {
+        const totalLesson = await Lesson.countDocuments({
+          course_id: course._id,
+        });
+
+        const totalQuestion = await Question.countDocuments({
+          course_id: course._id,
+        });
+        if (course.rating.length <= 0) {
+          return {
+            ...course._doc,
+            totalLesson,
+            totalQuestion,
+            averageRating: 0,
+          };
+        }
+
+        const rating = await Rating.aggregate([
+          { $match: { course_id: course._id } },
+          { $group: { _id: null, averageRating: { $avg: "$star" } } },
+        ]);
+
+        return {
+          ...course._doc,
+          totalLesson,
+          totalQuestion,
+          averageRating: rating[0].averageRating,
+        };
+      })
+    );
+
+    return result;
+
+    // return courses;
   } catch (error) {
     throw new apiError(error.statusCode, error.message);
   }

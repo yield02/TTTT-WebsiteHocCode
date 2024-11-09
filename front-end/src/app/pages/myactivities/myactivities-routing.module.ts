@@ -1,6 +1,6 @@
 import { RouterModule, Routes } from "@angular/router";
 import { NgModule } from "@angular/core";
-import { ForumComponent } from "./myactivities.layout";
+import { ActivitiesComponent } from "./myactivities.layout";
 import { CoursesComponent } from "./components/courses/courses.component";
 import { MycoursesComponent } from "./components/mycourses/mycourses.component";
 import { MypostComponent } from "./components/mypost/mypost.component";
@@ -13,7 +13,7 @@ import { CreateCourseComponent } from "./components/create-course/create-course.
 const routes: Routes = [
     {
         path: '',
-        component: ForumComponent,
+        component: ActivitiesComponent,
         children: [
             {
                 path: 'courses',

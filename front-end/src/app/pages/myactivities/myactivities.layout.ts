@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-forum',
+  selector: 'app-activities',
   templateUrl: './myactivities.layout.html',
   styleUrl: './myactivities.layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForumComponent {
+export class ActivitiesComponent {
 
   sidebarVisible: boolean = false;
   sidebarToggle(): void {

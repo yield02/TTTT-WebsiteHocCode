@@ -1,0 +1,126 @@
+<div class="mypost-page">
+  <div class="mypost-container flex flex-col gap-2">
+    <div class="flex justify-end items-center">
+      <div class="filter-action flex gap-2 items-center">
+        <div
+          class="search flex flex-row gap-2 text-gray-500"
+          [class.forcus]="isSearching"
+          #search
+        >
+          <button class="search-btn flex" (click)="toggleSearching()">
+            <ng-icon class="text-3xl" name="ionSearchOutline"></ng-icon>
+          </button>
+          <input
+            class="search-input"
+            name="searchCourse"
+            placeholder="Tìm kiếm bài viết"
+            [formControl]="searchPost"
+          />
+        </div>
+        <div>
+          <button
+            (click)="op.toggle($event)"
+            class="filter font-bold flex items-center gap-1"
+          >
+            <ng-icon class="text-2xl" name="ionFilterOutline"></ng-icon>
+            <span>Bộ lọc</span>
+          </button>
+          <p-overlayPanel #op>
+            <div class="flex flex-col gap-4">
+              <h6 class="text-sm font-bold">Bộ lọc</h6>
+              <div class="flex flex-col">
+                <label class="text-sm italic">Đối tượng:</label>
+                <p-dropdown
+                  [options]="[
+                    {
+                      label: 'Tất cả',
+                      value: ['like.length','view', 'status', 'createdAt']
+                    },
+                    {
+                      label: 'Thời gian',
+                      value: ['createdAt']
+                    },
+                    {
+                      label: 'Trạng thái',
+                      value: ['status'],
+                    },
+                    {
+                      label: 'Lượt xem',
+                      value: ['view'],
+                    },
+                    {
+                      label: 'Lượt thích',
+                      value: ['like.length'],
+                    }
+                  ]"
+                  optionLabel="label"
+                  optionValue="value"
+                  (onChange)="fieldFilterChange($event)"
+                ></p-dropdown>
+              </div>
+              <div class="flex flex-col">
+                <label class="text-sm italic">Sắp xếp:</label>
+                <p-dropdown
+                  [options]="[
+                    {
+                      label: 'Giảm dần',
+                      value: 'desc'
+                    },
+                    {
+                      label: 'Tăng dần',
+                      value: 'asc',
+                    }
+                  ]"
+                  optionLabel="label"
+                  optionValue="value"
+                  (onChange)="typeFilterChange($event)"
+                ></p-dropdown>
+              </div>
+            </div>
+          </p-overlayPanel>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="title grid grid-cols-12 gap-4">
+        <div class="col-span-4 grid grid-cols-7 gap-4">
+          <h4 class="col-span-1 text-center">#STT</h4>
+          <h4 class="col-span-6">Tiêu đề bài viết</h4>
+        </div>
+        <h4 class="col-span-2">Chủ đề</h4>
+        <h4 class="col-span-2">Ngày đăng</h4>
+        <div class="col-span-4 grid grid-cols-4 gap-4">
+          <h4 class="col-span-1">Trạng thái</h4>
+          <h4 class="col-span-3 text-end px-4">Thao tác</h4>
+        </div>
+      </div>
+      <div class="post-list">
+        @if(posts.length > 0) {
+        <ng-container
+          *ngFor="
+            let post of posts.slice(
+              paginator.page * paginator.rows,
+              paginator.page * paginator.rows + paginator.rows
+            );
+            index as i
+          "
+        >
+          <app-myac-mypost-post-item
+            [index]="i + 1"
+            [post]="post"
+          ></app-myac-mypost-post-item>
+        </ng-container>
+        }
+      </div>
+    </div>
+    <div class="paginator">
+      <p-paginator
+        [totalRecords]="paginator.total"
+        [rows]="paginator.rows"
+        [first]="paginator.first"
+        (onPageChange)="onPageChange($event)"
+        [showFirstLastIcon]="false"
+      ></p-paginator>
+    </div>
+  </div>
+</div>

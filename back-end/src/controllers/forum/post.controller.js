@@ -125,3 +125,14 @@ exports.searchPostsWithTitle = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.getPostsOfAuthor = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const posts = await postService.getPostsOfAuthor(userInfor._id);
+    res.status(200).json(posts);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

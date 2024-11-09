@@ -1,9 +1,14 @@
-<div class="courses-container flex gap-4 justify-start items-center bg-grey">
-  @if(courses$ | async; as courses) {
-  <ng-container *ngFor="let course of courses">
-    <app-course [course]="course" type="learning"></app-course>
-  </ng-container>
-  @if(courses.length <= 0) {
-  <span>Bạn chưa học khóa học nào!!</span>
-  } }
+<div class="courses-container flex flex-col gap-4 justify-start bg-grey">
+  <h1 class="text-2xl font-bold">Tiếp tục học</h1>
+  <div class="grid grid-cols-3 gap-4">
+    @if(learnings$ | async; as learnings) {
+    <ng-container *ngFor="let learning of learnings | keyvalue | slice : 0 : 5">
+      <div class="bg-white">
+        <study-home-learning-item
+          [learning]="learning.value"
+        ></study-home-learning-item>
+      </div>
+    </ng-container>
+    }
+  </div>
 </div>

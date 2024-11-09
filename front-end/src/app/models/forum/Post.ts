@@ -8,7 +8,7 @@ export interface Post {
     author_id?: string;
     like?: string[];
     views?: number;
-    status?: 'waiting' | 'allow' | 'banned';
+    status?: 'waiting' | 'allow' | 'block';
     hashtags: string[];
     reason?: string;
     createdAt: string;
