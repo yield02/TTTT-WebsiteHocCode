@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, type OnInit } fro
 import { Post } from '../../../../../models/forum/Post';
 
 import vi from '@angular/common/locales/vi';
+registerLocaleData(vi);
+
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionEyeOutline, ionHeart, ionHeartOutline } from '@ng-icons/ionicons';
 import { ButtonModule } from 'primeng/button';
@@ -18,7 +20,6 @@ import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { deletePost, toggleBlockComment, toggleHiddenPost } from '../../../../../store/forum/post/post.actions';
 import { MenuModule } from 'primeng/menu';
-registerLocaleData(vi);
 
 
 

@@ -18,6 +18,12 @@ const postRouter = require("./forum/post");
 const commentRouter = require("./forum/comment");
 const hashtagRouter = require("./forum/hashtag");
 
+const commentManagerRouter = require("../routes/manager/comment-manager.route");
+const courseManagerRouter = require("../routes/manager/course-manager.route");
+const postManagerRouter = require("../routes/manager/post-manager.route");
+const reportManagerRouter = require("../routes/manager/report-manager.route");
+const userManagerRouter = require("../routes/manager/user-manager.route");
+
 function route(app) {
   app.use("/api/auth", authRouter);
   app.use("/api/course", courseRouter);
@@ -36,5 +42,10 @@ function route(app) {
   app.use("/api/hashtag", hashtagRouter);
   app.use("/api/question", questionRouter);
   app.use("/api/exercise", exerciseRouter);
+  app.use("/api/manager/comment", commentManagerRouter);
+  app.use("/api/manager/course", courseManagerRouter);
+  app.use("/api/manager/post", postManagerRouter);
+  app.use("/api/manager/report", reportManagerRouter);
+  app.use("/api/manager/user", userManagerRouter);
 }
 module.exports = route;

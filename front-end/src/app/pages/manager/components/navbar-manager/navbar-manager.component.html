@@ -1,0 +1,106 @@
+<div class="nav-bar-component flex flex-col justify-between items-center">
+  <div class="w-full">
+    <div class="logo-box" routerLink="/home">
+      <a>
+        <img
+          class="image"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Code.svg/800px-Code.svg.png"
+          alt="logo"
+        />
+      </a>
+    </div>
+    <div class="border-box"></div>
+    <div class="nav-bar-list flex flex-col">
+      <div
+        class="nav-bar-item flex justify-around items-center gap-3"
+        [routerLink]="['/manager', 'overview']"
+        routerLinkActive="active"
+      >
+        <div class="front-icon">
+          <ng-icon class="icon text-2xl" name="ionBarChart"></ng-icon>
+        </div>
+        <span class="flex-1">Tổng quan</span>
+        <div class="end-icon"></div>
+      </div>
+
+      <div
+        class="nav-bar-item flex justify-around items-center gap-3"
+        [routerLink]="['/manager', 'reports']"
+        routerLinkActive="active"
+      >
+        <div class="front-icon">
+          <ng-icon class="icon text-2xl" name="ionWarning"></ng-icon>
+        </div>
+        <span class="flex-1">Báo cáo</span>
+        <div class="end-icon"></div>
+      </div>
+
+      <div
+        class="nav-bar-item flex justify-around items-center gap-3"
+        [routerLink]="['/manager', 'courses']"
+        routerLinkActive="active"
+      >
+        <div class="front-icon">
+          <ng-icon class="icon text-2xl" name="heroAcademicCapSolid"></ng-icon>
+        </div>
+        <span class="flex-1">Khóa học</span>
+        <div class="end-icon"></div>
+      </div>
+
+      <div
+        class="nav-bar-item flex justify-around items-center gap-3"
+        [routerLink]="['/manager', 'posts']"
+        routerLinkActive="active"
+      >
+        <div class="front-icon">
+          <ng-icon
+            class="icon text-2xl"
+            name="bootstrapFileEarmarkPost"
+          ></ng-icon>
+        </div>
+        <span class="flex-1">Bài viết</span>
+        <div class="end-icon"></div>
+      </div>
+
+      <div
+        class="nav-bar-item flex justify-around items-center gap-3"
+        [routerLink]="['/manager', 'comments']"
+        routerLinkActive="active"
+      >
+        <div class="front-icon">
+          <ng-icon class="icon text-2xl" name="ionChatbubblesSharp"></ng-icon>
+        </div>
+        <span class="flex-1">Bình luận</span>
+        <div class="end-icon"></div>
+      </div>
+
+      <div
+        class="nav-bar-item flex justify-around items-center gap-3"
+        [routerLink]="['/manager', 'users']"
+        routerLinkActive="active"
+      >
+        <div class="front-icon">
+          <ng-icon class="icon text-2xl" name="ionPerson"></ng-icon>
+        </div>
+        <span class="flex-1">Người dùng</span>
+        <div class="end-icon"></div>
+      </div>
+    </div>
+  </div>
+  <div class="user-box w-full">
+    <div class="border-box"></div>
+    <div class="user-infor flex gap-2 px-2 py-4">
+      <app-avatar-menu></app-avatar-menu>
+      @if(authUser$ | async; as user) {
+      <div class="flex flex-col justify-center">
+        <h2 class="font-semibold text-ellipsis">
+          {{ user?.fullname || user?.username }}
+        </h2>
+        <span class="text-sm italic text-ellipsis">
+          thanhnhuong0702.gmail.com
+        </span>
+      </div>
+      }
+    </div>
+  </div>
+</div>

@@ -25,4 +25,16 @@ import { Course } from '../../../../../models/Course';
 export class CourseItemComponent {
   @Input() data!: Course;
 
+  convertStateOfCourse(state: string) {
+    switch (state) {
+      case 'waiting':
+        return 'Chờ duyệt';
+      case 'active':
+        return 'Đang hoạt động';
+      case 'banned':
+        return 'Bị cấm';
+      default:
+        return 'Chờ duyệt';
+    }
+  }
 }

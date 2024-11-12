@@ -12,7 +12,10 @@ export interface Course {
         contentType: String,
         buffer: String
     },
-    status?: "waiting" | "active" | "banned";
+    status?: {
+        state: "waiting" | "active" | "banned",
+        reason?: string
+    };
     description: String,
     enroll?: String[],
     waiting_enroll?: String[],

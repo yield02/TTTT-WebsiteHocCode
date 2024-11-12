@@ -35,6 +35,11 @@ const routes: Routes = [
     canMatch: [loginGuardGuard],
   },
   {
+    path: 'manager',
+    loadChildren: () => import('./pages/manager/manager.module').then(m => m.ManagerModule),
+    canMatch: [loginGuardGuard],
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'

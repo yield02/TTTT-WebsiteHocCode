@@ -32,6 +32,11 @@ import { Question } from '../models/Question';
 import { questionReducer } from './question/question.reducer';
 import { Exercise } from '../models/Exercise';
 import { exerciseReducer } from './exercise/exercise.reducer';
+import { admin_UsersReducer } from './admin/users/users.reducer';
+import { admin_CourseReducer } from './admin/course/course.reducer';
+import { admin_CommentReducer } from './admin/comment/comment.reducer';
+import { admin_PostReducer } from './admin/post/post.reducer';
+import { admin_ReportReducer } from './admin/report/report.reducer';
 
 export interface AppState {
     user: AuthUser,
@@ -51,6 +56,11 @@ export interface AppState {
     comment: Comment[],
     question: Question[],
     exercise: Exercise[],
+    admin_user: User[],
+    admin_report: Course[],
+    admin_course: Course[],
+    admin_post: Post[],
+    admin_comment: Comment[],
 }
 
 
@@ -72,6 +82,11 @@ const reducers: ActionReducerMap<AppState> = {
     comment: commentReducer,
     question: questionReducer,
     exercise: exerciseReducer,
+    admin_user: admin_UsersReducer,
+    admin_report: admin_ReportReducer,
+    admin_course: admin_CourseReducer,
+    admin_post: admin_PostReducer,
+    admin_comment: admin_CommentReducer,
 }
 
 export default reducers;

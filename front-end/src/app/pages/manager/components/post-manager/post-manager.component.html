@@ -1,0 +1,254 @@
+<div class="post-manager flex flex-col w-full h-full py-2">
+  <div class="header">
+    <h1 class="font-bold text-2xl px-2 py-5">Quản lý bài viết</h1>
+  </div>
+  <div class="body flex-1 flex flex-col justify-between">
+    <div class="content">
+      <div class="filter-box flex justify-end items-center mb-2">
+        <div class="filter-action flex items-center gap-2">
+          <div
+            class="search flex flex-row gap-2 text-gray-500"
+            [class.forcus]="isSearching"
+            #search
+          >
+            <button class="search-btn flex" (click)="toggleSearching()">
+              <ng-icon class="text-3xl" name="ionSearchOutline"></ng-icon>
+            </button>
+            <input
+              class="search-input"
+              name="searchCourse"
+              placeholder="Tìm kiếm khóa học"
+              [formControl]="searchPost"
+            />
+          </div>
+          <div>
+            <button
+              (click)="op.toggle($event)"
+              class="filter font-bold flex items-center gap-1"
+            >
+              <ng-icon class="text-2xl" name="ionFilterOutline"></ng-icon>
+              <span>Bộ lọc</span>
+            </button>
+            <p-overlayPanel #op>
+              <div class="flex flex-col gap-4">
+                <h6 class="text-sm font-bold">Bộ lọc</h6>
+
+                <div class="flex flex-col">
+                  <label class="text-sm italic">Tác giả:</label>
+                  <p-dropdown
+                    [options]="(users$ | async) || []"
+                    optionLabel="username"
+                    optionValue="_id"
+                    [showClear]="true"
+                    placeholder="Chọn tác giả"
+                    (onChange)="authorFilterChange($event)"
+                  >
+                    <ng-template let-author pTemplate="selectedItem">
+                      <div class="flex align-items-center gap-2">
+                        <p-avatar
+                          styleClass="mr-2"
+                          [style]="{
+                            'background-color': '#dee9fc',
+                            color: '#1a2551'
+                          }"
+                          shape="circle"
+                          [image]="
+                            (author?.avatar?.contentType == 'url' &&
+                              author?.avatar?.url?.toString()) ||
+                            (author?.avatar?.buffer &&
+                              'data:' +
+                                author?.avatar?.contentType +
+                                ';base64,' +
+                                author?.avatar?.buffer) ||
+                            'assets/images/avatar-user-default.png'
+                          "
+                        />
+                        <div>{{ author.username }}</div>
+                      </div>
+                    </ng-template>
+                    <ng-template let-author pTemplate="item">
+                      <div class="flex align-items-center gap-2">
+                        <p-avatar
+                          styleClass="mr-2"
+                          [style]="{
+                            'background-color': '#dee9fc',
+                            color: '#1a2551'
+                          }"
+                          shape="circle"
+                          [image]="
+                            (author?.avatar?.contentType == 'url' &&
+                              author?.avatar?.url?.toString()) ||
+                            (author?.avatar?.buffer &&
+                              'data:' +
+                                author?.avatar?.contentType +
+                                ';base64,' +
+                                author?.avatar?.buffer) ||
+                            'assets/images/avatar-user-default.png'
+                          "
+                        />
+                        <div>{{ author.username }}</div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+
+                <div class="flex flex-col">
+                  <label class="text-sm italic">Đối tượng:</label>
+                  <p-dropdown
+                    [options]="[
+                              {
+                                label: 'Tất cả',
+                                value: ['status', 'createdAt', 'like', 'views']
+                              },
+                              {
+                                label: 'Trạng thái',
+                                value: ['status']
+                              },
+                              {
+                                label: 'Thời gian tạo',
+                                value: ['createdAt'],
+                              },
+                              {
+                                label: 'Lượt thích',
+                                value: ['like'],
+                              },
+                              {
+                                label: 'Lượt xem',
+                                value: ['views'],
+                              }
+                            ]"
+                    optionLabel="label"
+                    optionValue="value"
+                    (onChange)="fieldFilterChange($event)"
+                  ></p-dropdown>
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm italic">Sắp xếp:</label>
+                  <p-dropdown
+                    [options]="[
+                              {
+                                label: 'Giảm dần',
+                                value: 'desc'
+                              },
+                              {
+                                label: 'Tăng dần',
+                                value: 'asc',
+                              }
+                            ]"
+                    optionLabel="label"
+                    optionValue="value"
+                    (onChange)="typeFilterChange($event)"
+                  ></p-dropdown>
+                </div>
+              </div>
+            </p-overlayPanel>
+          </div>
+        </div>
+      </div>
+      <div
+        class="actions flex items-center gap-4"
+        [class.hidden]="postCheckList.length <= 0"
+      >
+        <p-dropdown
+          class="action-dropdown"
+          [(ngModel)]="actionState.state"
+          [options]="[
+            {
+              label: 'Thay đổi trạng thái',
+              value: 'status'
+            },
+            {
+              label: 'Xóa',
+              value: 'delete'
+            }
+          ]"
+          placeholder="Chọn hành động"
+          [editable]="true"
+          optionLabel="label"
+          optionValue="value"
+        />
+        <p-dropdown
+          class="action-dropdown"
+          [class.hidden]="actionState.state != 'status'"
+          [(ngModel)]="actionState.status"
+          [options]="[
+            {
+              label: 'chưa duyệt',
+              value: 'waiting'
+            },
+            {
+              label: 'duyệt',
+              value: 'allow'
+            },
+            {
+              label: 'cấm',
+              value: 'block'
+            }
+          ]"
+          placeholder="Chọn hành động"
+          [editable]="true"
+          optionLabel="label"
+          optionValue="value"
+        />
+        <p-button
+          label="Áp dụng"
+          (onClick)="applyAction()"
+          size="small"
+          [outlined]="true"
+        />
+      </div>
+      <div class="content-box">
+        <div class="title flex flex-row items-center gap-4 bg-grey">
+          <div class="flex gap-2">
+            <p-checkbox
+              [(ngModel)]="isChecked"
+              (onChange)="checkAll($event)"
+              [binary]="true"
+              inputId="binary"
+            />
+          </div>
+          <div class="basis-5/12">
+            <span class="font-bold text-gray-600">Tiêu đề </span>
+          </div>
+          <div class="author basis-1/6 grow-0 shrink-0">
+            <span class="font-bold text-gray-600">Tác giả</span>
+          </div>
+          <div class="createTime basis-1/6 grow-0 shrink-0 max-md:hidden">
+            <span class="font-bold text-gray-600">Ngày tạo</span>
+          </div>
+          <div class="status basis-1/6 grow-0 shrink-0">
+            <span class="font-bold text-gray-600">Trạng thái</span>
+          </div>
+          <div class="action">
+            <!-- <span class="font-bold text-gray-600">Hành động</span> -->
+          </div>
+        </div>
+        <div class="item-list">
+          <ng-container
+            *ngFor="
+              let post of posts.slice(
+                paginator.page * paginator.rows,
+                paginator.page * paginator.rows + paginator.rows
+              )
+            "
+          >
+            <app-manager-post-item
+              (toggleCheckEvent)="toggleCheckPost($event)"
+              [post]="post"
+              [checkedAll]="isCheckAll"
+            ></app-manager-post-item>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p-paginator
+        [totalRecords]="paginator.total"
+        [rows]="paginator.rows"
+        [first]="paginator.first"
+        (onPageChange)="onPageChange($event)"
+        [showFirstLastIcon]="false"
+      ></p-paginator>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,9 @@
 import { AuthService } from "../services/auth.service";
+import { AdminCommentEffects } from "./admin/admin-comment.effects";
+import { AdminCourseEffects } from "./admin/admin-course.effects";
+import { AdminPostEffects } from "./admin/admin-post.effects";
+import { AdminReportEffects } from "./admin/admin-report.effects";
+import { AdminUserEffects } from "./admin/admin-user.effects";
 import { AuthEffects } from "./auth.effects";
 import { ChapterEffects } from "./chapter.effects"
 import { CoursesManagerEffects } from "./course-manager.effects";
@@ -36,6 +41,11 @@ const effects: Array<any> = [
     QuesionEffects,
     ExerciseEffects,
     AuthEffects,
+    AdminCommentEffects,
+    AdminUserEffects,
+    AdminReportEffects,
+    AdminPostEffects,
+    AdminCourseEffects,
 ];
 
 export default effects;

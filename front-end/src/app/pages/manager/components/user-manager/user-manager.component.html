@@ -1,0 +1,95 @@
+<div class="user-manager flex flex-col w-full h-full py-2">
+  <div class="header">
+    <h1 class="font-bold text-2xl px-2 py-5">Quản lý người dùng</h1>
+  </div>
+  <div class="body flex-1 flex flex-col justify-between">
+    <div class="content">
+      <div class="filter-box flex justify-end items-center">
+        <div class="filter-action flex items-center gap-2">
+          <div
+            class="search flex flex-row gap-2 text-gray-500"
+            [class.forcus]="isSearching"
+            #search
+          >
+            <button class="search-btn flex" (click)="toggleSearching()">
+              <ng-icon class="text-3xl" name="ionSearchOutline"></ng-icon>
+            </button>
+            <input
+              class="search-input"
+              name="searchUser"
+              placeholder="Tìm kiếm người dùng"
+              [formControl]="searchUser"
+            />
+          </div>
+          <div>
+            <button
+              (click)="op.toggle($event)"
+              class="filter font-bold flex items-center gap-1"
+            >
+              <ng-icon class="text-2xl" name="ionFilterOutline"></ng-icon>
+              <span>Bộ lọc</span>
+            </button>
+            <p-overlayPanel #op>
+              <div class="flex flex-col gap-4">
+                <h6 class="text-sm font-bold">Bộ lọc</h6>
+                <div class="flex flex-col">
+                  <label class="text-sm italic">Đối tượng:</label>
+                  <p-dropdown
+                    [options]="[
+                              {
+                                label: 'Tất cả',
+                                value: ['averageRating', 'enroll.length', 'createdAt']
+                              },
+                              {
+                                label: 'Thời gian',
+                                value: ['createdAt']
+                              },
+                              {
+                                label: 'Số lượng học viên',
+                                value: ['enroll.length'],
+                              },
+                              {
+                                label: 'Đánh giá',
+                                value: ['averageRating'],
+                              }
+                            ]"
+                    optionLabel="label"
+                    optionValue="value"
+                    (onChange)="fieldFilterChange($event)"
+                  ></p-dropdown>
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm italic">Sắp xếp:</label>
+                  <p-dropdown
+                    [options]="[
+                              {
+                                label: 'Giảm dần',
+                                value: 'desc'
+                              },
+                              {
+                                label: 'Tăng dần',
+                                value: 'asc',
+                              }
+                            ]"
+                    optionLabel="label"
+                    optionValue="value"
+                    (onChange)="typeFilterChange($event)"
+                  ></p-dropdown>
+                </div>
+              </div>
+            </p-overlayPanel>
+          </div>
+        </div>
+      </div>
+      <div class="item-list"></div>
+    </div>
+    <div class="footer">
+      <p-paginator
+        [first]="1"
+        [rows]="10"
+        [totalRecords]="120"
+        showFirstLastIcon="false"
+      />
+    </div>
+  </div>
+</div>
