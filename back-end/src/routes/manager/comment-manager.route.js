@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const ApiError = require("../../utils/apiError");
-
 const jwt = require("jsonwebtoken");
+const CommentController = require("../../controllers/manager/comment-manager.controller");
 
 router.use(function (req, res, next) {
   const token = req.cookies.token;
@@ -21,5 +21,10 @@ router.use(function (req, res, next) {
     res.status(403).json({ message: "Forbidden" });
   });
 });
+router.get("/", CommentController.getComments);
+
+router.patch("/updateStatus", CommentController.updateStatusComments);
+
+router.delete("/deletemany/:comment_ids", CommentController.deleteComments);
 
 module.exports = router;

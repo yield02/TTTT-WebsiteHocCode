@@ -45,6 +45,37 @@
           }
         }
       }
+      .content-box {
+        border: 1px solid #dedede;
+        .title {
+          padding: 8px 16px;
+          border-bottom: 1px solid #dedede;
+        }
+      }
+      .action {
+        min-width: 56px;
+        height: 1px;
+      }
+      .actions {
+        padding: 4px 8px;
+        background: #f6f5fd;
+        border: 1px solid #dedede;
+        animation: actionFadeIn 0.15s linear;
+
+        &.hidden {
+          display: none;
+        }
+
+        .action-dropdown {
+          &.hidden {
+            display: none;
+          }
+        }
+
+        .day-ban {
+          max-width: 80px;
+        }
+      }
     }
     .footer {
     }
@@ -68,5 +99,37 @@
   }
   100% {
     width: 260px;
+  }
+}
+
+@keyframes actionFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::ng-deep {
+  .user-manager {
+    .body {
+      .content {
+        .actions {
+          .action-dropdown {
+            .p-dropdown-label {
+              max-width: 150px;
+            }
+          }
+          .state-dropdown {
+            .p-dropdown-label {
+              max-width: 100px;
+            }
+          }
+        }
+      }
+    }
   }
 }

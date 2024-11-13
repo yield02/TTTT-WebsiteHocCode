@@ -1,0 +1,61 @@
+<div
+  class="course-item flex flex-row items-center"
+  (click)="showCommentDialog()"
+>
+  <div class="flex gap-2 p-2" (click)="$event.stopPropagation()">
+    <p-checkbox
+      [(ngModel)]="isChecked"
+      [binary]="true"
+      (onChange)="toggleCheck($event)"
+      inputId="binary"
+    />
+  </div>
+  <div class="flex-1 grid grid-cols-8">
+    @if(author$ | async; as author) {
+    <div class="author flex items-center col-span-3">
+      <p-avatar
+        styleClass="mr-2"
+        [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
+        shape="circle"
+        [image]="
+          (author?.avatar?.contentType == 'url' &&
+            author?.avatar?.url?.toString()) ||
+          (author?.avatar?.buffer &&
+            'data:' +
+              author?.avatar?.contentType +
+              ';base64,' +
+              author?.avatar?.buffer) ||
+          'assets/images/avatar-user-default.png'
+        "
+      />
+      <span class="text-gray-600">
+        {{ author.username }}
+      </span>
+    </div>
+    }
+    <div class="createTime col-span-2 max-md:hidden">
+      <span class="text-gray-600">{{ formatMyTime(comment.createdAt!) }}</span>
+    </div>
+    <div
+      class="status col-span-3"
+      [class.allow]="comment.status === 'allow'"
+      [class.block]="comment.status === 'block'"
+      (click)="$event.stopPropagation()"
+    >
+      <p-dropdown
+        class="dropdown-status"
+        [options]="dropDownItems"
+        [formControl]="status"
+      ></p-dropdown>
+    </div>
+  </div>
+  <div class="action" (click)="$event.stopPropagation()">
+    <p-button
+      (onClick)="$event.stopPropagation(); menu.toggle($event)"
+      size="small"
+      [text]="true"
+      icon="pi pi-ellipsis-v"
+    ></p-button>
+    <p-menu #menu [model]="items" [popup]="true" />
+  </div>
+</div>

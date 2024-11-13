@@ -1,0 +1,101 @@
+<div class="course-item flex flex-row items-center gap-4">
+  <div class="flex gap-2 p-2">
+    <p-checkbox
+      [(ngModel)]="isChecked"
+      [binary]="true"
+      (onChange)="toggleCheck($event)"
+      inputId="binary"
+    />
+  </div>
+  <div class="flex-1 grid grid-cols-12">
+    <div class="author flex items-center col-span-2 max-lg:col-span-3">
+      <p-avatar
+        [pTooltip]="user.username.toString()"
+        styleClass="mr-2"
+        [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
+        shape="circle"
+        [image]="
+          (user?.avatar?.contentType == 'url' &&
+            user?.avatar?.url?.toString()) ||
+          (user?.avatar?.buffer &&
+            'data:' +
+              user?.avatar?.contentType +
+              ';base64,' +
+              user?.avatar?.buffer) ||
+          'assets/images/avatar-user-default.png'
+        "
+      />
+      <span class="text-gray-600 max-lg:hidden">
+        {{ user.username }}
+      </span>
+    </div>
+    <div class="general-infor col-span-3 flex flex-col max-lg:col-span-5">
+      <div class="flex flex-col">
+        <label class="text-xs text-gray-500 italic">Email:</label>
+        <p class="text-sm text-gray-600">
+          {{ user.email }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-xs text-gray-500 italic">SDT:</label>
+        <p class="text-sm text-gray-600">
+          {{ user.phone }}
+        </p>
+      </div>
+    </div>
+    <div class="createTime col-span-2 max-lg:hidden">
+      <span class="text-gray-600">{{ formatMyTime(user.createdAt!) }}</span>
+    </div>
+    <div
+      class="status col-span-2 flex items-center max-lg:hidden"
+      [class.waiting]="user.status.status === 'waiting'"
+      [class.allow]="user.status.status === 'allow'"
+      [class.block]="user.status.status === 'block'"
+    >
+      <p-dropdown
+        class="dropdown-status"
+        [options]="dropDownItems"
+        [formControl]="status"
+      ></p-dropdown>
+    </div>
+    <div class="col-span-2 max-lg:col-span-2 flex gap-2 flex-wrap">
+      <div class="flex items-center gap-2">
+        <ng-icon
+          class="text-xl text-blue-800"
+          name="ionChatbubbleSharp"
+        ></ng-icon>
+        <span class="w-8">{{ user.totalComment }}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <ng-icon
+          class="text-xl text-blue-800"
+          name="ionDocumentSharp"
+        ></ng-icon>
+        <span class="w-8">{{ user.totalPost }}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <ng-icon
+          class="text-xl text-yellow-300"
+          name="ionWarningSharp"
+        ></ng-icon>
+        <span class="w-8"> 1 </span>
+      </div>
+    </div>
+    <div
+      class="user-role col-span-1 max-lg:col-span-2"
+      [class.admin]="user.role == 'admin'"
+    >
+      {{ user.role }}
+    </div>
+  </div>
+  <div class="action">
+    <p-button
+      (onClick)="menu.toggle($event)"
+      size="small"
+      [text]="true"
+      icon="pi pi-ellipsis-v"
+    ></p-button>
+    <p-menu #menu [model]="items" [popup]="true" />
+  </div>
+  <p-confirmDialog />
+</div>

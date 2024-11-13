@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
         CommonModule,
     ],
     template: `
-    <span class="error-message py-2 text-red italic">
+    <span class="error-message py-2 text-red italic ">
         {{ message }}
     </span>
 

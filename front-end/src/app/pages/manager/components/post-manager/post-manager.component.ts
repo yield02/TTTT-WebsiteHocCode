@@ -13,7 +13,7 @@ import { AppState } from '../../../../store/reducer';
 import { manager_deletePosts, manager_loadPosts, manager_updateStatusPost } from '../../../../store/admin/post/post.actions';
 import { manager_loadUsers } from '../../../../store/admin/users/users.actions';
 import { Post } from '../../../../models/forum/Post';
-import { BehaviorSubject, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, Observable, switchMap } from 'rxjs';
 import { FilterAdminPostInterace, selectAdminPostWithId, selectPostAdminWithFilter } from '../../../../store/admin/post/post.selectors';
 import { User } from '../../../../models/User';
 import { AvatarModule } from 'primeng/avatar';
@@ -109,10 +109,18 @@ export class PostManagerComponent implements OnInit, OnDestroy {
             if (posts.length > 0) {
                 this.paginator.total = posts.length;
                 this.paginator.pageCount = Math.ceil(posts.length / this.paginator.rows);
-                this._changeDetectorRef.detectChanges();
             }
             this.posts = posts || [];
-        })
+            this._changeDetectorRef.detectChanges();
+        });
+
+        this.searchPost.valueChanges.pipe(debounceTime(500)).subscribe(
+            value => {
+                this.filter$.next({
+                    ...this.filter$.value,
+                    search: value
+                })
+            })
 
     }
     toggleSearching() {

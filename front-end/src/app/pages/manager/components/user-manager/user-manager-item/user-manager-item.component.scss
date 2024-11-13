@@ -29,6 +29,17 @@
       border-color: #e41749;
     }
   }
+
+  .user-role {
+    padding-left: 8px;
+    border-left: 4px solid transparent;
+    &.admin {
+      font-weight: bold;
+      color: #e41749;
+      border-color: #e41749;
+    }
+  }
+
   .action {
   }
 }

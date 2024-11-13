@@ -25,7 +25,6 @@ export interface FilterAdminPostInterace {
 
 export const selectPostAdminWithFilter = (filter: FilterAdminPostInterace) => createSelector(selectAdminManagerPostState, (posts: Post[]) => {
 
-    console.log(filter);
 
     let sortWithAuthorId = posts.filter(c => c.author_id === filter.author || filter.author === '');
 

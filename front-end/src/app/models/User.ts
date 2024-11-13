@@ -7,11 +7,11 @@ export interface User {
     username: String,
     email?: String | undefined,
     fullname?: String | undefined,
-    role: [] | [Object],
+    role: string,
     gender: Boolean,
     phone?: String | undefined,
     address: String | undefined,
-    status: Object,
+    status: any,
     avatar?: {
         url?: String,
         contentType?: String,
@@ -22,6 +22,8 @@ export interface User {
     updatedAt?: string,
     learning?: LearningInterFace,
     exercises?: Exercise[],
+    totalPost?: Number,
+    totalComment?: Number,
 }
 
 export interface AuthUser {
@@ -34,7 +36,7 @@ export interface AuthUser {
         hidden: boolean | undefined,
     } | undefined,
     fullname?: String | undefined,
-    role: [] | [Object],
+    role: string,
     gender: Boolean,
     phone?: {
         data: String | undefined | "",

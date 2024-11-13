@@ -172,7 +172,7 @@ exports.getCoursesById = async (coursesId) => {
           ...course._doc,
           totalLesson,
           totalQuestion,
-          averageRating: rating[0].averageRating,
+          averageRating: rating[0]?.averageRating,
         };
       })
     );
@@ -221,7 +221,7 @@ exports.getByAuthor = async (authorId) => {
           ...course._doc,
           totalLesson,
           totalQuestion,
-          averageRating: rating[0].averageRating,
+          averageRating: rating[0]?.averageRating,
         };
       })
     );
@@ -273,7 +273,7 @@ exports.getBySubjectId = async (subjectIds) => {
           ...course._doc,
           totalLesson,
           totalQuestion,
-          averageRating: rating[0].averageRating,
+          averageRating: rating[0]?.averageRating,
         };
       })
     );

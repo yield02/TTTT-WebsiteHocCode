@@ -24,4 +24,9 @@ router.use(function (req, res, next) {
 
 router.get("/", userController.getAllUsers);
 
+router.patch("/updateStatus", userController.updateStatus);
+router.patch("/updateAdminRole", userController.updateAdminRole);
+
+router.delete("/deletemany/:user_ids", userController.deleteUsers);
+
 module.exports = router;

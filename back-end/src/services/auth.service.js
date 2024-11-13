@@ -32,6 +32,19 @@ exports.login = async (data) => {
   if (!user) {
     throw new apiError(404, "Tài khoản không tồn tại");
   } else {
+    if (user.status.status == "block") {
+      if (new Date(user.status.date) > new Date(Date.now())) {
+        throw new apiError(
+          403,
+          `Tài khoản đã bị khóa đến ngày ${new Date(
+            user.status.date
+          ).toLocaleString()} \nlý do: ${user.status.reason}`
+        );
+      }
+      user.status.status = "allow";
+      await user.save();
+    }
+
     if (
       await bcrypt.compareSync(
         data.password,

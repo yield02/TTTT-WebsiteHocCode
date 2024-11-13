@@ -13,7 +13,7 @@ export const initialState: AuthUser = {
         hidden: false,
     },
     fullname: '',
-    role: [],
+    role: '',
     gender: false,
     phone: {
         data: '',
