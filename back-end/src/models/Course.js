@@ -18,7 +18,7 @@ const courseSchema = new mongoose.Schema(
       state: {
         type: String,
         enum: ["waiting", "active", "banned"],
-        default: "active",
+        default: "waiting",
       },
       reason: {
         type: String,

@@ -23,6 +23,11 @@ import { selectLearningFromCourseId } from '../../../../store/learning/learning.
 import { EditorComponent, EditorModule } from '@tinymce/tinymce-angular';
 import { Editor } from 'tinymce';
 import { FormsModule } from '@angular/forms';
+import { MenuItem } from 'primeng/api';
+import { ReportService } from '../../../../services/report.service';
+import { MenuModule } from 'primeng/menu';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ReportDynamicDialogComponent } from '../../../../components/report-dynamic-dialog/report-dynamic-dialog.component';
 
 @Component({
   selector: 'learning-lesson-content',
@@ -34,11 +39,12 @@ import { FormsModule } from '@angular/forms';
     YouTubePlayer,
     EditorComponent,
     FormsModule,
+    MenuModule,
 
     ContentComponent,
     HoursFormatPipe,
   ],
-  providers: [provideIcons({ ionChatboxOutline }), {
+  providers: [DialogService, provideIcons({ ionChatboxOutline }), {
     provide: YOUTUBE_PLAYER_CONFIG,
     useValue: {
       loadApi: true
@@ -90,16 +96,24 @@ export class LessonComponent implements OnInit, AfterViewInit, AfterViewChecked,
     ],
   }
 
+  moreAction: MenuItem[] = [];
+  reportRef: DynamicDialogRef | undefined;
+
 
   subscriptions: Subscription[] = [];
-  constructor(private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private sanitizer: DomSanitizer, private _changeDetector: ChangeDetectorRef) {
+  constructor(
+    private _store: Store<AppState>,
+    private _activatedRoute: ActivatedRoute,
+    private sanitizer: DomSanitizer, private _changeDetector: ChangeDetectorRef,
+    private _reportService: ReportService,
+    private _dialogService: DialogService,
+  ) {
 
   }
 
   ngOnInit(): void {
     this.course_id = this._activatedRoute.snapshot.paramMap.get("courseId")!;
 
-    const lesson_id = this._activatedRoute.snapshot.paramMap.get("lesson_id")!;
 
 
 
@@ -140,7 +154,22 @@ export class LessonComponent implements OnInit, AfterViewInit, AfterViewChecked,
       })).subscribe());
 
 
+    this.moreAction = [
+      {
+        label: 'Báo cáo bài học',
+        icon: 'pi pi-flag',
+        command: () => {
+          // this._reportService.report({
+          //   course_id: this.course_id as string,
+          //   lesson_id: lesson_id,
+          //   content: 'Bài học này không hữu ích',
+          //   type_report: 'lesson',
+          // }).subscribe();
 
+          this.showReportDialog();
+        }
+      }
+    ]
 
 
   }
@@ -171,9 +200,30 @@ export class LessonComponent implements OnInit, AfterViewInit, AfterViewChecked,
 
 
 
-  checkRender() {
-    console.log('render');
+  showReportDialog() {
+
+    let lesson_id = this._activatedRoute.snapshot.queryParams['lesson_id'];
+
+    this.reportRef = this._dialogService.open(ReportDynamicDialogComponent, {
+      width: '500px',
+      data: {
+        course_id: this.course_id,
+      }
+    });
+
+    this.reportRef?.onClose.subscribe((content) => {
+      if (content) {
+        this._reportService.report({
+          course_id: this.course_id as string,
+          lesson_id: lesson_id,
+          content: content,
+          type_report: 'lesson',
+        }).subscribe();
+      }
+
+    });
   }
+
 
 
 

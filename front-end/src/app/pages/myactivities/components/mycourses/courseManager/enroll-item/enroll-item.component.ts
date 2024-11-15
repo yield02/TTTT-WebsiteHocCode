@@ -32,6 +32,7 @@ import { Subscription } from 'rxjs';
 export class EnrollItemComponent implements OnChanges, OnInit, OnDestroy {
   @Input() user!: User;
   @Input() checkAll!: Boolean;
+  @Input() type: 'enroll' | 'waiting' = 'enroll';
 
   @Output() addCheck = new EventEmitter<String>();
   @Output() removeCheck = new EventEmitter<String>();

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const ApiError = require("../../utils/apiError");
-
 const jwt = require("jsonwebtoken");
+const reportController = require("../../controllers/manager/report-manager.controller");
 
 router.use(function (req, res, next) {
   const token = req.cookies.token;
@@ -21,5 +21,11 @@ router.use(function (req, res, next) {
     res.status(403).json({ message: "Forbidden" });
   });
 });
+
+router.get("/", reportController.getReports);
+
+router.patch("/updateStatus", reportController.updateStatusReports);
+
+router.delete("/deletemany/:report_ids", reportController.deleteReports);
 
 module.exports = router;

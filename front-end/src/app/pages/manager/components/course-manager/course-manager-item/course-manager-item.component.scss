@@ -1,0 +1,64 @@
+.course-item {
+  padding: 8px 16px;
+  border-bottom: 1px solid #dedede;
+  transition: 0.2s;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  .title {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .author {
+  }
+  .createTime {
+  }
+  .status {
+    padding-left: 8px;
+    border-left: 4px solid transparent;
+    &.waiting {
+      border-color: #ffd615;
+    }
+    &.allow {
+      border-color: #83e85a;
+    }
+    &.block {
+      border-color: #e41749;
+    }
+  }
+
+  .user-role {
+    padding-left: 8px;
+    border-left: 4px solid transparent;
+    &.admin {
+      font-weight: bold;
+      color: #e41749;
+      border-color: #e41749;
+    }
+  }
+  .content-box {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* number of lines to show */
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  .action {
+  }
+}
+
+::ng-deep {
+  .course-item {
+    .status {
+      .dropdown-status {
+        .p-dropdown-label {
+          padding: 0.5rem;
+          min-width: 100px;
+        }
+      }
+    }
+  }
+}

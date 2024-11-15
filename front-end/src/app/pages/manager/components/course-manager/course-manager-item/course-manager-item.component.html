@@ -1,0 +1,77 @@
+<div class="course-item flex flex-row items-center gap-4">
+  <div class="flex gap-2 p-2">
+    <p-checkbox
+      [(ngModel)]="isChecked"
+      [binary]="true"
+      (onChange)="toggleCheck($event)"
+      inputId="binary"
+    />
+  </div>
+  <div class="flex-1 grid grid-cols-12 gap-4">
+    <div class="col-span-2">
+      {{ course.course_name }}
+    </div>
+    <div class="author flex items-center col-span-2">
+      <p-avatar
+        [pTooltip]="author?.username?.toString()"
+        styleClass="mr-2"
+        [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
+        shape="circle"
+        [image]="
+          (author?.avatar?.contentType == 'url' &&
+            author?.avatar?.url?.toString()) ||
+          (author?.avatar?.buffer &&
+            'data:' +
+              author?.avatar?.contentType +
+              ';base64,' +
+              author?.avatar?.buffer) ||
+          'assets/images/avatar-user-default.png'
+        "
+      />
+      <span class="text-gray-600 max-lg:hidden">
+        {{ author?.username }}
+      </span>
+    </div>
+    <div class="grid grid-cols-6 gap-2 col-span-3">
+      <div class="flex items-center gap-1" pTooltip="Số lượng học viên">
+        <ng-icon class="text-xl text-blue-500" name="ionSchool"></ng-icon>
+        <span>{{ course.enroll?.length }}</span>
+      </div>
+      <div class="flex items-center gap-1" pTooltip="Số bài học">
+        <ng-icon class="text-xl text-blue-500" name="ionTvSharp"></ng-icon>
+        <span>{{ numberLesson }}</span>
+      </div>
+      <div class="flex items-center gap-1" pTooltip="Số báo cáo">
+        <ng-icon class="text-xl text-yellow-500" name="ionWarning"></ng-icon>
+        <span>{{ numberReport }}</span>
+      </div>
+    </div>
+    <div class="createTime col-span-2 max-lg:hidden">
+      <span class="text-gray-600">{{
+        course?.createdAt ? formatMyTime(course.createdAt!.toString()) : ""
+      }}</span>
+    </div>
+    <div
+      class="status col-span-3 flex items-center"
+      [class.waiting]="course.status?.state === 'waiting'"
+      [class.allow]="course.status?.state === 'active'"
+      [class.block]="course.status?.state === 'banned'"
+    >
+      <p-dropdown
+        class="dropdown-status"
+        [options]="dropDownItems"
+        [formControl]="status"
+      ></p-dropdown>
+    </div>
+  </div>
+  <div class="action">
+    <p-button
+      (onClick)="menu.toggle($event)"
+      size="small"
+      [text]="true"
+      icon="pi pi-ellipsis-v"
+    ></p-button>
+    <p-menu #menu [model]="items" [popup]="true" />
+  </div>
+  <p-confirmDialog />
+</div>

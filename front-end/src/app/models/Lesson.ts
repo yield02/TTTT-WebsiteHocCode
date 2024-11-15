@@ -3,6 +3,7 @@ export interface Lesson {
     title: String,
     content?: String,
     video?: String,
+    author_id?: String,
     createdAt?: String,
     updatedAt?: String,
     course_id: String,

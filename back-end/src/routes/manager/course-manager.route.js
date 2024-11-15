@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ApiError = require("../../utils/apiError");
+const CourseController = require("../../controllers/manager/course-manager.controller");
 
 const jwt = require("jsonwebtoken");
 
@@ -21,5 +22,15 @@ router.use(function (req, res, next) {
     res.status(403).json({ message: "Forbidden" });
   });
 });
+
+router.get("/courses", CourseController.getCourses);
+router.get("/lessons", CourseController.getLessons);
+
+router.patch("/courses/updateStatus", CourseController.updateStatus);
+
+router.delete(
+  "/courses/deletemany/:course_ids",
+  CourseController.deleteCourses
+);
 
 module.exports = router;

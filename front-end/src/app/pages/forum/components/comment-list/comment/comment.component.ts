@@ -21,6 +21,9 @@ import { FetchUsers } from '../../../../../store/users/users.actions';
 
 import vi from '@angular/common/locales/vi';
 import { EditorComponent } from '@tinymce/tinymce-angular';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ReportService } from '../../../../../services/report.service';
+import { ReportDynamicDialogComponent } from '../../../../../components/report-dynamic-dialog/report-dynamic-dialog.component';
 registerLocaleData(vi);
 
 
@@ -36,7 +39,7 @@ registerLocaleData(vi);
         CommentEditorComponent,
         EditorComponent,
     ],
-    providers: [provideIcons({
+    providers: [DialogService, provideIcons({
         ionCalendarNumberOutline,
         ionCafeOutline
     })],
@@ -92,12 +95,12 @@ export class CommentComponent implements OnInit, OnDestroy {
     }
 
 
-
+    reportRef: DynamicDialogRef | undefined;
     moreActions!: MenuItem[] | null;
 
     subscriptions: Subscription[] = [];
 
-    constructor(private _store: Store<AppState>) {
+    constructor(private _store: Store<AppState>, private _dialogService: DialogService, private _reportService: ReportService) {
 
     }
 
@@ -111,6 +114,9 @@ export class CommentComponent implements OnInit, OnDestroy {
         this.moreActions = [
             {
                 icon: 'pi pi-flag',
+                command: () => {
+                    this.showReportDialog();
+                }
             }
         ];
 
@@ -155,6 +161,26 @@ export class CommentComponent implements OnInit, OnDestroy {
                 }
             })
         ).subscribe();
+    }
+
+    showReportDialog() {
+
+        this.reportRef = this._dialogService.open(ReportDynamicDialogComponent, {
+            width: '500px',
+            data: {
+            }
+        });
+
+        this.reportRef?.onClose.subscribe((content) => {
+            if (content) {
+                this._reportService.report({
+                    comment_id: this.comment._id!,
+                    content: content,
+                    type_report: 'comment',
+                }).subscribe();
+            }
+
+        });
     }
 
     interactWithComment() {

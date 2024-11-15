@@ -1,0 +1,27 @@
+<div class="dialog-container flex justify-center items-center flex-col gap-4">
+  <div class="dialog-header text-center">
+    <h3 class="dialog-heading font-bold text-lg">Báo cáo</h3>
+    <span class="text-sm text-gray-400 italic text-center"
+      >Lưu ý khi báo cáo!!! bạn sẽ chịu trách nhiệm nếu có hành động lạm dụng
+      báo cáo</span
+    >
+  </div>
+  <div class="dialog-body w-full">
+    <textarea
+      class="w-full"
+      [(ngModel)]="reportContent"
+      placeholder="Nội dung báo cáo"
+      pInputTextarea
+      [autoResize]="true"
+      [rows]="5"
+    ></textarea>
+  </div>
+  <div class="dialog-footer">
+    <p-button
+      label="Gửi báo cáo"
+      [text]="true"
+      size="small"
+      (onClick)="sendReport()"
+    />
+  </div>
+</div>

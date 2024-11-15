@@ -30,9 +30,18 @@
   <div class="content-container">
     <div class="my-8 flex justify-between items-center">
       <h3 class="content-heading">{{ lesson.title }}</h3>
-      <span class="time-stamp"
-        >Ngày đăng {{ formatDateAndTime(lesson.createdAt!) }}</span
-      >
+      <div class="flex justify-center items-center">
+        <span class="time-stamp"
+          >Ngày đăng {{ formatDateAndTime(lesson.createdAt!) }}</span
+        >
+        <p-button
+          (onClick)="menu.toggle($event)"
+          icon="pi pi-ellipsis-v"
+          [rounded]="true"
+          [text]="true"
+        />
+        <p-menu #menu popup="true" [model]="moreAction"></p-menu>
+      </div>
     </div>
     <learning-lesson-content-box [lesson_id]="lesson._id">
       <editor

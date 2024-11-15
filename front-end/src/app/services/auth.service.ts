@@ -29,6 +29,29 @@ export class AuthService {
 
   }
 
+  isAdmin(): Observable<boolean> {
+    return this.store.select('user').pipe(
+      switchMap(data => {
+        if (!data._id) {
+          if (this.cookie.get('token')) {
+            return this.getUserInfor();
+          }
+          else {
+            return of(false);
+          }
+        }
+        else {
+          if (data.role === 'admin') {
+            return of(true);
+          }
+          else {
+            return of(false);
+          }
+        }
+      })
+    );
+  }
+
 
   isAddRequiredInformation(): Observable<boolean> {
     return this.store.select('user').pipe(

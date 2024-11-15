@@ -37,6 +37,7 @@ import { admin_CourseReducer } from './admin/course/course.reducer';
 import { admin_CommentReducer } from './admin/comment/comment.reducer';
 import { admin_PostReducer } from './admin/post/post.reducer';
 import { admin_ReportReducer } from './admin/report/report.reducer';
+import { Report } from '../models/Report';
 
 export interface AppState {
     user: AuthUser,
@@ -57,7 +58,7 @@ export interface AppState {
     question: Question[],
     exercise: Exercise[],
     admin_user: User[],
-    admin_report: Course[],
+    admin_report: Report[],
     admin_course: Course[],
     admin_post: Post[],
     admin_comment: Comment[],

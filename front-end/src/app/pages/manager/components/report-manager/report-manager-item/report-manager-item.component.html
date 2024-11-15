@@ -1,0 +1,63 @@
+<div class="report-item flex flex-row items-center gap-4">
+  <div class="flex gap-2 p-2">
+    <p-checkbox
+      [(ngModel)]="isChecked"
+      [binary]="true"
+      (onChange)="toggleCheck($event)"
+      inputId="binary"
+    />
+  </div>
+  <div class="flex-1 grid grid-cols-12">
+    <div class="reporter flex items-center col-span-2">
+      <p-avatar
+        [pTooltip]="reporter?.username?.toString()"
+        styleClass="mr-2"
+        [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
+        shape="circle"
+        [image]="
+          (reporter?.avatar?.contentType == 'url' &&
+            reporter?.avatar?.url?.toString()) ||
+          (reporter?.avatar?.buffer &&
+            'data:' +
+              reporter?.avatar?.contentType +
+              ';base64,' +
+              reporter?.avatar?.buffer) ||
+          'assets/images/avatar-user-default.png'
+        "
+      />
+      <span class="text-gray-600 max-lg:hidden">
+        {{ reporter?.username }}
+      </span>
+    </div>
+    <div class="flex items-center col-span-2">
+      {{ convertTypeReport(report.type_report) }}
+    </div>
+    <div class="createTime col-span-2">
+      <span class="text-gray-600">{{ formatMyTime(report.createdAt!) }}</span>
+    </div>
+    <div
+      class="status col-span-2 flex items-center max-lg:hidden"
+      [class.waiting]="report.state === 'unprocessed'"
+      [class.allow]="report.state === 'processed'"
+    >
+      <p-dropdown
+        class="dropdown-status"
+        [options]="dropDownItems"
+        [formControl]="status"
+      ></p-dropdown>
+    </div>
+    <div class="content-box col-span-4">
+      {{ report.content }}
+    </div>
+  </div>
+  <div class="action">
+    <p-button
+      (onClick)="menu.toggle($event)"
+      size="small"
+      [text]="true"
+      icon="pi pi-ellipsis-v"
+    ></p-button>
+    <p-menu #menu [model]="items" [popup]="true" />
+  </div>
+  <p-confirmDialog />
+</div>

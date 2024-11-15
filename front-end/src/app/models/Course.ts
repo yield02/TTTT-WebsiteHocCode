@@ -6,7 +6,7 @@ export interface Course {
         username: string;
         fullname?: string;
         avatar: any;
-    },
+    } | any,
     course_name: String,
     image?: {
         contentType: String,

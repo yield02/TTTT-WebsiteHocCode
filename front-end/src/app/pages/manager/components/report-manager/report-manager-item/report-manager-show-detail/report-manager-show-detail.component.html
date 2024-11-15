@@ -1,0 +1,174 @@
+@if(lesson) {
+<div *ngIf="lesson" class="lesson-container flex flex-col gap-4">
+  <div class="action mb-12">
+    <p-button
+      (onClick)="blockLesson()"
+      label="Khóa khóa học"
+      [outlined]="true"
+      severity="danger"
+    />
+  </div>
+  @if(author$ | async; as user ) {
+  <div class="flex" id="infor">
+    <p-avatar
+      [image]="
+        (user?.avatar?.contentType == 'url' && user?.avatar?.url?.toString()) ||
+        (user?.avatar?.buffer &&
+          'data:' +
+            user?.avatar?.contentType +
+            ';base64,' +
+            user?.avatar?.buffer) ||
+        'assets/images/avatar-user-default.png'
+      "
+      styleClass="mr-2"
+      size="large"
+      shape="circle"
+    />
+    <div class="flex flex-col gap-1">
+      <h1 class="author_name hover:text-blue-700 cursor-pointer">
+        {{ user.fullname || user.username }}
+      </h1>
+      <div class="flex gap-4">
+        <!-- <span class="text-gray-600 description"
+              ><ng-icon class="description-icon" name="ionCafeOutline"></ng-icon>
+              Converstation Starter</span
+            > -->
+        <span class="text-gray-600 description"
+          ><ng-icon class="description-icon" name="ionCalendarNumberOutline">
+          </ng-icon>
+          {{
+            lesson.createdAt ? formatMyTime(lesson.createdAt.toString()) : ""
+          }}
+        </span>
+      </div>
+    </div>
+  </div>
+  }
+  <ng-container *ngIf="lesson.video">
+    <div class="video-wrapper">
+      <div class="video-play-wapper">
+        <youtube-player
+          allowfullscreen
+          #lesson_video
+          width="100"
+          height="100"
+          ng-show="showvideo"
+          class="video"
+          [videoId]="lesson.video.toString()"
+        />
+      </div>
+    </div>
+  </ng-container>
+  <div class="content">
+    <h1 class="content-heading-text text-4xl mb-2">{{ lesson.title }}</h1>
+    <editor
+      class="content-body"
+      [init]="initEditor"
+      [initialValue]="lesson?.content?.toString()"
+      apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+    ></editor>
+  </div>
+</div>
+} @if(post$ | async; as post) {
+<div class="dialog-container">
+  <div class="action mb-12">
+    <p-button
+      (onClick)="blockPost()"
+      label="Khóa bài viết"
+      [outlined]="true"
+      severity="danger"
+    />
+  </div>
+  @if(author$ | async; as user ) {
+  <div class="flex" id="infor">
+    <p-avatar
+      [image]="
+        (user?.avatar?.contentType == 'url' && user?.avatar?.url?.toString()) ||
+        (user?.avatar?.buffer &&
+          'data:' +
+            user?.avatar?.contentType +
+            ';base64,' +
+            user?.avatar?.buffer) ||
+        'assets/images/avatar-user-default.png'
+      "
+      styleClass="mr-2"
+      size="large"
+      shape="circle"
+    />
+    <div class="flex flex-col gap-1">
+      <h1 class="author_name hover:text-blue-700 cursor-pointer">
+        {{ user.fullname || user.username }}
+      </h1>
+      <div class="flex gap-4">
+        <!-- <span class="text-gray-600 description"
+            ><ng-icon class="description-icon" name="ionCafeOutline"></ng-icon>
+            Converstation Starter</span
+          > -->
+        <span class="text-gray-600 description"
+          ><ng-icon class="description-icon" name="ionCalendarNumberOutline">
+          </ng-icon>
+          {{ formatMyTime(post.createdAt) }}
+        </span>
+      </div>
+    </div>
+  </div>
+  }
+  <editor
+    class="content-body"
+    [init]="initEditor"
+    [initialValue]="post.content.toString()"
+    apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+  ></editor>
+</div>
+} @if(comment$ | async; as comment) {
+<div class="dialog-container">
+  <div class="action mb-12">
+    <p-button
+      (onClick)="blockComment()"
+      label="Khóa bình luận"
+      [outlined]="true"
+      severity="danger"
+    />
+  </div>
+  @if(author$ | async; as user ) {
+  <div class="flex" id="infor">
+    <p-avatar
+      [image]="
+        (user?.avatar?.contentType == 'url' && user?.avatar?.url?.toString()) ||
+        (user?.avatar?.buffer &&
+          'data:' +
+            user?.avatar?.contentType +
+            ';base64,' +
+            user?.avatar?.buffer) ||
+        'assets/images/avatar-user-default.png'
+      "
+      styleClass="mr-2"
+      size="large"
+      shape="circle"
+    />
+    <div class="flex flex-col gap-1">
+      <h1 class="author_name hover:text-blue-700 cursor-pointer">
+        {{ user.fullname || user.username }}
+      </h1>
+      <div class="flex gap-4">
+        <!-- <span class="text-gray-600 description"
+            ><ng-icon class="description-icon" name="ionCafeOutline"></ng-icon>
+            Converstation Starter</span
+          > -->
+        <span class="text-gray-600 description"
+          ><ng-icon class="description-icon" name="ionCalendarNumberOutline">
+          </ng-icon>
+          {{ formatMyTime(comment.createdAt!) }}
+        </span>
+      </div>
+    </div>
+  </div>
+  }
+  <editor
+    class="content-body"
+    [init]="initEditor"
+    [initialValue]="comment.content.toString()"
+    apiKey="whoh1eym4df4e9avoky9m11qp0at6evnhufgkw21dwabfvnm"
+  ></editor>
+</div>
+}

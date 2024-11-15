@@ -1,0 +1,29 @@
+<div class="lesson-list-container">
+  <div class="lesson-list-header grid grid-cols-12">
+    <div class="lesson-list-header-item col-span-1">STT</div>
+    <div class="lesson-list-header-item col-span-8">Tên bài học</div>
+    <div class="lesson-list-header-item col-span-3">Dạng bài học</div>
+  </div>
+  <div class="lesson-list-body">
+    <ng-container *ngFor="let lesson of lessons; let i = index">
+      <div class="lesson-list-item grid grid-cols-12" (click)="showContent(i)">
+        <div class="lesson-list-item-item col-span-1">{{ i + 1 }}</div>
+        <div class="lesson-list-item-item col-span-8">{{ lesson.title }}</div>
+        <div class="lesson-list-item-item col-span-3 flex gap-2">
+          <div pTooltip="Văn bản" *ngIf="lesson.content">
+            <ng-icon
+              class="text-2xl text-blue-600"
+              name="ionDocument"
+            ></ng-icon>
+          </div>
+          <div pTooltip="Video" *ngIf="lesson.video">
+            <ng-icon
+              class="text-2xl text-blue-600"
+              name="heroComputerDesktopSolid"
+            ></ng-icon>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

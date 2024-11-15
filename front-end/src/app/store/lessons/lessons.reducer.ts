@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { AddAllLessons, CreateLessonSucess, DeleteAllLessons, DeleteLessons, DeleteLessonSucess, FetchingLessonSucess, UpdateLessonsSuccess, UpdateLessonSuccess } from './lessons.actions';
 import { Lesson } from '../../models/Lesson';
 import { state } from '@angular/animations';
+import { manager_loadLessonsSuccess } from '../admin/course/course.actions';
 
 export const initialState: Lesson[] = []
 
@@ -42,6 +43,9 @@ export const lessonsReducer = createReducer(
         })
     }),
     on(AddAllLessons, (state, { lessons }) => {
+        return lessons;
+    }),
+    on(manager_loadLessonsSuccess, (state, { lessons }) => {
         return lessons;
     })
 );

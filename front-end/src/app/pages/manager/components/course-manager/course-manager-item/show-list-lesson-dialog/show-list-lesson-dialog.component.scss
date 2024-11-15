@@ -1,0 +1,21 @@
+.lesson-list-container {
+  border: 1px solid #dedede;
+  .lesson-list-header {
+    padding: 8px 16px;
+    border-bottom: 1px solid #dedede;
+    .lesson-list-header-item {
+    }
+  }
+  .lesson-list-body {
+    .lesson-list-item {
+      padding: 8px 16px;
+      border-bottom: 1px solid #dedede;
+      cursor: pointer;
+      &:hover {
+        background-color: #f5f5f5;
+      }
+      .lesson-list-item-item {
+      }
+    }
+  }
+}

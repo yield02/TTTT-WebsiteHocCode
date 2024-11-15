@@ -1,6 +1,7 @@
 const authRouter = require("./auth");
 const userRouter = require("./user");
 const oAuthRouter = require("./oauth");
+const reportRouter = require("./report");
 
 const courseRouter = require("./study/course");
 const chapterRouter = require("./study/chapter");
@@ -31,6 +32,7 @@ function route(app) {
   app.use("/api/lesson", lessonRouter);
   app.use("/api/subject", subjectRouter);
   app.use("/api/user", userRouter);
+  app.use("/api/report", reportRouter);
   app.use("/api/discuss", discussRouter);
   app.use("/api/oauth", oAuthRouter);
   app.use("/api/reply-discuss", replyDiscussRouter);

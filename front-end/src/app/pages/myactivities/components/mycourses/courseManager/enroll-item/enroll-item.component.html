@@ -37,6 +37,7 @@
   <div class="flex items-center col-span-2 overflow-clip">
     <h2>{{ user?.phone }}</h2>
   </div>
+  @if(type === 'enroll') {
   <div class="col-span-2 flex items-center">
     <p-progressBar class="w-5/6" [value]="studyProgress"></p-progressBar>
   </div>
@@ -48,4 +49,5 @@
       [options]="optionsExerciseChart"
     ></p-chart>
   </div>
+  }
 </div>

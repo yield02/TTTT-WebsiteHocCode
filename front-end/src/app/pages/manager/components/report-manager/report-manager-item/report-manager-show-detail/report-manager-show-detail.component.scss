@@ -1,0 +1,45 @@
+.lesson-container {
+  .video-wrapper {
+    background-color: rgba(0, 0, 0, 1);
+    padding: 0 8.5%;
+    position: relative;
+    width: 100%;
+    .video-play-wapper {
+      padding-top: 56.25%;
+      position: relative;
+      .video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+
+  .content {
+    .content-heading-text {
+      font-weight: 600;
+    }
+  }
+}
+::ng-deep {
+  .video {
+    div {
+      width: 100%;
+      height: 100%;
+    }
+    .youtube-player-placeholder {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  .lesson-container {
+    .content-body {
+      .tox-tinymce {
+        border: none;
+      }
+    }
+  }
+}

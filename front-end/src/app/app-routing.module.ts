@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { loginGuardGuard } from './guard/LoginGuard.guard';
 import { MessageService } from 'primeng/api';
 import { ErrorComponent } from './pages/error/error.component';
+import { Admin } from './guard/Admin';
 
 
 
@@ -37,7 +38,7 @@ const routes: Routes = [
   {
     path: 'manager',
     loadChildren: () => import('./pages/manager/manager.module').then(m => m.ManagerModule),
-    canMatch: [loginGuardGuard],
+    canMatch: [loginGuardGuard, Admin],
   },
   {
     path: '',

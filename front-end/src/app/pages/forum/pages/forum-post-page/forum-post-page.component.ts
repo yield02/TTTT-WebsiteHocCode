@@ -25,6 +25,9 @@ import { createComment } from '../../../../store/forum/comment/comment.actions';
 import vi from '@angular/common/locales/vi';
 import { state } from '@angular/animations';
 import { EditorComponent } from '@tinymce/tinymce-angular';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ReportService } from '../../../../services/report.service';
+import { ReportDynamicDialogComponent } from '../../../../components/report-dynamic-dialog/report-dynamic-dialog.component';
 registerLocaleData(vi);
 
 @Component({
@@ -43,7 +46,7 @@ registerLocaleData(vi);
         CommentEditorComponent,
         CommentListComponent,
     ],
-    providers: [provideIcons({
+    providers: [DialogService, provideIcons({
         ionCalendarNumberOutline,
         heroHeartSolid,
         ionCafeOutline,
@@ -108,6 +111,8 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
         ],
     }
 
+    reportRef: DynamicDialogRef | undefined;
+
     actions: MenuItem[] = [
 
         {
@@ -116,6 +121,7 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
             },
             icon: 'pi pi-flag',
             command: () => {
+                this.showReportDialog();
             }
         },
 
@@ -123,7 +129,13 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
 
     subscriptions: Subscription[] = [];
 
-    constructor(private _store: Store<AppState>, private _activatedRoute: ActivatedRoute, private _router: Router) {
+    constructor(
+        private _store: Store<AppState>,
+        private _activatedRoute: ActivatedRoute,
+        private _router: Router,
+        private _reportService: ReportService,
+        private _dialogService: DialogService,
+    ) {
 
     }
     ngOnInit(): void {
@@ -187,6 +199,7 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
                         },
                         icon: 'pi pi-flag',
                         command: () => {
+                            this.showReportDialog();
                         }
                     },
                     {
@@ -264,6 +277,26 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
         change: SimpleChanges
     ): void {
         console.log(change);
+    }
+
+    showReportDialog() {
+
+        this.reportRef = this._dialogService.open(ReportDynamicDialogComponent, {
+            width: '500px',
+            data: {
+            }
+        });
+
+        this.reportRef?.onClose.subscribe((content) => {
+            if (content) {
+                this._reportService.report({
+                    post_id: this.post$.getValue()._id,
+                    content: content,
+                    type_report: 'post',
+                }).subscribe();
+            }
+
+        });
     }
 
 

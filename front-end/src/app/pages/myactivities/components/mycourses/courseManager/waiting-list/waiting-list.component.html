@@ -2,7 +2,7 @@
 <div class="w-full">
   <h1 class="title mt-4">Người đăng ký</h1>
   <div class="enroll-list w-full">
-    <div class="tools flex justify-between items-center">
+    <div class="tools flex justify-between items-center py-2">
       <div class="flex gap-4">
         <div>
           <p-checkbox
@@ -48,10 +48,19 @@
         />
       </div>
     </div>
+    <div class="list-title">
+      <div class="grid grid-cols-12 items-center gap-4">
+        <div></div>
+        <h2 class="font-semibold col-span-2">Tên người dùng</h2>
+        <h2 class="font-semibold col-span-2">Email</h2>
+        <h2 class="font-semibold col-span-2">Số điện thoại</h2>
+      </div>
+    </div>
     <div class="list-container">
       @if(userList$ | async; as users) {
       <ng-container *ngFor="let user of users">
         <course-manager-enroll-item
+          type="waiting"
           (addCheck)="addCheckList($event)"
           (removeCheck)="removeCheckList($event)"
           [checkAll]="checkAll"
