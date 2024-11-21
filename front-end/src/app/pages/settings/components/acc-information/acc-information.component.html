@@ -63,7 +63,7 @@
       }
     </div>
 
-    <form [formGroup]="InformationForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="InformationForm">
       <div class="information-item flex flex-wrap justify-start items-center">
         <div class="flex-item md:basis-1/2 basis-full px-4">
           <div>
@@ -246,7 +246,7 @@
       <div class="flex justify-end items-center">
         <p-button
           label="Lưu thông tin"
-          type="submit"
+          (onClick)="onSubmit()"
           [rounded]="true"
           severity="info"
         />

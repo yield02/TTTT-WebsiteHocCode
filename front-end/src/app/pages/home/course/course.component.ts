@@ -53,7 +53,7 @@ export class CourseComponent implements OnInit, OnDestroy {
   ratings$: BehaviorSubject<RatingInterface[]> = new BehaviorSubject<RatingInterface[]>([]);
 
 
-
+  was_enroll: boolean = false;
   isShowRating: boolean = false;
   isCollapseAll: boolean = true;
   fetchedCourse: boolean = false;
@@ -127,6 +127,7 @@ export class CourseComponent implements OnInit, OnDestroy {
 
   enroll(course_id: String) {
     this._store.dispatch(UserEnrollCourse({ course_id: course_id }));
+    this.was_enroll = true;
   }
 
   ngOnDestroy(): void {

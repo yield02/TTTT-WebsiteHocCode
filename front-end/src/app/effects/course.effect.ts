@@ -4,11 +4,12 @@ import { SubjectService } from "../services/subject.service";
 import { CourseService } from "../services/course.service";
 import { FetchingCourseFromCourseId, FetchingCourseFromCourseIds, FetchingCoursesFromSubjectIds, FetchingCoursesSucess, UserEnrollCourse, UserEnrollCourseSucess } from "../store/courses/courses.actions";
 import { catchError, map, mergeMap, of, switchMap } from "rxjs";
+import { MessageService } from "primeng/api";
 
 @Injectable({ providedIn: 'root' })
 export class CourseEffects {
 
-    constructor(private actions$: Actions, private _subjectService: SubjectService, private _coursesService: CourseService) { }
+    constructor(private actions$: Actions, private _subjectService: SubjectService, private _coursesService: CourseService, private _message: MessageService) { }
 
     loadCourses$ = createEffect(() => this.actions$.pipe(
         ofType(FetchingCoursesFromSubjectIds),
@@ -30,7 +31,10 @@ export class CourseEffects {
         () => this.actions$.pipe(
             ofType(UserEnrollCourse),
             mergeMap((_action) => this._coursesService.UserEnrollCourse(_action.course_id).pipe(
-                map((course) => UserEnrollCourseSucess({ course })),
+                map((course) => {
+                    this._message.add({ severity: 'success', summary: 'Ghi danh thành công, vui lòng chờ giảng viên duyệt yêu cầu', key: "global" });
+                    return UserEnrollCourseSucess({ course });
+                }),
                 catchError(error => of())
             ))
         )

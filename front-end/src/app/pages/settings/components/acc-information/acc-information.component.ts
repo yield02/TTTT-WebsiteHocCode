@@ -124,13 +124,12 @@ export class AccInformationComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    console.log('onsumit');
 
     if (!this.InformationForm.valid) {
       this.InformationForm.markAllAsTouched();
       return;
     }
-
-    console.log(this.InformationForm.value)
 
     const submitValue = {
       ...this.InformationForm.value,

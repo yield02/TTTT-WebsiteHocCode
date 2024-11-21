@@ -94,7 +94,7 @@
         [raised]="true"
         severity="info"
       />
-      } @else if(course?.waiting_enroll?.includes(user._id)) {
+      } @else if(course?.waiting_enroll?.includes(user._id) || was_enroll) {
       <p-button
         disabled="true"
         label="Chờ Admin duyệt yêu cầu"
@@ -102,7 +102,7 @@
         [raised]="true"
         severity="help"
       />
-      } @else {
+      } @else if(user._id) {
       <p-button
         (onClick)="enroll(course._id!)"
         label="Đăng ký khóa học"

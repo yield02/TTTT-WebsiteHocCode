@@ -14,8 +14,9 @@ import { CourseManagerService } from '../../../../services/course-manger.service
 import { Add } from '../../../../store/mycoursemanager/mycoursemanager.actions';
 import { Observable } from 'rxjs';
 import { AppState } from '../../../../store/reducer';
-import { state } from '@angular/animations';
 import { selectCourseManagerWithName } from '../../../../store/mycoursemanager/mycoursemanager.selectors';
+import { AuthUser } from '../../../../models/User';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'myacc-mycourses',
@@ -40,10 +41,11 @@ export class MycoursesComponent implements OnInit, AfterViewInit, OnDestroy {
   searchValue: String = '';
   isFetching: boolean = false;
 
+  authUser$: Observable<AuthUser> = this.store.select(state => state.user);
 
   subscriptions: Subscription[] = [];
 
-  constructor(private store: Store<AppState>, private courseManagerService: CourseManagerService) {
+  constructor(private store: Store<AppState>, private courseManagerService: CourseManagerService, private _message: MessageService) {
 
     // fetch data when component is initialized
     this.subscriptions.push(this.store.select('myCourseManager').pipe(switchMap((data: Course[]) => {
@@ -79,6 +81,18 @@ export class MycoursesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.courses.next(course);
       })
     ).subscribe();
+  }
+
+  checkUserInfor(user: AuthUser): boolean {
+    if (!user.email || user.email.verify == false || !user.phone || !user.address) {
+      return false;
+    }
+    return true;
+  }
+
+  showMessageAddInfor() {
+    console.log('vo day');
+    this._message.add({ severity: 'warn', summary: 'Vui lòng cập nhật thông tin cá nhân', detail: 'Vui lòng cập nhật thông tin cá nhân để tiếp tục thao tác này', key: "global" });
   }
 
   ngOnDestroy(): void {

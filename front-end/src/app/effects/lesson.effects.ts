@@ -6,11 +6,12 @@ import { AddAllLessons, CallAPIDeleteLessons, CreateLesson, CreateLessonSucess, 
 import { ChapterCreateLesson, ChapterDeleteLesson, ChapterUpdateLesson, UpdateChapter } from '../store/chapters/chapters.actions';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../store/reducer';
+import { MessageService } from 'primeng/api';
 
 @Injectable({ providedIn: 'root' })
 export class LessonEffects {
 
-    constructor(private actions$: Actions, private lessonService: LessonService, private _store: Store<AppState>) { }
+    constructor(private actions$: Actions, private lessonService: LessonService, private _store: Store<AppState>, private _message: MessageService) { }
 
     createLesson$ = createEffect(() =>
         this.actions$.pipe(
@@ -18,7 +19,10 @@ export class LessonEffects {
             switchMap(_action =>
                 this.lessonService.createLesson(_action.createLesson)
                     .pipe(
-                        map(res => CreateLessonSucess({ lesson: res.lesson })),
+                        map(res => {
+                            this._message.add({ severity: 'success', summary: 'Tạo bài học thành công', detail: 'Bài học đã được tạo thành công', key: "global" });
+                            return CreateLessonSucess({ lesson: res.lesson });
+                        }),
                         map(data => ({ ...data, course_id: _action.createLesson.chapter_id, chapter_id: _action.createLesson.chapter_id }))
                     ),
             ),

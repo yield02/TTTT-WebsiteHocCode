@@ -4,19 +4,24 @@ import { catchError, map, of, switchMap } from "rxjs";
 import { addPost, addPosts, createPost, deletePost, editContentPost, getAllPostOfAuthor, interactWithPost, loadPostWithId, removePost, toggleBlockComment, toggleHiddenPost, updatePost } from "../../store/forum/post/post.actions";
 import { PostService } from "../../services/forum/post.service";
 import { Router } from "@angular/router";
+import { MessageService } from "primeng/api";
 
 @Injectable({ providedIn: 'root' })
 
 export class PostEffects {
 
-    constructor(private actions$: Actions, private _postService: PostService, private _router: Router) { }
+    constructor(private actions$: Actions, private _postService: PostService, private _router: Router, private _message: MessageService) { }
 
     createPost$ = createEffect(() => this.actions$.pipe(
         ofType(createPost),
         switchMap((_action) => {
             return this._postService.createPost(_action.post)
                 .pipe(
-                    map(post => addPost({ post: post })),
+                    map(post => {
+                        this._message.add({ severity: 'success', summary: 'Đăng bài viết thành công', detail: "Vui lòng chờ người quản trị duyệt nhé!", key: "global" });
+
+                        return addPost({ post: post });
+                    }),
                     catchError(error => { console.log(error); return of() })
                 )
         }
