@@ -15,7 +15,7 @@
         [initialValue]="question.content.toString()"
       ></editor>
     </div>
-    <div class="content-question flex-1">
+    <div class="content-question flex-1 p-1">
       <div *ngIf="question.type == 'choice' || question.type == 'multichoice'">
         @if(isCheckAnswer) {
         <ng-container *ngFor="let option of question.options; index as i">

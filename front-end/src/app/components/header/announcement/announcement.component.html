@@ -45,7 +45,7 @@
     </div>
     <div class="notify-scroll flex-col">
       @if(announcements$ | async; as announcements) {
-      <ng-container *ngFor="let announcement of announcements">
+      <ng-container *ngFor="let announcement of announcements.reverse()">
         <app-announcement-item
           [announcement]="announcement"
         ></app-announcement-item>

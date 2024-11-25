@@ -10,7 +10,12 @@ import { MessageService } from "primeng/api";
 
 export class PostEffects {
 
-    constructor(private actions$: Actions, private _postService: PostService, private _router: Router, private _message: MessageService) { }
+    constructor(
+        private actions$: Actions,
+        private _postService: PostService,
+        private _router: Router,
+        private _message: MessageService
+    ) { }
 
     createPost$ = createEffect(() => this.actions$.pipe(
         ofType(createPost),
@@ -19,7 +24,7 @@ export class PostEffects {
                 .pipe(
                     map(post => {
                         this._message.add({ severity: 'success', summary: 'Đăng bài viết thành công', detail: "Vui lòng chờ người quản trị duyệt nhé!", key: "global" });
-
+                        this._router.navigate(['/forum/post', post.post_id]);
                         return addPost({ post: post });
                     }),
                     catchError(error => { console.log(error); return of() })

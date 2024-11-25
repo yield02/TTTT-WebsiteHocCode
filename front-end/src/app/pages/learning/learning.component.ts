@@ -6,7 +6,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ChapterlistComponent } from './components/chapterlist/chapterlist.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from '../../models/Course';
-import { Observable, of, Subscription, switchMap, tap } from 'rxjs';
+import { combineLatest, forkJoin, map, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../store/reducer';
 import { selectCourseFromCourseId, selectFirstChapterAndLesson } from '../../store/courses/courses.selector';
@@ -14,6 +14,8 @@ import { FetchingCourseFromCourseId } from '../../store/courses/courses.actions'
 import { selectLearningFromCourseId } from '../../store/learning/learning.selectors';
 import { fetchLearning } from '../../store/learning/learning.actions';
 import { LearningInterFace } from '../../models/Learning';
+import { CookieService } from 'ngx-cookie-service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-learning',
@@ -44,7 +46,12 @@ export class LearningComponent implements OnInit, OnDestroy {
 
 
 
-  constructor(private _activatedRoute: ActivatedRoute, private _store: Store<AppState>, private _router: Router) {
+  constructor(
+    private _activatedRoute: ActivatedRoute,
+    private _store: Store<AppState>,
+    private _router: Router,
+    private _messageService: MessageService
+  ) {
 
   }
 
@@ -70,6 +77,36 @@ export class LearningComponent implements OnInit, OnDestroy {
         return this._store.dispatch(fetchLearning({ course_id: course_id! }));
       })).subscribe());
 
+
+
+    this.subcriptions.push(
+      combineLatest({
+        user: this._store.select('user'),
+        course: this._store.pipe(select(selectCourseFromCourseId(course_id as String)))
+      }).pipe(map(
+        ({ user, course }) => {
+          if (user._id && course?.enroll?.includes(user._id) || user?._id == course?.author_id._id) {
+            return true;
+          }
+          if (user && course) {
+            return false;
+          }
+          return;
+        }
+      )).subscribe(result => {
+        if (result === false) {
+          this._messageService.add(
+            {
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Bạn chưa ghi danh khóa học này',
+              key: "global"
+            }
+          );
+          this._router.navigate(['/home']);
+        }
+      }))
+
     this.subcriptions.push(
       this._store.pipe(
         select(selectLearningFromCourseId(this._activatedRoute.snapshot.params['courseId'])),
@@ -82,12 +119,10 @@ export class LearningComponent implements OnInit, OnDestroy {
 
         }), tap(data => {
           if (!data) return;
-
           this._router.navigate([`/learning/${course_id}`], { queryParams: { chapter_id: data.chapter._id, lesson_id: data.lesson._id } });
         })
       ).subscribe()
     );
-
   }
 
   toggleLessonBar() {

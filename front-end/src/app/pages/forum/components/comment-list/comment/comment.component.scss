@@ -2,6 +2,9 @@
   .content * {
     all: revert;
   }
+  .content {
+    word-wrap: break-word;
+  }
 }
 
 ::ng-deep {

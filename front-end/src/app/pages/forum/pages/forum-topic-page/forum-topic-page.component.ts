@@ -21,6 +21,7 @@ import { ForumPostPageComponent } from "../forum-post-page/forum-post-page.compo
 import { FetchUsers } from '../../../../store/users/users.actions';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronDownSolid } from '@ng-icons/heroicons/solid';
+import { AuthUser } from '../../../../models/User';
 
 
 
@@ -82,6 +83,7 @@ export class ForumTopicPageComponent implements OnInit, OnDestroy {
         totalRecord: 0
     }
 
+    authUser$: Observable<AuthUser> = this._store.select(state => state.user);
     hashtags$: Observable<Hashtag[]> = this._store.select(state => state.hashtag);
     posts$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
 
@@ -134,6 +136,17 @@ export class ForumTopicPageComponent implements OnInit, OnDestroy {
             }
         });
     }
+
+    checkUserInfor(user: AuthUser): boolean {
+        if (user.role === 'admin') {
+            return true;
+        }
+        if (user.email?.verify == false || !user.address || !user.phone || !user.fullname || !user.address) {
+            return false;
+        }
+        return true;
+    }
+
     onPageChange(event: any) {
         this.page = { ...this.page, ...event };
         this.filterPost = { ...this.filterPost, page: ++event.page };

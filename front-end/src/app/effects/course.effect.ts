@@ -5,11 +5,18 @@ import { CourseService } from "../services/course.service";
 import { FetchingCourseFromCourseId, FetchingCourseFromCourseIds, FetchingCoursesFromSubjectIds, FetchingCoursesSucess, UserEnrollCourse, UserEnrollCourseSucess } from "../store/courses/courses.actions";
 import { catchError, map, mergeMap, of, switchMap } from "rxjs";
 import { MessageService } from "primeng/api";
+import { Router } from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
 export class CourseEffects {
 
-    constructor(private actions$: Actions, private _subjectService: SubjectService, private _coursesService: CourseService, private _message: MessageService) { }
+    constructor(
+        private actions$: Actions,
+        private _subjectService: SubjectService,
+        private _coursesService: CourseService,
+        private _message: MessageService,
+        private _router: Router
+    ) { }
 
     loadCourses$ = createEffect(() => this.actions$.pipe(
         ofType(FetchingCoursesFromSubjectIds),
@@ -23,7 +30,11 @@ export class CourseEffects {
         ofType(FetchingCourseFromCourseId),
         mergeMap((_action) => this._coursesService.getCourseFromCourseId(_action.course_id).pipe(
             map(course => FetchingCoursesSucess({ courses: [course] })),
-            catchError(error => of())
+            catchError(error => {
+                this._router.navigate(["/home"]);
+                this._message.add({ severity: 'error', summary: "có lỗi xảy ra", detail: 'Không tìm thấy khóa học', key: "global" });
+                return of();
+            })
         ))
     ));
 

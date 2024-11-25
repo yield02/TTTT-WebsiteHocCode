@@ -1,12 +1,22 @@
 <div class="flex justify-end items-center mb-2">
-  <p-button
-    label="Đăng bài viết"
-    [text]="true"
-    [raised]="true"
-    severity="info"
-    size="small"
-    [routerLink]="['/forum', 'topic', topic_id, 'create']"
-  />
+  @if(authUser$ | async; as user) {
+  <ng-container *ngIf="checkUserInfor(user)">
+    <p-button
+      label="Đăng bài viết"
+      [text]="true"
+      [raised]="true"
+      severity="info"
+      size="small"
+      [routerLink]="['/forum', 'topic', topic_id, 'create']"
+    />
+  </ng-container>
+  <ng-container *ngIf="!checkUserInfor(user)">
+    <span class="italic text-sm text-gray-400"
+      >Vui lòng cập nhật đầy đủ thông tin tài khoản để đăng bài viết
+      nhé!!!</span
+    >
+  </ng-container>
+  }
 </div>
 <div class="container topic-container">
   <div

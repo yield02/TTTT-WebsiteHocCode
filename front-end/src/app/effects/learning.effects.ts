@@ -3,11 +3,12 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { addAllLearning, addLearning, fetchLearning, fetchLearnings, updateAndCreateLearning, updateLearing } from "../store/learning/learning.actions";
 import { LearningService } from "../services/learning.service";
 import { catchError, map, of, switchMap, tap } from "rxjs";
+import { Router } from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
 export class LearningEffects {
 
-    constructor(private actions$: Actions, private _learningService: LearningService) { }
+    constructor(private actions$: Actions, private _learningService: LearningService, private router: Router) { }
 
     // fetchUsers$ = createEffect(() => this.actions$.pipe(
     //     ofType(FetchUsers),
@@ -35,7 +36,11 @@ export class LearningEffects {
         switchMap((_action) =>
             this._learningService.updateAndCreateLearning(_action.course_id, _action.chapter_id, _action.lesson_id, _action?.learning_id).pipe(
                 map(learning => updateLearing({ course_id: _action.course_id, learning: learning })),
-                catchError(error => of())
+                catchError(error => {
+                    console.log(error);
+                    this.router.navigate(['/home']);
+                    return of(error);
+                })
             ))
     ));
 

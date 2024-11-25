@@ -12,7 +12,7 @@ import { heroCake, heroDevicePhoneMobile, heroHome } from '@ng-icons/heroicons/o
 import { FileUploadModule } from 'primeng/fileupload';
 import { HttpClientModule } from '@angular/common/http';
 import { AvatarModule } from 'primeng/avatar';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, take, takeLast } from 'rxjs';
 import { AuthUser, User } from '../../../../models/User';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/reducer';
@@ -51,7 +51,7 @@ import { ToastModule } from 'primeng/toast';
 })
 export class AccInformationComponent implements OnInit, OnDestroy {
 
-  InformationForm: FormGroup;
+  InformationForm!: FormGroup;
   avatar?: {
     objectURL: string,
     lastModified: Number,
@@ -73,14 +73,19 @@ export class AccInformationComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
   constructor(private fb: FormBuilder, private _store: Store<AppState>, private _authService: AuthService, private _messageService: MessageService) {
-    this.InformationForm = fb.group({
+    console.log('constructor');
+
+  }
+
+  ngOnInit(): void {
+    this.InformationForm = this.fb.group({
       fullname: ['', Validators.compose([Validators.required])],
-      email: fb.group({
+      email: this.fb.group({
         data: ['', Validators.compose([Validators.required, Validators.email])],
         verify: [false],
         hidden: [false],
       }),
-      phone: fb.group({
+      phone: this.fb.group({
         data: ['', Validators.compose([Validators.required, Validators.pattern(/^(0|\+84)([35789]\d{8}|2\d{9})$/)])],
         verify: [false],
         hidden: [false],
@@ -89,10 +94,8 @@ export class AccInformationComponent implements OnInit, OnDestroy {
       gender: ['male', Validators.compose([Validators.required])],
       address: ['', Validators.compose([Validators.required])],
     });
-  }
 
-  ngOnInit(): void {
-    this.subscriptions.push(this.user$.subscribe(user => {
+    this.subscriptions.push(this.user$.pipe(take(1)).subscribe(user => {
       if (user) {
         this.user = user;
         this.InformationForm.patchValue({
@@ -182,8 +185,7 @@ export class AccInformationComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
+
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 

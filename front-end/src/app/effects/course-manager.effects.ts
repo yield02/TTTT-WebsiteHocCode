@@ -4,11 +4,16 @@ import { CourseManagerService } from "../services/course-manger.service";
 import { AcceptEnroll, Add, DeleteUserEnrollFromAuth, FetchCourseManager, fetchUsersInCourse, RejectEnroll, toggleUpdatePublishCourse, UpdateCourseManager } from "../store/mycoursemanager/mycoursemanager.actions";
 import { catchError, debounceTime, map, of, switchMap, take, tap, throttleTime, timer } from "rxjs";
 import { fetchUsersSuccess } from "../store/users/users.actions";
+import { MessageService } from "primeng/api";
 
 @Injectable({ providedIn: 'root' })
 export class CoursesManagerEffects {
 
-    constructor(private actions$: Actions, private _courseManagerService: CourseManagerService) { }
+    constructor(
+        private actions$: Actions,
+        private _courseManagerService: CourseManagerService,
+        private _messageService: MessageService,
+    ) { }
 
     loadCourse$ = createEffect(() => this.actions$.pipe(
         ofType(FetchCourseManager),
@@ -25,7 +30,10 @@ export class CoursesManagerEffects {
         ofType(AcceptEnroll),
         switchMap(_action => this._courseManagerService.acceptEnroll(_action.course_id, _action.enrolls_id)
             .pipe(
-                map((course) => UpdateCourseManager({ course })),
+                map((course) => {
+                    this._messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đã chấp nhận yêu cầu', key: "global" })
+                    return UpdateCourseManager({ course })
+                }),
                 catchError((error) => of())
             )
         )
@@ -34,7 +42,10 @@ export class CoursesManagerEffects {
     enrollReject$ = createEffect(() => this.actions$.pipe(
         ofType(RejectEnroll),
         switchMap(_action => this._courseManagerService.rejectEnroll(_action.course_id, _action.enrolls_id).pipe(
-            map((course) => UpdateCourseManager({ course })),
+            map((course) => {
+                this._messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đã từ chối yêu cầu', key: "global" })
+                return UpdateCourseManager({ course })
+            }),
             catchError((error) => of())
         ))))
 

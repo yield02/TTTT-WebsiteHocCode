@@ -11,6 +11,7 @@ import { selectCourseFromCourseId } from '../../../../store/courses/courses.sele
 import { selectSubjectWithId } from '../../../../store/subjects/subjects.selectors';
 import { Course } from '../../../../models/Course';
 import { RouterLink } from '@angular/router';
+import { CourseService } from '../../../../services/course.service';
 
 @Component({
     selector: 'study-home-learning-item',
@@ -37,7 +38,11 @@ export class StudyHomeLearningItemComponent {
     progress: number = 0;
 
 
-    constructor(private _store: Store<AppState>, private _changeDetector: ChangeDetectorRef) {
+    constructor(private _store: Store<AppState>, private _changeDetector: ChangeDetectorRef, private _courseService: CourseService) {
+    }
+
+    checkEnroll(): Observable<boolean> {
+        return this._courseService.checkUserEnroll(this.course._id as string);
     }
 
     ngOnInit(): void {
@@ -54,6 +59,7 @@ export class StudyHomeLearningItemComponent {
                 return this._store.pipe(select(selectSubjectWithId(course?.subject_id!)));
             })
         ) as Observable<Subject | undefined>;
+
 
     }
 }   

@@ -42,6 +42,7 @@
         </div>
         }
       </div>
+      @if(checkEnroll() | async; as check) {
       <p-button
         [routerLink]="
           learning ? '/learning/' + course._id : 'course/' + course._id
@@ -52,6 +53,16 @@
         severity="secondary"
         [rounded]="true"
       />
+      } @else {
+      <p-button
+        [routerLink]="['/home/course/', course._id]"
+        [label]="'Xem khóa học'"
+        [outlined]="true"
+        size="small"
+        severity="secondary"
+        [rounded]="true"
+      />
+      }
     </div>
   </div>
 </div>

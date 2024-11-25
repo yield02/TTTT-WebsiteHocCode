@@ -88,6 +88,7 @@ export class EnrollItemComponent implements OnChanges, OnInit, OnDestroy {
           }
         ]
       }
+      console.log(this.exerciseData);
       this._changeDetector.detectChanges();
     })
 

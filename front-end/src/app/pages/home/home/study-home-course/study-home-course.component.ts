@@ -11,6 +11,7 @@ import { LearningInterFace } from '../../../../models/Learning';
 import { selectLearningFromCourseId } from '../../../../store/learning/learning.selectors';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { RouterLink } from '@angular/router';
+import { CourseService } from '../../../../services/course.service';
 
 @Component({
     selector: 'study-home-course',
@@ -37,7 +38,7 @@ export class StudyHomeCourseComponent implements OnInit, OnDestroy {
 
     learningSubscription: Subscription | undefined;
 
-    constructor(private _store: Store<AppState>) {
+    constructor(private _store: Store<AppState>, private _courseService: CourseService) {
 
     }
 
@@ -55,6 +56,11 @@ export class StudyHomeCourseComponent implements OnInit, OnDestroy {
         );
 
 
+    }
+
+
+    checkEnroll(): Observable<boolean> {
+        return this._courseService.checkUserEnroll(this.course._id as string);
     }
 
     ngOnDestroy(): void {

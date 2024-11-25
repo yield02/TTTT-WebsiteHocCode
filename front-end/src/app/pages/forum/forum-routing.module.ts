@@ -6,6 +6,7 @@ import { ForumTopicPageComponent } from "./pages/forum-topic-page/forum-topic-pa
 import { ForumPostPageComponent } from "./pages/forum-post-page/forum-post-page.component";
 import { ForumCreateTopicPageComponent } from "./pages/forum-create-topic-page/forum-create-topic-page.component";
 import { ForumEditPostPageComponent } from "./pages/forum-edit-post-page/forum-edit-post-page.component";
+import { loginGuardGuard } from "../../guard/LoginGuard.guard";
 
 
 
@@ -24,6 +25,7 @@ const routes: Routes = [
                     {
                         path: 'create',
                         component: ForumCreateTopicPageComponent,
+                        canActivate: [loginGuardGuard]
                     },
                     {
                         path: '',

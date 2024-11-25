@@ -64,7 +64,7 @@ export class AuthService {
     );
   }
 
-  isAuth(): Observable<boolean> {
+  isAuth(message: boolean = true): Observable<boolean> {
     return this.store.select('user').pipe(
       switchMap(data => {
         if (!data._id) {
@@ -77,6 +77,17 @@ export class AuthService {
         }
         else {
           return of(true);
+        }
+      }),
+      tap(result => {
+        if (!result && message) {
+          this.router.navigate(['/home']);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Có lỗi xảy ra',
+            detail: 'Vui lòng đăng nhập để thực hiện tính năng này',
+            key: 'global'
+          })
         }
       })
     );

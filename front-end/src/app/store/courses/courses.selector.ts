@@ -4,6 +4,7 @@ import { Course } from "../../models/Course";
 import { Chapter } from "../../models/Chapter";
 import { Lesson } from "../../models/Lesson";
 import * as lodash from "lodash";
+import { AuthUser } from "../../models/User";
 
 
 const selectCoursesState = (state: AppState) => state.courses;
@@ -47,12 +48,14 @@ export const selectFirstChapterAndLesson = (course_id: String) => createSelector
     selectCoursesState,
     selectChapterState,
     selectLessonState,
-    (courses: Course[], chapters: Chapter[], lessons: Lesson[]): { chapter: Chapter, lesson: Lesson } | undefined => {
+    selectUserState,
+    (courses: Course[], chapters: Chapter[], lessons: Lesson[], user: AuthUser): { chapter: Chapter, lesson: Lesson } | undefined => {
         const course: Course | undefined = courses.find(c => c._id === course_id);
-        if (!course) {
-            console.log("Course not found");
+        if (!course || !course.enroll?.includes(user._id) && course.author_id?._id !== user._id) {
+            console.log('vo day');
             return undefined;
         }
+
         const chapter = chapters.find(c => c._id === (course?.chapters && course.chapters[0]));
         if (!chapter) {
             console.log("Chapter not found");

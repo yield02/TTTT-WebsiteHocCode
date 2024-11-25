@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.authenSubscription = this.$isAuth.pipe(switchMap((isAuth) => {
       if (!isAuth) {
-        return this.authService.isAuth();
+        return this.authService.isAuth(false);
       }
       return of(false);
     })).subscribe()

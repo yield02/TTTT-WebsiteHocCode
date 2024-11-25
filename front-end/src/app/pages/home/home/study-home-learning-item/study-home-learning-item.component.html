@@ -1,3 +1,4 @@
+@if (subject$ | async; as subject) { @if(course?._id) {
 <div class="learning-item flex flex-row items-center gap-4">
   <div class="image-container">
     <img
@@ -16,11 +17,9 @@
     <div class="flex flex-col gap-1">
       <div class="tag">
         <div class="tag-item">
-          @if (subject$ | async; as subject) {
           <ng-container>
             {{ subject?.title }}
           </ng-container>
-          }
         </div>
       </div>
       <h1 class="title font-bold text-xl">{{ course?.course_name }}</h1>
@@ -38,6 +37,7 @@
         </p-progressBar>
       </div>
       <div class="button-container">
+        @if(checkEnroll() | async; as check) {
         <p-button
           label="Chủ đ��"
           [routerLink]="['/learning', learning.course_id]"
@@ -47,7 +47,19 @@
           size="small"
           severity="secondary"
         />
+        } @else {
+        <p-button
+          label="Chủ đ��"
+          [routerLink]="['/home/course/', learning.course_id]"
+          label="Đăng ký"
+          [outlined]="true"
+          [raised]="true"
+          size="small"
+          severity="secondary"
+        />
+        }
       </div>
     </div>
   </div>
 </div>
+} }
