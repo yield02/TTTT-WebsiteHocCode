@@ -50,7 +50,7 @@ interface PageEvent {
 
         UserManagerItemComponent,
     ],
-    providers: [ConfirmationService, provideIcons({
+    providers: [provideIcons({
         ionSearchOutline,
         ionFilterOutline
     })],

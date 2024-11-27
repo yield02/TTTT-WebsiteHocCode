@@ -38,7 +38,7 @@ import { manager_deleteReports, manager_updateStatusReports } from '../../../../
         ConfirmDialogModule,
         DynamicDialogModule,
     ],
-    providers: [ConfirmationService, DialogService],
+    providers: [DialogService],
     templateUrl: './report-manager-item.component.html',
     styleUrl: './report-manager-item.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,7 +105,7 @@ export class ReportManagerItemComponent {
 
     ngOnInit(): void {
         this.status.setValue(this.report.state);
-        console.log(this.report);
+        // console.log(this.report);
 
         this.items = [
             {

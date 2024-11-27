@@ -4,12 +4,17 @@ import { catchError, map, of, switchMap } from "rxjs";
 import { AdminPostService } from "../../services/admin/admin-post.service";
 import { addUsers, deleteUsersSucess, manager_deleteUsers, manager_loadUsers, manager_updateAdminRoleUsers, manager_updateStatusUsers, updateAdminRoleUsersSuccess, updateStatusUsersSuccess } from "../../store/admin/users/users.actions";
 import { AdminUserService } from "../../services/admin/admin-user.service";
+import { MessageService } from "primeng/api";
 
 @Injectable({ providedIn: 'root' })
 
 export class AdminUserEffects {
 
-    constructor(private actions$: Actions, private _adminUserService: AdminUserService) { }
+    constructor(
+        private actions$: Actions,
+        private _adminUserService: AdminUserService,
+        private _messageService: MessageService
+    ) { }
 
 
     loadUsers$ = createEffect(() => this.actions$.pipe(
@@ -29,7 +34,10 @@ export class AdminUserEffects {
         switchMap((_action) =>
             this._adminUserService.updateStatus(_action.user_ids, _action.status, _action?.reason, _action?.date)
                 .pipe(
-                    map(() => updateStatusUsersSuccess({ user_ids: _action.user_ids, status: _action.status, reason: _action?.reason, date: _action?.date })),
+                    map(() => {
+                        this._messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật trạng thái người dùng thành công.', key: 'global' });
+                        return updateStatusUsersSuccess({ user_ids: _action.user_ids, status: _action.status, reason: _action?.reason, date: _action?.date });
+                    }),
                     catchError(error => of(error)),
                 )
         )
@@ -40,7 +48,10 @@ export class AdminUserEffects {
         switchMap((_action) =>
             this._adminUserService.updateAdminRole(_action.user_ids, _action.state)
                 .pipe(
-                    map(() => updateAdminRoleUsersSuccess({ user_ids: _action.user_ids, role: _action.state })),
+                    map(() => {
+                        this._messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật quyền quản trị người dùng thành công.', key: 'global' });
+                        return updateAdminRoleUsersSuccess({ user_ids: _action.user_ids, role: _action.state });
+                    }),
                     catchError(error => of(error))))
     ))
 

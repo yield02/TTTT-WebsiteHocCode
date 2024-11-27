@@ -48,7 +48,7 @@ interface PageEvent {
         ReportManagerItemComponent,
 
     ],
-    providers: [ConfirmationService, provideIcons({
+    providers: [provideIcons({
         ionSearchOutline,
         ionFilterOutline
     })],

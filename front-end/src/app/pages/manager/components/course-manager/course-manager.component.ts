@@ -48,7 +48,7 @@ interface PageEvent {
         CourseManagerItemComponent,
 
     ],
-    providers: [DialogService, ConfirmationService, provideIcons({
+    providers: [DialogService, provideIcons({
         ionSearchOutline,
         ionFilterOutline
     })],

@@ -35,7 +35,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
         ConfirmDialogModule,
 
     ],
-    providers: [DialogService, ConfirmationService, provideIcons({
+    providers: [DialogService, provideIcons({
         ionChatbubbleSharp,
         ionDocumentSharp,
         ionWarningSharp
