@@ -15,32 +15,34 @@
       </div>
     </div>
   </div>
-  <p-tabView>
-    <p-tabPanel header="Quản lý đăng ký">
-      <div class="member-manager flex justify-center items-center">
-        <div class="container flex flex-col justify-center items-center">
-          <course-manager-waiting-list class="w-full" [course]="course">
-          </course-manager-waiting-list>
+  <div class="px-2">
+    <p-tabView class="tab-view">
+      <p-tabPanel header="Quản lý đăng ký">
+        <div class="member-manager flex justify-center items-center">
+          <div class="w-full flex flex-col justify-center items-center">
+            <course-manager-waiting-list class="w-full" [course]="course">
+            </course-manager-waiting-list>
+          </div>
         </div>
-      </div>
-    </p-tabPanel>
-    <p-tabPanel header="Quản lý thành viên">
-      <course-manager-enroll-list
-        class="w-full"
-        [course]="course"
-      ></course-manager-enroll-list>
-    </p-tabPanel>
-    <p-tabPanel header="Thảo luận">
-      <ng-container>
-        <course-manager-comment-list></course-manager-comment-list
-      ></ng-container>
-    </p-tabPanel>
-    <p-tabPanel header="Đánh giá">
-      <ng-container>
-        <course-manager-rating-list></course-manager-rating-list>
-      </ng-container>
-    </p-tabPanel>
-  </p-tabView>
+      </p-tabPanel>
+      <p-tabPanel header="Quản lý thành viên">
+        <course-manager-enroll-list
+          class="w-full"
+          [course]="course"
+        ></course-manager-enroll-list>
+      </p-tabPanel>
+      <p-tabPanel header="Thảo luận">
+        <ng-container>
+          <course-manager-comment-list></course-manager-comment-list
+        ></ng-container>
+      </p-tabPanel>
+      <p-tabPanel header="Đánh giá">
+        <ng-container>
+          <course-manager-rating-list></course-manager-rating-list>
+        </ng-container>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
 </div>
 
 }

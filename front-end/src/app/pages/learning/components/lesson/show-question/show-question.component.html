@@ -101,6 +101,12 @@
           </ng-container>
         </ng-container>
 
+        @if(codeError) {
+        <div class="error-code text-red-600 p-4">
+          {{ codeError }}
+        </div>
+        }
+
         <div class="submit mt-2 flex justify-between items-center">
           <h3 class="text-xl">Test:</h3>
           <p-button

@@ -1,5 +1,5 @@
 import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionCafeOutline, ionCalendarNumberOutline, ionHeartOutline } from '@ng-icons/ionicons';
@@ -9,7 +9,7 @@ import { CommentEditorComponent } from '../../components/comment-editor/comment-
 import { CommentListComponent } from '../../components/comment-list/comment-list.component';
 import { AppState } from '../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { Post } from '../../../../models/forum/Post';
 import { selectAuthorPostId, selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
 import { deletePost, interactWithPost, loadPostWithId, toggleBlockComment, toggleHiddenPost } from '../../../../store/forum/post/post.actions';
@@ -28,6 +28,7 @@ import { EditorComponent } from '@tinymce/tinymce-angular';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ReportService } from '../../../../services/report.service';
 import { ReportDynamicDialogComponent } from '../../../../components/report-dynamic-dialog/report-dynamic-dialog.component';
+import { selectHashtagWithIds } from '../../../../store/forum/hashtag/hashtag.selectors';
 registerLocaleData(vi);
 
 @Component({
@@ -77,6 +78,9 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
         updatedAt: '',
 
     });
+
+    hashtag: string = "";
+
     user$: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
     initEditor: EditorComponent['init'] = {
@@ -129,12 +133,15 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
 
     subscriptions: Subscription[] = [];
 
+
+
     constructor(
         private _store: Store<AppState>,
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
         private _reportService: ReportService,
         private _dialogService: DialogService,
+        private _changeDetector: ChangeDetectorRef,
     ) {
 
     }
@@ -271,6 +278,17 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
             }
 
         }));
+
+
+        this.subscriptions.push(
+            from(this.post$).pipe(switchMap(post => {
+                return this._store.pipe(select(selectHashtagWithIds(
+                    post.hashtags)));
+            })).subscribe(hashtag => {
+                this.hashtag = hashtag;
+                this._changeDetector.detectChanges();
+            })
+        )
     }
 
     ngOnChanges(

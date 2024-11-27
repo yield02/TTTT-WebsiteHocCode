@@ -11,12 +11,22 @@
     />
   </div>
   <div class="infor-container px-2">
-    <div class="tag">
+    <div class="tag flex items-center justify-between">
       @if(subject$ | async; as subject) {
       <span class="tag-item">
         {{ subject?.title }}
       </span>
       }
+      <div class="flex justify-center items-center gap-1">
+        <ng-container
+          *ngFor="
+            let array of tranformArray(course.averageRating);
+            let i = index
+          "
+        >
+          <ng-icon class="tag-item text-xl" name="ionStar"></ng-icon>
+        </ng-container>
+      </div>
     </div>
     <h4 class="title font-bold truncate">{{ course.course_name }}</h4>
     <span class="author-name text-gray-400 text-sm italic">{{

@@ -124,6 +124,14 @@ export class CommentComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(combineLatest({ user: this._store.select(state => state.user), author: this._store.pipe(select(selectUserFromId(this.comment.author_id!))) }).subscribe(data => {
             if (data.user._id === data.author?._id) {
+                this.moreActions = [
+                    {
+                        icon: 'pi pi-flag',
+                        command: () => {
+                            this.showReportDialog();
+                        }
+                    }
+                ];
                 this.moreActions?.push(
                     {
                         icon: 'pi pi-pencil',

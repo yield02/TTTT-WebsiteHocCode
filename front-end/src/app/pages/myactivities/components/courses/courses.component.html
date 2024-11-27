@@ -1,6 +1,6 @@
 <div class="courses-container flex flex-col gap-4 justify-start bg-grey">
   <h1 class="text-2xl font-bold">Tiếp tục học</h1>
-  <div class="grid grid-cols-3 gap-4">
+  <div class="grid grid-cols-3 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4">
     @if(learnings$ | async; as learnings) {
     <ng-container *ngFor="let learning of learnings | keyvalue | slice : 0 : 5">
       <div class="bg-white">

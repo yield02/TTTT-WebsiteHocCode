@@ -14,6 +14,9 @@
     <ng-icon class="notify-icon" name="ionNotificationsOutline"></ng-icon>
   </button>
   <ng-container [ngTemplateOutlet]="notifyTemp"></ng-container>
+  @if(numberUnreadAnnouncements > 0) {
+  <div class="number-unread">{{ numberUnreadAnnouncements }}</div>
+  }
 </div>
 
 <p-dialog

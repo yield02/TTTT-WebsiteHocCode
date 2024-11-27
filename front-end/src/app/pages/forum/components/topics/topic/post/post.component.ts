@@ -1,5 +1,5 @@
 import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { ionEyeOutline, ionHeartOutline, ionTimeOutline } from '@ng-icons/ionicons';
@@ -8,10 +8,11 @@ import { Post } from '../../../../../../models/forum/Post';
 
 import { AppState } from '../../../../../../store/reducer';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from '../../../../../../models/User';
 import { selectUserFromId } from '../../../../../../store/users/users.selector';
 import vi from '@angular/common/locales/vi';
+import { selectHashtagWithIds } from '../../../../../../store/forum/hashtag/hashtag.selectors';
 registerLocaleData(vi);
 
 @Component({
@@ -33,11 +34,15 @@ registerLocaleData(vi);
     styleUrl: './post.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopicPostComponent implements OnInit {
+export class TopicPostComponent implements OnInit, OnDestroy {
     @Input() post!: Post;
 
 
     user$!: Observable<User | undefined>;
+
+    hashtag: string = '';
+
+    hashtagSubscription!: Subscription;
 
     constructor(private _store: Store<AppState>) {
 
@@ -46,9 +51,20 @@ export class TopicPostComponent implements OnInit {
     ngOnInit(): void {
 
         this.user$ = this._store.pipe(select(selectUserFromId(this.post.author_id!)));
+
+        this.hashtagSubscription = this._store.pipe(select(selectHashtagWithIds(
+            this.post.hashtags
+        ))).subscribe(hashtag => {
+            this.hashtag = hashtag;
+        });
+
     }
 
     formatDateAndTime(date: String): String {
         return formatDate(new Date(date.toString()), 'dd/MM/yyyy HH:mm', 'vi');
+    }
+
+    ngOnDestroy(): void {
+        this.hashtagSubscription.unsubscribe();
     }
 }

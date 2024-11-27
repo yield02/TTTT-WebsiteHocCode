@@ -5,9 +5,13 @@
     <a class="" [routerLink]="'/forum/post/' + post.post_id">
       <h1 class="title">{{ post.title }}</h1>
     </a>
-    <div class="flex items-center gap-2">
-      <ng-icon name="ionTimeOutline"></ng-icon
-      ><span class="time-stamp">{{ formatDateAndTime(post.createdAt) }}</span>
+    <div class="flex gap-2 flex-wrap">
+      <div class="flex items-center gap-2">
+        <ng-icon name="ionTimeOutline"></ng-icon
+        ><span class="time-stamp">{{ formatDateAndTime(post.createdAt) }}</span>
+      </div>
+      <span>-</span>
+      <span>{{ hashtag }}</span>
     </div>
   </div>
   <div class="flex justify-end items-center max-sm:hidden">

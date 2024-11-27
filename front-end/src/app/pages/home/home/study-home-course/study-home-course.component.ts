@@ -12,6 +12,8 @@ import { selectLearningFromCourseId } from '../../../../store/learning/learning.
 import { ProgressBarModule } from 'primeng/progressbar';
 import { RouterLink } from '@angular/router';
 import { CourseService } from '../../../../services/course.service';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { ionStar } from '@ng-icons/ionicons';
 
 @Component({
     selector: 'study-home-course',
@@ -21,7 +23,11 @@ import { CourseService } from '../../../../services/course.service';
         ButtonModule,
         ProgressBarModule,
         RouterLink,
+        NgIconComponent,
     ],
+    providers: [provideIcons({
+        ionStar
+    })],
     templateUrl: './study-home-course.component.html',
     styleUrl: './study-home-course.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,6 +67,10 @@ export class StudyHomeCourseComponent implements OnInit, OnDestroy {
 
     checkEnroll(): Observable<boolean> {
         return this._courseService.checkUserEnroll(this.course._id as string);
+    }
+
+    tranformArray(length: Number = 0): any[] {
+        return new Array(length);
     }
 
     ngOnDestroy(): void {

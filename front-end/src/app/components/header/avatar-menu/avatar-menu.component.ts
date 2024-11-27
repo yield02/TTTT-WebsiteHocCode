@@ -9,7 +9,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducer';
 import { AuthUser } from '../../../models/User';
-import { ionLogOutOutline, ionNewspaperOutline, ionPersonCircleOutline, ionSettingsOutline } from '@ng-icons/ionicons';
+import { ionLogOutOutline, ionNewspaperOutline, ionPersonCircleOutline, ionSettingsOutline, ionShieldOutline } from '@ng-icons/ionicons';
 import { heroAcademicCap } from '@ng-icons/heroicons/outline';
 
 
@@ -30,6 +30,7 @@ import { heroAcademicCap } from '@ng-icons/heroicons/outline';
       ionNewspaperOutline,
       ionSettingsOutline,
       ionLogOutOutline,
+      ionShieldOutline,
     })
   ],
   templateUrl: './avatar-menu.component.html',

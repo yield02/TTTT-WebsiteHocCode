@@ -40,12 +40,14 @@
     </div>
     <div class="menu-item" routerLink="/myactivities">
       <ng-icon class="menu-icon" name="heroAcademicCap"></ng-icon>
-      Khóa học của tôi
+      Hoạt động của tôi
     </div>
-    <div class="menu-item">
-      <ng-icon class="menu-icon" name="ionNewspaperOutline"></ng-icon> Bài viết
-      của tôi
+    @if(user.role == 'admin') {
+    <div class="menu-item" routerLink="/manager">
+      <ng-icon class="menu-icon" name="ionShieldOutline"></ng-icon> Quản lý diễn
+      đàn
     </div>
+    }
     <div class="menu-item" routerLink="/settings">
       <ng-icon class="menu-icon" name="ionSettingsOutline"></ng-icon> Cài đặt
     </div>

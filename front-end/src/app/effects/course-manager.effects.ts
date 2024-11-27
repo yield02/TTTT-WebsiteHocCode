@@ -73,7 +73,10 @@ export class CoursesManagerEffects {
         ofType(DeleteUserEnrollFromAuth),
         switchMap(_action => this._courseManagerService.deleteUserEnrollFromAuth(_action.course_id, _action.users_id)
             .pipe(
-                map((course) => UpdateCourseManager({ course })),
+                map((course) => {
+                    this._messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đã xóa người dùng khỏi khóa học', key: "global" })
+                    return UpdateCourseManager({ course });
+                }),
                 catchError((error) => of())
             )
         )

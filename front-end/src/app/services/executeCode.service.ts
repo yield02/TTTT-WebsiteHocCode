@@ -25,7 +25,7 @@ export class ExecuteCodeService {
   constructor(private _http: HttpClient) { }
 
   executeCode(data: ExecuteCodeInterface): Observable<any> {
-    return this._http.post('https://onecompiler-apis.p.rapidapi.com/api/v1/run', data, {
+    return this._http.post<any>('https://onecompiler-apis.p.rapidapi.com/api/v1/run', data, {
       headers: {
         'x-rapidapi-key': 'bb52959502msh8f3140358912854p18d671jsn399d6e07d2cd',
         'x-rapidapi-host': 'onecompiler-apis.p.rapidapi.com',

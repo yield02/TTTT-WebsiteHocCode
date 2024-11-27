@@ -93,7 +93,6 @@ exports.createOrUpdateExercise = async function (data, author_id) {
     let exercise = await Exercise.findOneAndUpdate(
       {
         author_id: author_id,
-        _id: { $ne: data._id },
         course_id: data.course_id,
         question_id: data.question_id,
         lesson_id: data.lesson_id,

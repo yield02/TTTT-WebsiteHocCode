@@ -71,6 +71,7 @@ exports.deletePost = async (post_id, user_id) => {
     const post = await Post.findOneAndDelete({
       post_id: post_id,
       author_id: user_id,
+      status: { $ne: "block" },
     });
     if (!post) {
       throw new ApiError(404, "Post not found");

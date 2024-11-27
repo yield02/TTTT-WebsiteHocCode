@@ -18,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AppState } from '../../../../../store/reducer';
 import { Store } from '@ngrx/store';
 import { createExercise, createOrUpdateExercise, updateExercise } from '../../../../../store/exercise/exercise.actions';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'study-show-question',
@@ -138,7 +139,7 @@ export class ShowQuestionComponent implements OnInit, OnDestroy {
         content: `console.log('Hello World!');`,
         language: 'javascript',
     }];
-
+    codeError: string = '';
     codeEditor: any;
 
 
@@ -183,7 +184,8 @@ export class ShowQuestionComponent implements OnInit, OnDestroy {
         private _changeDetector: ChangeDetectorRef,
         private _executeCodeSerive: ExecuteCodeService,
         private _activateRoute: ActivatedRoute,
-        private _store: Store<AppState>
+        private _store: Store<AppState>,
+        private _messageService: MessageService,
     ) { }
 
     ngOnInit(): void {
@@ -240,6 +242,7 @@ export class ShowQuestionComponent implements OnInit, OnDestroy {
             this.answer![0] = option;
         }
         else if (this.question.type === 'multichoice') {
+            console.log(option);
             if (this.answer?.includes(option)) {
                 this.answer = this.answer?.filter(item => item !== option);
             }
@@ -322,6 +325,8 @@ export class ShowQuestionComponent implements OnInit, OnDestroy {
                 }
             });
 
+            this.codeError = res[0].stderr;
+
 
             const result = this.question.testKey?.every((item, index) => {
                 return item.output === this.answer![index];
@@ -334,11 +339,13 @@ export class ShowQuestionComponent implements OnInit, OnDestroy {
             this.exercise.code = this.files;
             this.exercise.answer = this.answer;
 
-
+            this.message(result);
             this._store.dispatch(createOrUpdateExercise({ exercise: this.exercise }));
 
         }, error => {
             console.log(error);
+            this.message(false);
+
             this.runningCode = false;
             this._changeDetector.detectChanges();
         }, () => {
@@ -355,13 +362,23 @@ export class ShowQuestionComponent implements OnInit, OnDestroy {
             result = !!this.question.answer?.every((item) => {
                 return this.answer?.includes(item);
             });
-        }
+        };
 
         this.exercise.status = result;
 
         this._store.dispatch(createOrUpdateExercise({ exercise: this.exercise }));
         this.isCheckAnswer = true;
         this._changeDetector.detectChanges();
+    }
+
+    message(status: boolean) {
+        if (status) {
+            this._messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Câu trả lời chính xác', key: "global" });
+            return;
+        }
+        this._messageService.add({ severity: 'error', summary: 'Thất bại', detail: 'Câu trả lời không chính xác', key: "global" });
+
+
     }
 
     nextCloseDialog() {

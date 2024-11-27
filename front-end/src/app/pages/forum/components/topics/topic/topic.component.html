@@ -28,10 +28,19 @@
     <div class="flex justify-center items-center gap-2">
       <span class="time-line">{{ topic.latestPost?.author_id?.username }}</span
       ><p-avatar
-        label="U"
         styleClass="mr-2"
         [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
         shape="circle"
+        [image]="
+          (topic.latestPost?.author_id?.avatar?.contentType == 'url' &&
+            topic.latestPost?.author_id?.avatar?.url?.toString()) ||
+          (topic.latestPost?.author_id?.avatar?.buffer &&
+            'data:' +
+              topic.latestPost?.author_id?.avatar?.contentType +
+              ';base64,' +
+              topic.latestPost?.author_id?.avatar?.buffer) ||
+          'assets/images/avatar-user-default.png'
+        "
       ></p-avatar>
     </div>
     }

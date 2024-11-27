@@ -41,6 +41,8 @@ export class AnnouncementComponent implements OnInit, AfterViewInit, OnDestroy {
 
   announcement_ids: string[] = [];
 
+  numberUnreadAnnouncements: number = 0;
+
   mobileDialog: boolean = false;
   announcements$!: Observable<Announcement[]>;
   actionItems: MenuItem[] = [
@@ -90,6 +92,7 @@ export class AnnouncementComponent implements OnInit, AfterViewInit, OnDestroy {
     this.announcements$ = this._store.select(state => state.user.announcement).pipe(tap(
       announcements => {
         this.announcement_ids = announcements.map(item => item._id);
+        this.numberUnreadAnnouncements = announcements.filter(item => item.state === 'unread').length;
       }
     ));
   }

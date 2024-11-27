@@ -51,6 +51,7 @@ export class PostEffects {
             this._postService.editContentPost(_action.post)
                 .pipe(
                     map(post => {
+                        this._message.add({ severity: 'success', detail: "Chỉnh sửa bài viết thành công.", key: "global" });
                         this._router.navigate(['/forum/post/' + post.post_id]);
                         return updatePost({ post: post });
                     }),
@@ -64,7 +65,10 @@ export class PostEffects {
         switchMap((_action) =>
             this._postService.deletePost(_action.post_id)
                 .pipe(
-                    map(() => removePost({ post_id: _action.post_id })),
+                    map(() => {
+                        this._message.add({ severity: 'success', detail: "Xóa bài viết thành công.", key: "global" });
+                        return removePost({ post_id: _action.post_id });
+                    }),
                     catchError(error => { console.log(error); return of() })
                 )
         )

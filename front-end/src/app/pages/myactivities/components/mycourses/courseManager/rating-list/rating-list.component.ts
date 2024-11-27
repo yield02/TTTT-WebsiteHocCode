@@ -39,7 +39,7 @@ export class RatingListComponent implements OnInit, OnDestroy {
     this.paginator = {
       pageIndex: 0,
       pageSize: 5,
-      totalRecord: 10,
+      totalRecord: 0,
     }
   }
 

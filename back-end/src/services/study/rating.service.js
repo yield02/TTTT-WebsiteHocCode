@@ -5,18 +5,18 @@ const ApiError = require("../../utils/apiError");
 exports.createRating = async (data, course_id, author_id) => {
   try {
     if (!data.star && !course_id && !author_id) {
-      throw new ApiError("Thông tin yêu cầu không đầy đủ", 400);
+      throw new ApiError(400, "Thông tin yêu cầu không đầy đủ");
     }
     const course = await Course.findById(course_id);
     if (!course) {
-      throw new ApiError("Không tìm thấy khóa học", 404);
+      throw new ApiError(404, "Không tìm thấy khóa học");
     }
     if (!course.enroll.includes(author_id)) {
-      throw new ApiError("Bạn chưa tham gia khóa học này", 400);
+      throw new ApiError(400, "Bạn chưa tham gia khóa học này");
     }
     const rating = await Rating.findOne({ course_id, author_id });
     if (rating) {
-      throw new ApiError("Bạn đã đánh giá khóa học này", 400);
+      throw new ApiError(400, "Bạn đã đánh giá khóa học này");
     }
 
     const newRating = new Rating({
@@ -32,7 +32,7 @@ exports.createRating = async (data, course_id, author_id) => {
     return newRating;
   } catch (error) {
     console.log(error);
-    throw new ApiError(500, error.message);
+    throw new ApiError(error.statusCode, error.message);
   }
 };
 
