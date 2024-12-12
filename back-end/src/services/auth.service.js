@@ -51,7 +51,7 @@ exports.login = async (data) => {
         user.get("password", null, { getters: false })
       )
     ) {
-      const { password, avatar, ...jwtInfor } = user._doc;
+      const { password, avatar, announcement, ...jwtInfor } = user._doc;
       const token = jwt.sign(jwtInfor, process.env.JWT_SECRET_KEY, {
         expiresIn: "12h",
       });

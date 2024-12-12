@@ -10,9 +10,11 @@ export const interactWithPost = createAction('[Forum Post] Interact With Post', 
 export const toggleBlockComment = createAction('[Forum Post] Toggle Block Comment', props<{ post_id: string }>());
 export const toggleHiddenPost = createAction('[Forum Post] Toggle Hidden Post', props<{ post_id: string }>());
 export const getAllPostOfAuthor = createAction('[Forum Post] Get All Post Of Author');
+export const updatePostView = createAction('[Forum Post] Update Post View', props<{ _id: string }>());
 
 
 export const addPosts = createAction('[Forum Post] Add Posts', props<{ posts: Post[] }>());
 export const addPost = createAction('[Forum Post] Add Post', props<{ post: Post }>());
 export const updatePost = createAction('[Forum Post] Update Post', props<{ post: Post }>());
 export const removePost = createAction('[Forum Post] Remove Post', props<{ post_id: number }>());
+export const updatePostViewSuccess = createAction('[Forum Post] Update Post View Success', props<{ post_id: string }>());

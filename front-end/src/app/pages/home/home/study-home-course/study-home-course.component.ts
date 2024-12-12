@@ -70,7 +70,12 @@ export class StudyHomeCourseComponent implements OnInit, OnDestroy {
     }
 
     tranformArray(length: Number = 0): any[] {
-        return new Array(length);
+        const result = length.toFixed();
+        return new Array(Number(result));
+    }
+
+    tranformNumber(number: Number) {
+        return Number(number);
     }
 
     ngOnDestroy(): void {

@@ -136,3 +136,14 @@ exports.getPostsOfAuthor = async (req, res, next) => {
     return next(new ApiError(error.statusCode, error.message));
   }
 };
+
+exports.updateView = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    var userInfor = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const post = await postService.updateView(req.params.post_id);
+    res.status(200).json(post);
+  } catch (error) {
+    return next(new ApiError(error.statusCode, error.message));
+  }
+};

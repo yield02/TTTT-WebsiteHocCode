@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, of, switchMap } from "rxjs";
-import { addPost, addPosts, createPost, deletePost, editContentPost, getAllPostOfAuthor, interactWithPost, loadPostWithId, removePost, toggleBlockComment, toggleHiddenPost, updatePost } from "../../store/forum/post/post.actions";
+import { addPost, addPosts, createPost, deletePost, editContentPost, getAllPostOfAuthor, interactWithPost, loadPostWithId, removePost, toggleBlockComment, toggleHiddenPost, updatePost, updatePostView, updatePostViewSuccess } from "../../store/forum/post/post.actions";
 import { PostService } from "../../services/forum/post.service";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
@@ -110,6 +110,14 @@ export class PostEffects {
                     catchError(error => { console.log(error); return of() })
                 )
         )
+    ));
+
+    updateViewPost$ = createEffect(() => this.actions$.pipe(
+        ofType(updatePostView),
+        switchMap(_action => this._postService.updatePostView(_action._id).pipe(
+            map(() => { return updatePostViewSuccess({ post_id: _action._id }) }),
+            catchError(error => { console.log(error); return of() })
+        )),
     ))
 
 }

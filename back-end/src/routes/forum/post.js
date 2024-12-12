@@ -10,6 +10,7 @@ router.get("/:post_id", postController.getPostWithId);
 
 router.post("/", postController.createPost);
 
+router.patch("/update-view/:post_id", postController.updateView);
 router.patch(
   "/manager/block_comment/:post_id",
   postController.toggleBlockComment

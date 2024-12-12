@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Post } from '../../../models/forum/Post';
-import { addPost, addPosts, removePost, updatePost } from './post.actions';
+import { addPost, addPosts, removePost, updatePost, updatePostViewSuccess } from './post.actions';
 
 
 
@@ -24,5 +24,8 @@ export const postReducer = createReducer(
             }
             return acc;
         }, [...state]);
+    }),
+    on(updatePostViewSuccess, (state, { post_id }) => {
+        return state.map(p => p._id === post_id ? { ...p, views: (p.views || 0) + 1 } : p);
     })
 );

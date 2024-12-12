@@ -215,3 +215,16 @@ exports.getPostsOfAuthor = async (author_id) => {
     throw new ApiError(500, error.message);
   }
 };
+
+exports.updateView = async (_id) => {
+  try {
+    const post = await Post.findByIdAndUpdate(
+      _id,
+      { $inc: { views: 1 } },
+      { new: true }
+    );
+    return post;
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};

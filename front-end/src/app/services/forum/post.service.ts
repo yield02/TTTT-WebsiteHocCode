@@ -77,6 +77,10 @@ export class PostService {
     return this.http.get<Post[]>(`${environment.apiUrl}post/author`, { withCredentials: true });
   }
 
+  updatePostView(post_id: string): Observable<any> {
+    return this.http.patch<any>(`${environment.apiUrl}post/update-view/${post_id}`, {}, { withCredentials: true });
+  }
+
 }
 
 

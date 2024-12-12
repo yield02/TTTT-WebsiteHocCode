@@ -87,7 +87,10 @@ export class CoursesManagerEffects {
         debounceTime(1000),
         switchMap(_action => this._courseManagerService.toggleUpdatePublishCourse(_action.course_id, _action.state)
             .pipe(
-                map((course) => UpdateCourseManager({ course })),
+                map((course) => {
+                    this._messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đã cập nhật trạng thái khóa học', key: "global" })
+                    return UpdateCourseManager({ course });
+                }),
                 catchError((error) => of())
             ))
     ))

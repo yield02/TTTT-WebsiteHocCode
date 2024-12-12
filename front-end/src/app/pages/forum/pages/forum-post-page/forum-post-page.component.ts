@@ -12,7 +12,7 @@ import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, from, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { Post } from '../../../../models/forum/Post';
 import { selectAuthorPostId, selectPostWithPostId } from '../../../../store/forum/post/post.selectors';
-import { deletePost, interactWithPost, loadPostWithId, toggleBlockComment, toggleHiddenPost } from '../../../../store/forum/post/post.actions';
+import { deletePost, interactWithPost, loadPostWithId, toggleBlockComment, toggleHiddenPost, updatePostView } from '../../../../store/forum/post/post.actions';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { MenuItem } from 'primeng/api';
 
@@ -133,7 +133,7 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
 
     subscriptions: Subscription[] = [];
 
-
+    viewTimeOut: any;
 
     constructor(
         private _store: Store<AppState>,
@@ -288,7 +288,11 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
                 this.hashtag = hashtag;
                 this._changeDetector.detectChanges();
             })
-        )
+        );
+
+        this.viewTimeOut = setTimeout(() => {
+            this._store.dispatch(updatePostView({ _id: this.post$.getValue()._id as string }));
+        }, 30000);
     }
 
     ngOnChanges(
@@ -352,6 +356,7 @@ export class ForumPostPageComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => subscription.unsubscribe());
+        clearTimeout(this.viewTimeOut);
     }
 
 }

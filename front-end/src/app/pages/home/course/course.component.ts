@@ -52,7 +52,7 @@ export class CourseComponent implements OnInit, OnDestroy {
   course$: BehaviorSubject<Course | undefined> = new BehaviorSubject<Course | undefined>(undefined);
   user$: Observable<AuthUser> = this._store.select(state => state.user).pipe(tap((user) => {
     if (!user?._id) {
-      this._messageService.add({ severity: 'info', detail: 'Bạn phải đăng nhập để ghi danh khóa học này!', key: "global" });
+      // this._messageService.add({ severity: 'info', detail: 'Bạn phải đăng nhập để ghi danh khóa học này!', key: "global" });
     }
   }));
   ratings$: BehaviorSubject<RatingInterface[]> = new BehaviorSubject<RatingInterface[]>([]);
